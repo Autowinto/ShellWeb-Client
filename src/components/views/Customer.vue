@@ -1398,7 +1398,6 @@ export default {
   },
   methods: {
     fetchData(endpoint) {
-      console.log(process.env.VUE_APP_URL)
       return axios.get(process.env.VUE_APP_URL + endpoint);
     },
     loadContracts: function() {

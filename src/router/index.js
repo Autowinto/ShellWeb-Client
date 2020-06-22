@@ -8,6 +8,7 @@ import Contact from '../components/views/Contact.vue'
 import Login from '../components/views/Login.vue'
 import NotFound from '../components/views/NotFound.vue'
 import Tickets from '../components/views/Tickets.vue'
+import Ticket from '../components/views/Ticket.vue'
 
 Vue.use(Router)
 
@@ -43,6 +44,11 @@ export default new Router({
       path: '/tickets',
       name: 'tickets',
       component: Tickets
+    },
+    {
+      path: '/ticket',
+      name: 'ticket',
+      component: Ticket
     },
     {
       path: '/login',

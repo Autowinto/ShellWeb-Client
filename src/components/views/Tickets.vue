@@ -1,121 +1,126 @@
 <template>
-    <div id="wrapper">
-                <div class="container-fluid">
-                    <h3 class="text-dark mb-4">Tickets</h3>
-                    <div class="card shadow">
-                        <div class="card-header py-3">
-                            <p class="text-primary m-0 font-weight-bold">Tickets Info</p>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md text-nowrap">
-                                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label>Show&nbsp;<select class="form-control form-control-sm custom-select custom-select-sm"><option value="10" selected="">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>&nbsp;</label></div>
-                                </div>
-                                <div class="col-md">
-                                    <div class="text-md-right dataTables_filter" id="dataTable_filter"><label><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search"></label></div>
-                                </div>
-                            </div>
-                            <b-table show-empty outlined hover>
-                              
-                            </b-table>
-                            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                                <table class="table dataTable my-0" id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Ticket ID</th>
-                                            <th>Subject</th>
-                                            <th>Date of creation</th>
-                                            <th>Last updated</th>
-                                            <th>Status</th>
-                                            <th>Reply Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td><strong>Ticket ID</strong></td>
-                                            <td><strong>Subject</strong></td>
-                                            <td><strong>Date of creation</strong></td>
-                                            <td><strong>Last updated</strong></td>
-                                            <td><strong>Status</strong></td>
-                                            <td><strong>Reply Status</strong></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 align-self-center">
-                                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
-                                </div>
-                                <div class="col-md-6">
-                                    <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                                        <ul class="pagination">
-                                            <li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-                                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <div class="container-fluid">
+    <h3 class="text-dark mb-4">Tickets</h3>
+    <div class="card shadow">
+      <div class="card-header py-3">
+        <p class="text-primary m-0 font-weight-bold">Tickets Info</p>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 text-nowrap">
+            <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+              <label>
+                Show&nbsp;
+                <b-form-select v-model="perPage" :options='paginationOptions'></b-form-select>
+              </label>
             </div>
-  
+          </div>
+          <div class="col-md-6">
+            <div class="text-md-right dataTables_filter" id="dataTable_filter">
+              <label>
+                <input
+                  type="search"
+                  class="form-control form-control-sm"
+                  aria-controls="dataTable"
+                  placeholder="Search"
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <b-table
+            show-empty
+            outlined
+            hover
+            :items="items"
+            :fields="fields"
+            :per-page="0"
+            :current-page="currentPage"
+          >
+            <template v-slot:cell(TicketTitle)="data">
+              <b-link
+                :to="{ path: '/ticket', query: {ticketID: data.item.TicketID}}"
+              >{{ data.item.TicketTitle }}</b-link>
+            </template>
+          </b-table>
+          <b-pagination
+            size="md"
+            v-model="currentPage"
+            :total-rows="totalItems"
+            :per-page="perPage"
+          ></b-pagination>
+        </div>
+        <div class="row">
+          <button
+            onclick="window.location.href = 'customerform.html';"
+            
+            class="btn btn-primary ml-2 btn-sm"
+          >Add Customer</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import moment from 'moment'
+import axios from "axios";
 
 export default {
-  
   data() {
     return {
-      fields: {
-
-      }
+      fields: [
+        {
+          key: "TicketID",
+          label: "Ticket ID"
+        },
+        {
+          key: "TicketTitle",
+          label: "Name"
+        }
+      ],
+      items: [],
+      currentPage: 1,
+      perPage: 10,
+      totalItems: 0,
+      paginationOptions: [
+        { value: 10, text: '10' },
+        { value: 25, text: '25' },
+        { value: 50, text: '50' }
+      ]
     }
   },
-
-  created() {
-    this.fetchTickets();
+  mounted() {
+    this.fetchData();
   },
-
-
   methods: {
-    moment: function() {
-      return moment();
-    },
-    fetchTickets() {
-
+    fetchData() {
+      axios
+        .get(process.env.VUE_APP_URL + 'tickets/' + this.currentPage + '/' + this.perPage)
+        .then(response => {
+          const data = response.data;
+          console.log(data)
+          this.items = data.tickets.items;
+          this.currentPage = parseInt(data.tickets.page);
+          this.totalItems = data.tickets.totalItemCount;
+          this.perPage = data.tickets.itemsInPage;
+        })
+        .catch(err => {
+          console.error(err);
+        });
     }
   },
-  filters: {
-    newestDate: function (dates) {
-      var momentArray = []
-
-      for (var date in dates) {
-        momentArray.push(moment(date))
+  watch: {
+    currentPage: {
+      handler: function() {
+        this.fetchData(); //Do error handling here in the future
       }
-
-      return moment.max(momentArray).format('MMM Do YYYY');
+    },
+    perPage: {
+      handler: function() {
+        this.fetchData();
+      }
     }
   }
-
-}
+};
 </script>
-
-<style>
-
-</style>

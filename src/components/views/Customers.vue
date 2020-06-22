@@ -96,7 +96,7 @@ export default {
   methods: {
     fetchData() {
       axios
-        .get('http://localhost:8081/customers/' + this.currentPage + '/' + this.perPage)
+        .get(process.env.VUE_APP_URL + 'customers/' + this.currentPage + '/' + this.perPage)
         .then(response => {
           const data = response.data.customers;
           console.log(data)
