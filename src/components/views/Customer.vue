@@ -240,7 +240,7 @@
                   <b-card-text>
                     <div class="row">
                       <div v-for="(contact, idx) in contacts" :key="idx" class="col-4">
-                        <router-link to="/contact">
+                        <b-link :to="{ path: '/contact/', query: {contactid: contact.EndUserID}}">
                           <div class="card btn mb-3 btn-light p-3" style="height: 140px;">
                             <div class="row ml-3">
                               <h5
@@ -259,14 +259,14 @@
                               <h6>{{contact.Email}}</h6>
                             </div>
                           </div>
-                        </router-link>
+                        </b-link>
                       </div>
                     </div>
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Contracts" v-on:click="loadContracts">
                   <b-card-text>
-                    <div v-if="contracts" class="row">
+                    <b-row v-if="contracts">
                       <div class="container p-0 mr-0 mb-2">
                         <div class="text-right">
                           <button
@@ -369,7 +369,12 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </b-row>
+                    <b-row>
+                      <b-pagination>
+                        
+                      </b-pagination>
+                    </b-row>
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Assets">

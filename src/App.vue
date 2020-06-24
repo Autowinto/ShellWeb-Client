@@ -11,6 +11,11 @@ export default {
   name: "App",
   components: {
     NavBar
+  },
+  watch: {
+    '$route' (to, from) {
+      document.title = to.meta.title || 'TITLE NOT FOUND'
+      }
   }
 };
 </script>

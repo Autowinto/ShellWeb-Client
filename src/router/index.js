@@ -18,49 +18,76 @@ export default new Router({
     {
       path: '/',
       name: 'dashboard',
-      component: Dashboard
+      component: Dashboard,
+      meta: {
+        title: 'Dashboard'
+      }
     },
     {
       path: '/customers',
       name: 'customers',
-      component: Customers
+      component: Customers,
+      meta: {
+        title: 'Customers'
+      }
     },
     {
       path: '/profile',
       name: 'profile',
-      component: Profile
+      component: Profile,
+      meta: {
+        title: 'Profile'
+      }
     },
     {
       path: '/customer',
       name: 'customer',
-      component: Customer
+      component: Customer,
+      meta: {
+        title: 'Customer'
+      }
     },
     {
       path: '/contact',
       name: 'contact',
-      component: Contact
+      component: Contact,
+      meta: {
+        title: 'Contact'
+      }
     },
     {
       path: '/tickets',
       name: 'tickets',
-      component: Tickets
+      component: Tickets,
+      meta: {
+        title: 'Tickets'
+      }
     },
     {
       path: '/ticket',
       name: 'ticket',
-      component: Ticket
+      component: Ticket,
+      meta: {
+        title: 'Ticket'
+      }
     },
     {
       path: '/login',
       name: 'login',
       component: Login,
-      meta: {hideNavBar: true}
+      meta: {
+        hideNavBar: true,
+        title: 'Login'
+      }
     },
     {
       path: '*',
       name: '404',
       component: NotFound,
-      meta: {hideNavBar: true}
+      meta: {
+        hideNavBar: true,
+        title: '404'
+      }
     },
   ]
 })
