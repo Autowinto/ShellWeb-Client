@@ -13,7 +13,7 @@ export default {
     NavBar
   },
   watch: {
-    '$route' (to, from) {
+    '$route' (to) {
       document.title = to.meta.title || 'TITLE NOT FOUND'
       }
   }
