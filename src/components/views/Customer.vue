@@ -232,13 +232,13 @@
             </div>
           </div>
         </div>
-        <div class="col m-0 p-0 pl-3">
-          <div>
-            <b-card no-body class="class shadow">
+        <b-col style="position: relative;">
+          <div style="height: 100%;">
+            <b-card no-body class="class shadow" style="height: 100%;">
               <b-tabs card fill>
                 <b-tab title="Employees" active>
                   <b-card-text>
-                    <div class="row">
+                    <b-row>
                       <div v-for="(contact, idx) in contacts" :key="idx" class="col-4">
                         <b-link :to="{ path: '/contact/', query: {contactid: contact.EndUserID}}">
                           <div class="card btn mb-3 btn-light p-3" style="height: 140px;">
@@ -261,7 +261,8 @@
                           </div>
                         </b-link>
                       </div>
-                    </div>
+                    </b-row>
+                    <b-pagination/>
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Contracts" v-on:click="loadContracts">
@@ -370,11 +371,7 @@
                         </div>
                       </div>
                     </b-row>
-                    <b-row>
-                      <b-pagination>
-                        
-                      </b-pagination>
-                    </b-row>
+                    <b-pagination/>
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Assets">
@@ -404,6 +401,7 @@
               </b-tabs>
             </b-card>
           </div>
+          <!---
           <div class="card-header shadow p-0">
             <ul class="nav nav-tabs">
               <li class="nav-item">
@@ -1361,7 +1359,8 @@
               </div>
             </div>
           </div>
-        </div>
+          -- End of old tab-box-->
+        </b-col>
       </div>
     </div>
   </div>

@@ -182,7 +182,7 @@
                           class="small"
                         >{{this.comments[0].FirstName}} {{this.comments[0].LastName}} |</span>
                         <span class="small" style="color:limegreen;">{{this.comments[0].Email}} |</span>
-                        <span class="small">{{this.comments[0].Date |momentDateTime}}</span>
+                        <span class="small">{{this.comments[0].Date | momentDateTime}}</span>
                       </div>
                       <div class="mb-3">{{this.comments[0].Comment}}</div>
                     </div>
