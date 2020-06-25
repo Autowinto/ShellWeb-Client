@@ -176,7 +176,7 @@
                 </div>
                 <div class="card-body p4">
                   <div class="row m-0 mb-3">
-                    <div class="rounded border w-100 p-3" style="background-color: #f9f9f9;">
+                    <div v-if="this.comments.length" class="rounded border w-100 p-3" style="background-color: #f9f9f9;">
                       <div id="info" class="mb-2">
                         <span
                           class="small"
@@ -246,17 +246,14 @@ export default {
     };
   },
   created() {
-    axios
-      .all([
-        this.fetchData("ticketInfo/" + this.ticketID),
-        this.fetchData("ticketComments/" + this.ticketID + "/1/10")
-      ])
-      .then(
-        axios.spread((ticketInfoRes, ticketCommentsRes) => {
-          this.items = ticketInfoRes.data.ticketInfo;
-          this.comments = ticketCommentsRes.data.comments.items;
-        })
-      );
+    this.fetchData("ticketInfo/" + this.ticketID)
+    .then(response => {
+      this.items = response.data.ticketInfo;
+    })
+    this.fetchData("ticketComments/" + this.ticketID + "/1/10")
+    .then(response => {
+      this.comments = response.data.comments.items;
+    })
   },
   methods: {
     fetchData(endpoint) {
