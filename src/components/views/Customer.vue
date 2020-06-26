@@ -33,7 +33,7 @@
                       </div>
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Payment Terms</h4>
-                        <h4 class="small">TempFiller</h4>
+                        <h4 class="small">{{paymentTerms}}</h4>
                       </div>
                     </div>
                   </div>
@@ -84,18 +84,18 @@
                     <div class="col">
                       <button
                         class="btn btn-primary w-100"
-                        onclick="window.location.href='domaineditform.html'"
+                        v-b-modal.manageDomainModal
                       >Manage Domain</button>
                     </div>
                     <div class="col">
                       <button
                         class="btn btn-primary w-100"
-                        onclick="window.location.href='customereditform.html'"
+                        v-b-modal.editCustomerModal
                       >Edit Customer</button>
                     </div>
                   </div>
                   <div class="card shadow mb-3"></div>
-                  <button class="btn btn-danger w-100">Delete Customer</button>
+                  <button class="btn btn-danger w-100" v-b-modal.deletionModal>Delete Customer</button>
                 </div>
               </div>
             </div>
@@ -238,31 +238,33 @@
               <b-tabs card fill>
                 <b-tab title="Employees" active>
                   <b-card-text>
-                    <b-row>
+                    <b-row v-if="contacts.length">
                       <div v-for="(contact, idx) in contacts" :key="idx" class="col-4">
-                        <b-link :to="{ path: '/contact/', query: {contactid: contact.EndUserID}}">
+                        <b-link :to="{ path: '/contact/', query: {contactid: contact.contact_id}}">
                           <div class="card btn mb-3 btn-light p-3" style="height: 140px;">
                             <div class="row ml-3">
                               <h5
                                 class="m-0 font-weight-bold"
-                              >{{contact.Firstname}} {{contact.Lastname}}</h5>
+                              >{{contact.first_name}} {{contact.last_name}}</h5>
                             </div>
                             <div class="row ml-3">
                               <h6 class="small"></h6>
                             </div>
-                            <div v-if="contact.Phone" class="row ml-3">
+                            <div v-if="contact.phone && contact.phone !== 'null'" class="row ml-3">
                               <span class="fa fa-phone fa-fw mr-1"></span>
-                              <h6>{{contact.Phone}}</h6>
+                              <h6>{{contact.phone}}</h6>
                             </div>
-                            <div v-if="contact.Email" class="row ml-3">
+                            <div v-if="contact.email && contact.email !== 'null'" class="row ml-3">
                               <span class="fa fa-at fa-fw mr-1"></span>
-                              <h6>{{contact.Email}}</h6>
+                              <h6>{{contact.email}}</h6>
                             </div>
                           </div>
                         </b-link>
                       </div>
                     </b-row>
-                    <b-pagination/>
+                    <b-row v-else align-h="center">
+                      <h3>Nothing to display</h3>
+                    </b-row>
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Contracts" v-on:click="loadContracts">
@@ -371,7 +373,6 @@
                         </div>
                       </div>
                     </b-row>
-                    <b-pagination/>
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Assets">
@@ -1363,6 +1364,16 @@
         </b-col>
       </div>
     </div>
+    <!--Modals below here-->
+    <b-modal id="deletionModal" size="md" button-size="sm" ok-variant="danger" ok-title="YES" cancel-title="No" header-bg-variant="danger" header-text-variant="white" centered title='Delete Customer?'>
+      <h5>Are you sure you want to delete the customer {{customerInfo.name}}</h5>
+    </b-modal>
+    <b-modal centered id="editCustomerModal">
+
+    </b-modal>
+    <b-modal centered id="manageDomainModal">
+
+    </b-modal>
   </div>
 </template>
 
@@ -1380,6 +1391,7 @@ export default {
         }
       ],
       customerInfo: {},
+      paymentTerms: {},
       customerGroup: 0,
       contacts: [],
       contracts: [],
@@ -1388,17 +1400,19 @@ export default {
     };
   },
   created() {
-    this.fetchData("customer/" + this.id).then(response => {
-      const data = response.data;
-      this.customerInfo = data.customer;
-      this.contacts = data.contacts;
-      this.customerGroup = data.customerGroup;
-      this.ateraid = data.apiInfo
-      // this.currentPage = data.page;
-      // this.totalItems = data.totalItemCount
-      // this.perPage = data.itemsInPage;
-      console.log(this.customerInfo);
-    });
+    axios.all([
+      this.fetchData("customer/" + this.id),
+      this.fetchData(`contacts/${this.id}`)
+    ]).then(axios.spread((...responses) => {
+      const customerData = responses[0].data
+      this.customerInfo = customerData.customer
+      this.customerGroup = customerData.customerGroup
+      this.ateraid = customerData.apiInfo
+      this.paymentTerms = customerData.paymentTerms
+
+      const contactData = responses[1].data
+      this.contacts = contactData.contacts
+    }))
   },
   methods: {
     fetchData(endpoint) {

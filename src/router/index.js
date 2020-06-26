@@ -9,6 +9,9 @@ import Login from '../components/views/Login.vue'
 import NotFound from '../components/views/NotFound.vue'
 import Tickets from '../components/views/Tickets.vue'
 import Ticket from '../components/views/Ticket.vue'
+import Invoices from '../components/views/Invoices.vue'
+import TimeOverview from '../components/views/TimeOverview.vue'
+import Administration from '../components/views/Administration.vue'
 
 Vue.use(Router)
 
@@ -69,6 +72,30 @@ export default new Router({
       component: Ticket,
       meta: {
         title: 'Ticket'
+      }
+    },
+    {
+      path: '/invoices',
+      name: 'invoices',
+      component: Invoices,
+      meta: {
+        title: 'Invoices'
+      }
+    },
+    {
+      path: '/timeoverview',
+      name: 'timeoverview',
+      component: TimeOverview,
+      meta: {
+        title: 'Time Overview'
+      }
+    },
+    {
+      path: '/administration',
+      name: 'administration',
+      component: Administration,
+      meta: {
+        title: 'Administration'
       }
     },
     {

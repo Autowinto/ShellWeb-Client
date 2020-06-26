@@ -33,7 +33,7 @@
             <i class="fas fa-table"></i>Time Overview
           </b-nav-item>
           <b-nav-item  to="/administration">
-            <i class="fas fa-table"></i>Invoices
+            <i class="fas fa-table"></i>Administration
           </b-nav-item>
           <b-nav-item  to="/login">
             <i class="fas fa-table"></i>Login
