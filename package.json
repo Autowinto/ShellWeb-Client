@@ -1,5 +1,5 @@
 {
-  "name": "vue-test",
+  "name": "shell",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,13 +12,14 @@
     "bootstrap-vue": "^2.15.0",
     "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
+    "dayjs": "^1.8.28",
     "dotenv": "^8.2.0",
     "jquery": "^3.5.1",
-    "moment": "^2.27.0",
     "popper.js": "^1.16.1",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
     "vue-router": "^3.3.4",
+    "vuex": "^3.4.0",
     "webpack": "^4.43.0"
   },
   "devDependencies": {

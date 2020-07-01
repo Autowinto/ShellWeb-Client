@@ -25,17 +25,17 @@
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">First Name</h4>
-                        <h4 class="small"></h4>
+                        <h4 class="small">{{contactInfo.Firstname}}</h4>
                       </div>
-                      <div class="mb-3">
+                      <div class="mb-3" v-if="contactInfo.JobTitle">
                         <h4 class="small font-weight-bold">Job Title</h4>
-                        <h4 class="small"></h4>
+                        <h4 class="small">{{contactInfo.JobTitle}}</h4>
                       </div>
                     </div>
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Last Name</h4>
-                        <h4 class="small"></h4>
+                        <h4 class="small">{{contactInfo.Lastname}}</h4>
                       </div>
                     </div>
                   </div>
@@ -44,13 +44,13 @@
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Phone Number</h4>
-                        <h4 class="small"></h4>
+                        <h4 class="small">{{contactInfo.Phone}}</h4>
                       </div>
                     </div>
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Email</h4>
-                        <h4 class="small"></h4>
+                        <h4 class="small">{{contactInfo.Email}}</h4>
                       </div>
                     </div>
                   </div>
@@ -65,36 +65,28 @@
                   <h6 class="text-primary mb-0 font-weight-bold">Assigned Tickets</h6>
                 </div>
                 <div class="card-body shadow">
-                  <div
-                    class="table-responsive table mt-2"
-                    id="dataTable"
-                    role="grid"
-                    aria-describedby="dataTable_info"
-                  >
-                    <table class="table dataTable my-0" id="dataTable">
-                      <thead>
-                        <tr>
-                          <th>Ticket ID</th>
-                          <th>Subject</th>
-                          <th>Date of creation</th>
-                          <th>Last updated</th>
-                          <th>Status</th>
-                          <th>Reply Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>
-                            <a href="ticketpage.html"></a>
-                          </td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <div>
+                      <b-table
+                        show-empty
+                        outlined
+                        hover
+                        :items="tickets"
+                        :fields="fields"
+                        :per-page="0"
+                        :current-page="currentPage"
+                      >
+                        <template v-slot:cell(subject)="data">
+                          <b-link
+                            :to="{ path: '/ticket', query: {ticketID: data.item.ticket_id}}"
+                          >{{ data.item.subject }}</b-link>
+                        </template>
+                      </b-table>
+                      <b-pagination
+                        size="md"
+                        v-model="currentPage"
+                        :total-rows="totalItems"
+                        :per-page="perPage"
+                      ></b-pagination>
                   </div>
                 </div>
               </div>
@@ -107,7 +99,55 @@
 </template>
 
 <script>
+import axios from "axios";
 
-export default {  
-}
+export default {
+  data() {
+    return {
+      contactInfo: {},
+      tickets: [],
+      fields: [
+        {
+          key: "ticket_id",
+          label: "Ticket ID"
+        },
+        {
+          key: "subject",
+          label: "Subject"
+        },
+        {
+          key: "created_date",
+          label: "Date of Creation"
+        },
+        {
+          key: "modified_date",
+          label: "Last Updated"
+        },
+        {
+          key: "status",
+          label: "Status"
+        },
+        {
+          key: "reply_status",
+          label: "Reply Status"
+        },
+      ],
+    };
+  },
+  created() {
+    this.fetchData(`contact/${this.$route.query.contactid}`).then(response => {
+      this.contactInfo = response.data.contactInfo;
+    });
+    this.fetchData(`contact/tickets/${this.$route.query.contactid}/1/10`).then(
+      response => {
+        this.tickets = response.data.tickets;
+      }
+    );
+  },
+  methods: {
+    fetchData(endpoint) {
+      return axios.get(process.env.VUE_APP_URL + endpoint);
+    }
+  }
+};
 </script>

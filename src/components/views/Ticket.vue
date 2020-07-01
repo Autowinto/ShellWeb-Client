@@ -2,6 +2,12 @@
   <div id="wrapper">
     <div class="d-flex flex-column" id="content-wrapper">
       <div id="content">
+        <!-- <b-container>
+            <b-card class="mb-3" style="background-color: #36b9cc;">
+              <span style="color: black;" class="">Contact is undefined, please fix this here: </span>
+              <b-link :href="'https://app.atera.com/Admin#/ticket/' + this.ticketID">https://app.atera.com/Admin#/ticket/{{this.ticketID}}</b-link>
+            </b-card>
+        </b-container> -->
         <div class="container-fluid">
           <div class="row mb-3">
             <div class="col-10 m-0 ml-2 p-0">
@@ -110,7 +116,7 @@
           </div>
           <h3 class="text-dark mb-4">Ticket ID: {{this.items.TicketID}}</h3>
           <div class="row">
-            <div class="col-3">
+            <b-col cols="3">
               <div class="card shadow mb-3">
                 <div class="card-header">
                   <h6 class="text-primary font-weight-bold mb-0">Ticket Information</h6>
@@ -119,7 +125,7 @@
                   <div class="row mb-3">
                     <div class="col">
                       <p class="text-primary m-0 font-weight-bold">Customer ID</p>
-                      <p>{{this.items.CustomerBusinessNumber}}</p>
+                      <p>{{this.items.CustomerBusinessNumber || N/A}}</p>
                     </div>
                     <div class="col">
                       <p class="text-primary m-0 font-weight-bold">Employee</p>
@@ -151,13 +157,13 @@
                   <div class="row mb-3">
                     <div class="col">
                       <p class="text-primary m-0 font-weight-bold">Date of creation</p>
-                      <p class="m-0">{{this.items.TicketCreatedDate | momentDateOnly}}</p>
+                      <p class="m-0">{{this.items.TicketCreatedDate | dayjsDateOnly}}</p>
                     </div>
                   </div>
-                  <div class="row mb-3" v-if="this.items.TicetResolvedDate">
+                  <div class="row mb-3" v-if="this.items.TicketResolvedDate">
                     <div class="col">
                       <p class="text-primary m-0 font-weight-bold">Last updated</p>
-                      <p class="m-0">{{this.items.TicketResolvedDate | momentDateOnly}}</p>
+                      <p class="m-0">{{this.items.TicketResolvedDate | dayjsDateOnly}}</p>
                     </div>
                   </div>
                   <div class="row mb-3">
@@ -168,7 +174,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </b-col>
             <div class="col">
               <div class="card shadow mb-3">
                 <div class="card-header">
@@ -182,7 +188,7 @@
                           class="small"
                         >{{this.comments[0].FirstName}} {{this.comments[0].LastName}} |</span>
                         <span class="small" style="color:limegreen;">{{this.comments[0].Email}} |</span>
-                        <span class="small">{{this.comments[0].Date | momentDateTime}}</span>
+                        <span class="small">{{this.comments[0].Date | dayjsDateTime}}</span>
                       </div>
                       <div class="mb-3">{{this.comments[0].Comment}}</div>
                     </div>
@@ -204,7 +210,7 @@
                       <div id="info" class="mb-2">
                         <span class="small">{{comment.FirstName}} {{comment.LastName}} |</span>
                         <span class="small" style="color:limegreen;">{{comment.Email}} |</span>
-                        <span class="small">{{comment.Date | momentDateTime}}</span>
+                        <span class="small">{{comment.Date | dayjsDateTime}}</span>
                       </div>
                       <div class="mb-3">{{comment.Comment}}</div>
                     </div>
@@ -218,7 +224,7 @@
                           class="small"
                           style="color:limegreen;"
                         >{{comment.FirstName}} {{comment.LastName}}</span>
-                        <span class="small">{{comment.Date | momentDateTime}}</span>
+                        <span class="small">{{comment.Date | dayjsDateTime}}</span>
                       </div>
                       <div class="mb-3">{{comment.Comment}}</div>
                     </div>
@@ -235,7 +241,7 @@
 
 <script>
 import axios from "axios";
-import moment from "moment";
+import dayjs from "dayjs";
 
 export default {
   data() {
@@ -246,11 +252,11 @@ export default {
     };
   },
   created() {
-    this.fetchData("ticketInfo/" + this.ticketID)
+    this.fetchData(`ticket/${this.ticketID}`)
     .then(response => {
       this.items = response.data.ticketInfo;
     })
-    this.fetchData("ticketComments/" + this.ticketID + "/1/10")
+    this.fetchData(`ticket/ticketComments/${this.ticketID}/1/10`)
     .then(response => {
       this.comments = response.data.comments.items;
     })
@@ -259,16 +265,16 @@ export default {
     fetchData(endpoint) {
       return axios.get(process.env.VUE_APP_URL + endpoint);
     },
-    moment: function() {
-      return moment();
+    dayjs: function() {
+      return dayjs();
     }
   },
   filters: {
-    momentDateOnly: function(date) {
-      return moment(date).format("MMM Do YYYY");
+    dayjsDateOnly: function(date) {
+      return dayjs(date).format("MMM Do YYYY");
     },
-    momentDateTime: function(date) {
-      return moment(date).format("MMM Do YYYY, h:mm:ss a");
+    dayjsDateTime: function(date) {
+      return dayjs(date).format("MMM Do YYYY, h:mm:ss a");
     }
   }
 };

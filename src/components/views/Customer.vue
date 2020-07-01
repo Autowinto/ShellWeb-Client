@@ -247,8 +247,8 @@
                                 class="m-0 font-weight-bold"
                               >{{contact.first_name}} {{contact.last_name}}</h5>
                             </div>
-                            <div class="row ml-3">
-                              <h6 class="small"></h6>
+                            <div class="row ml-3" v-if="contact.job_title !== 'null'">
+                              <h6 class="small">{{contact.job_title}}</h6>
                             </div>
                             <div v-if="contact.phone && contact.phone !== 'null'" class="row ml-3">
                               <span class="fa fa-phone fa-fw mr-1"></span>
@@ -379,7 +379,31 @@
                   <b-card-text>Tab contents 2</b-card-text>
                 </b-tab>
                 <b-tab title="Tickets">
-                  <b-card-text>Passwords</b-card-text>
+                  <b-card-text>
+                    <div>
+                      <b-table
+                        show-empty
+                        outlined
+                        hover
+                        :items="tickets"
+                        :fields="ticketFields"
+                        :per-page="0"
+                        :current-page="currentPage"
+                      >
+                        <template v-slot:cell(subject)="data">
+                          <b-link
+                            :to="{ path: '/ticket', query: {ticketID: data.item.ticket_id}}"
+                          >{{ data.item.subject }}</b-link>
+                        </template>
+                      </b-table>
+                      <b-pagination
+                        size="md"
+                        v-model="currentPage"
+                        :total-rows="totalItems"
+                        :per-page="perPage"
+                      ></b-pagination>
+                  </div>
+                  </b-card-text>
                 </b-tab>
                 <b-tab title="Passwords">
                   <b-card-text>Attachments</b-card-text>
@@ -1384,25 +1408,46 @@ import moment from 'moment'
 export default {
   data() {
     return {
-      fields: [
+      ticketFields: [
         {
-          key: "BusinessNumber",
-          label: "Customer ID"
-        }
+          key: "ticket_id",
+          label: "Ticket ID"
+        },
+        {
+          key: "subject",
+          label: "Subject"
+        },
+        {
+          key: "created_date",
+          label: "Date of Creation"
+        },
+        {
+          key: "modified_date",
+          label: "Last Updated"
+        },
+        {
+          key: "status",
+          label: "Status"
+        },
+        {
+          key: "reply_status",
+          label: "Reply Status"
+        },
       ],
       customerInfo: {},
       paymentTerms: {},
       customerGroup: 0,
       contacts: [],
       contracts: [],
+      tickets: [],
       ateraid: {},
       id: this.$route.query.customerID
     };
   },
   created() {
     axios.all([
-      this.fetchData("customer/" + this.id),
-      this.fetchData(`contacts/${this.id}`)
+      this.fetchData(`customer/${this.id}`),
+      this.fetchData(`customer/contacts/${this.id}`)
     ]).then(axios.spread((...responses) => {
       const customerData = responses[0].data
       this.customerInfo = customerData.customer
@@ -1413,13 +1458,19 @@ export default {
       const contactData = responses[1].data
       this.contacts = contactData.contacts
     }))
+    console.log(`customer/tickets/${this.$route.query.customerID}/1/10`)
+    this.fetchData(`customer/tickets/${this.$route.query.customerID}/1/10`).then(
+      response => {
+        this.tickets = response.data.tickets;
+      }
+    );
   },
   methods: {
     fetchData(endpoint) {
       return axios.get(process.env.VUE_APP_URL + endpoint);
     },
     loadContracts: function() {
-      this.fetchData('contracts/' + this.ateraid).then(response => {
+      this.fetchData('customer/contracts/' + this.ateraid).then(response => {
         this.contracts = response.data.contracts;
       });
     },
