@@ -386,10 +386,19 @@
                         :per-page="0"
                         :current-page="currentPage"
                       >
+                        <!--Template for storing the link to the ticket in the table column.-->
                         <template v-slot:cell(subject)="data">
                           <b-link
                             :to="{ path: '/ticket', query: {ticketID: data.item.ticket_id}}"
                           >{{ data.item.subject }}</b-link>
+                        </template>
+                        <!--Template for formatting the creation date-->
+                        <template v-slot:cell(created_date)="data">
+                          <p class="m-0 p-0">{{data.item.created_date | dayjsDateTime}}</p>
+                        </template>
+                        <!--Template for formatting the updated date-->
+                        <template v-slot:cell(modified_date)="data">
+                          <p class="m-0 p-0">{{data.item.modified_date | dayjsDateTime}}</p>
                         </template>
                       </b-table>
                       <b-pagination
@@ -1399,7 +1408,7 @@
 
 <script>
 import axios from 'axios'
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export default {
   data() {
@@ -1470,13 +1479,16 @@ export default {
         this.contracts = response.data.contracts;
       });
     },
-    moment: function() {
-      return moment();
+    dayjs: function() {
+      return dayjs();
     }
   },
   filters: {
-    moment: function (date) {
-      return moment(date).format('MMM Do YYYY');
+    dayjsDateOnly: function(date) {
+      return dayjs(date).format("MMM D, YYYY");
+    },
+    dayjsDateTime: function(date) {
+      return dayjs(date).format("MMM D, YYYY, h:mm:ss a");
     }
   }
 };

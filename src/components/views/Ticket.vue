@@ -271,10 +271,10 @@ export default {
   },
   filters: {
     dayjsDateOnly: function(date) {
-      return dayjs(date).format("MMM Do YYYY");
+      return dayjs(date).format("MMM D, YYYY");
     },
     dayjsDateTime: function(date) {
-      return dayjs(date).format("MMM Do YYYY, h:mm:ss a");
+      return dayjs(date).format("MMM D, YYYY, h:mm:ss a");
     }
   }
 };

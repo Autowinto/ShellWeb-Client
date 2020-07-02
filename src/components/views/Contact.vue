@@ -80,6 +80,13 @@
                             :to="{ path: '/ticket', query: {ticketID: data.item.ticket_id}}"
                           >{{ data.item.subject }}</b-link>
                         </template>
+                        <template v-slot:cell(created_date)="data">
+                          <p class="m-0 p-0">{{data.item.created_date | dayjsDateTime}}</p>
+                        </template>
+                        <!--Template for formatting the updated date-->
+                        <template v-slot:cell(modified_date)="data">
+                          <p class="m-0 p-0">{{data.item.modified_date | dayjsDateTime}}</p>
+                        </template>
                       </b-table>
                       <b-pagination
                         size="md"
@@ -100,6 +107,7 @@
 
 <script>
 import axios from "axios";
+import dayjs from 'dayjs';
 
 export default {
   data() {
@@ -147,6 +155,17 @@ export default {
   methods: {
     fetchData(endpoint) {
       return axios.get(process.env.VUE_APP_URL + endpoint);
+    },
+    dayjs: function() {
+      return dayjs();
+    }
+  },
+  filters: {
+    dayjsDateOnly: function(date) {
+      return dayjs(date).format("MMM D, YYYY");
+    },
+    dayjsDateTime: function(date) {
+      return dayjs(date).format("MMM D, YYYY, h:mm:ss a");
     }
   }
 };
