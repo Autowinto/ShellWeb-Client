@@ -240,26 +240,22 @@
                   <b-card-text>
                     <b-row v-if="contacts.length">
                       <div v-for="(contact, idx) in contacts" :key="idx" class="col-4">
-                        <b-link :to="{ path: '/contact/', query: {contactid: contact.contact_id}}">
-                          <div class="card btn mb-3 btn-light p-3" style="height: 140px;">
+                          <div class="card mb-3 p-3" style="height: 140px;">
                             <div class="row ml-3">
-                              <h5
-                                class="m-0 font-weight-bold"
-                              >{{contact.first_name}} {{contact.last_name}}</h5>
+                              <b-link class="font-weight-bold" style="color: black; font-size: 120%;" :to="{ path: '/contact/', query: {contactid: contact.contact_id}}">{{contact.first_name}} {{contact.last_name}}</b-link>
                             </div>
                             <div class="row ml-3" v-if="contact.job_title !== 'null'">
                               <h6 class="small">{{contact.job_title}}</h6>
                             </div>
                             <div v-if="contact.phone && contact.phone !== 'null'" class="row ml-3">
-                              <span class="fa fa-phone fa-fw mr-1"></span>
-                              <h6>{{contact.phone}}</h6>
+                              <span style="color: black;" class="fa fa-phone fa-fw mr-1"></span>
+                              <b-link :href="'tel:' + contact.phone">{{contact.phone}}</b-link>
                             </div>
                             <div v-if="contact.email && contact.email !== 'null'" class="row ml-3">
-                              <span class="fa fa-at fa-fw mr-1"></span>
-                              <h6>{{contact.email}}</h6>
+                              <span style="color: black;" class="fa fa-at fa-fw mr-1"></span>
+                              <b-link :href="'mailto:' + contact.email">{{contact.email}}</b-link>
                             </div>
                           </div>
-                        </b-link>
                       </div>
                     </b-row>
                     <b-row v-else align-h="center">
