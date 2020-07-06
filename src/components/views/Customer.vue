@@ -238,24 +238,28 @@
               <b-tabs card fill>
                 <b-tab title="Employees" active>
                   <b-card-text>
-                    <b-row v-if="contacts.length">
-                      <div v-for="(contact, idx) in contacts" :key="idx" class="col-4">
-                          <div class="card mb-3 p-3" style="height: 140px;">
-                            <div class="row ml-3">
-                              <b-link class="font-weight-bold" style="color: black; font-size: 120%;" :to="{ path: '/contact/', query: {contactid: contact.contact_id}}">{{contact.first_name}} {{contact.last_name}}</b-link>
-                            </div>
-                            <div class="row ml-3" v-if="contact.job_title !== 'null'">
-                              <h6 class="small">{{contact.job_title}}</h6>
-                            </div>
-                            <div v-if="contact.phone && contact.phone !== 'null'" class="row ml-3">
-                              <span style="color: black;" class="fa fa-phone fa-fw mr-1"></span>
-                              <b-link :href="'tel:' + contact.phone">{{contact.phone}}</b-link>
-                            </div>
-                            <div v-if="contact.email && contact.email !== 'null'" class="row ml-3">
-                              <span style="color: black;" class="fa fa-at fa-fw mr-1"></span>
-                              <b-link :href="'mailto:' + contact.email">{{contact.email}}</b-link>
-                            </div>
+                    <b-row v-if="items.contacts.length">
+                      <div v-for="(contact, idx) in items.contacts" :key="idx" class="col-4">
+                        <div class="card mb-3 p-3" style="height: 140px;">
+                          <div class="row ml-3">
+                            <b-link
+                              class="font-weight-bold"
+                              style="color: black; font-size: 120%;"
+                              :to="{ path: '/contact/', query: {contactid: contact.contact_id}}"
+                            >{{contact.first_name}} {{contact.last_name}}</b-link>
                           </div>
+                          <div class="row ml-3" v-if="contact.job_title !== 'null'">
+                            <h6 class="small">{{contact.job_title}}</h6>
+                          </div>
+                          <div v-if="contact.phone && contact.phone !== 'null'" class="row ml-3">
+                            <span style="color: black;" class="fa fa-phone fa-fw mr-1"></span>
+                            <b-link :href="'tel:' + contact.phone">{{contact.phone}}</b-link>
+                          </div>
+                          <div v-if="contact.email && contact.email !== 'null'" class="row ml-3">
+                            <span style="color: black;" class="fa fa-at fa-fw mr-1"></span>
+                            <b-link :href="'mailto:' + contact.email">{{contact.email}}</b-link>
+                          </div>
+                        </div>
                       </div>
                     </b-row>
                     <b-row v-else align-h="center">
@@ -263,19 +267,10 @@
                     </b-row>
                   </b-card-text>
                 </b-tab>
-                <b-tab title="Contracts" v-on:click="loadContracts">
+                <b-tab title="Contracts">
                   <b-card-text>
-                    <b-row v-if="contracts">
-                      <div class="container p-0 mr-0 mb-2">
-                        <div class="text-right">
-                          <button
-                            id="addContactButton"
-                            onclick="window.location.href = 'contractform.html';"
-                            class="btn btn-primary ml-3 btn-sm"
-                          >Create Contract</button>
-                        </div>
-                      </div>
-                      <div v-for="(contract, idx) in contracts" :key="idx" class="pl-4 col-6">
+                    <b-row v-if="items.contracts">
+                      <div v-for="(contract, idx) in items.contracts" :key="idx" class="pl-4 col-6">
                         <div class="card mb-3" style="color: black;">
                           <div class="container h-100 pl-0">
                             <div class="row">
@@ -289,53 +284,92 @@
                                   <h6 class>{{contract.ContractName}} - {{contract.ContractType}}</h6>
                                 </div>
                                 <div class="row ml-1">
-                                  <h5 class="font-weight-bold">{{contract.StartDate | moment}} - {{contract.EndDate | moment}}</h5>
+                                  <h5
+                                    class="font-weight-bold"
+                                  >{{contract.StartDate | moment}} - {{contract.EndDate | moment}}</h5>
                                 </div>
-                                  <div v-if="contract.RetainerFlatFeeContract !== null" class="row ml-1">
-                                    <h6 id="hourly-rate">{{contract.RetainerFlatFeeContract.Rate.Description}} - {{contract.RetainerFlatFeeContract.Amount}}{{customerInfo.currency}}</h6>
+                                <div
+                                  v-if="contract.RetainerFlatFeeContract !== null"
+                                  class="row ml-1"
+                                >
+                                  <h6
+                                    id="hourly-rate"
+                                  >{{contract.RetainerFlatFeeContract.Rate.Description}} - {{contract.RetainerFlatFeeContract.Amount}}{{customerInfo.currency}}</h6>
+                                </div>
+                                <div v-if="contract.HourlyContract !== null">
+                                  <div class="row ml-1">
+                                    <h6
+                                      id="hourly-rate"
+                                    >{{contract.HourlyContract.PrimaryRate.Description}} - {{contract.HourlyContract.PrimaryRate.Amount}}{{customerInfo.currency}}</h6>
                                   </div>
-                                  <div v-if="contract.HourlyContract !== null">
-                                    <div class="row ml-1">
-                                      <h6 id="hourly-rate">{{contract.HourlyContract.PrimaryRate.Description}} - {{contract.HourlyContract.PrimaryRate.Amount}}{{customerInfo.currency}}</h6>
-                                    </div>
-                                    <div v-for="(rate, idx) in contract.HourlyContract.AdditionalRates" :key="idx" class="row ml-1">
-                                      <h6 id="hourly-rate">{{rate.Description}} - {{rate.Amount}}{{customerInfo.currency}}</h6>
-                                    </div>                        
+                                  <div
+                                    v-for="(rate, idx) in contract.HourlyContract.AdditionalRates"
+                                    :key="idx"
+                                    class="row ml-1"
+                                  >
+                                    <h6
+                                      id="hourly-rate"
+                                    >{{rate.Description}} - {{rate.Amount}}{{customerInfo.currency}}</h6>
                                   </div>
-                                  <div v-if="contract.BlockMoneyContract !== null">
-                                    <div class="row ml-1">
-                                      <h6 id="hourly-rate">{{contract.BlockMoneyContract.ContractAmount.Description}} - {{contract.BlockMoneyContract.ContractAmount.Amount}}{{customerInfo.currency}}</h6>
-                                    </div>
-                                    <div class="row ml-1">
-                                      <h6 id="hourly-rate">{{contract.BlockMoneyContract.PrimaryRate.Description}} - {{contract.BlockMoneyContract.PrimaryRate.Amount}}{{customerInfo.currency}}</h6>
-                                    </div>
-                                    <div v-for="(rate, idx) in contract.BlockMoneyContract.AdditionalRates" :key="idx" class="row ml-1">
-                                      <h6 id="hourly-rate">{{rate.Description}} - {{rate.Amount}}{{customerInfo.currency}}</h6>
-                                    </div>                        
+                                </div>
+                                <div v-if="contract.BlockMoneyContract !== null">
+                                  <div class="row ml-1">
+                                    <h6
+                                      id="hourly-rate"
+                                    >{{contract.BlockMoneyContract.ContractAmount.Description}} - {{contract.BlockMoneyContract.ContractAmount.Amount}}{{customerInfo.currency}}</h6>
                                   </div>
-                                  <div v-if="contract.RemoteMonitoringContract !== null">
-                                    <div class="row ml-1">
-                                      <h6 id="hourly-rate">{{contract.RemoteMonitoringContract.RatePerDevice.Description}} - {{contract.RemoteMonitoringContract.RatePerDevice.Amount}}{{customerInfo.currency}}</h6>
-                                    </div>
+                                  <div class="row ml-1">
+                                    <h6
+                                      id="hourly-rate"
+                                    >{{contract.BlockMoneyContract.PrimaryRate.Description}} - {{contract.BlockMoneyContract.PrimaryRate.Amount}}{{customerInfo.currency}}</h6>
                                   </div>
-                                  <div v-if="contract.OnlineBackupContract !== null">
-                                    <div class="row ml-1">
-                                      <h6 id="hourly-rate">{{contract.OnlineBackupContract.RatePerGB.Description}} - {{contract.OnlineBackupContract.RatePerGB.Amount}}{{customerInfo.currency}}</h6>
-                                    </div>                     
+                                  <div
+                                    v-for="(rate, idx) in contract.BlockMoneyContract.AdditionalRates"
+                                    :key="idx"
+                                    class="row ml-1"
+                                  >
+                                    <h6
+                                      id="hourly-rate"
+                                    >{{rate.Description}} - {{rate.Amount}}{{customerInfo.currency}}</h6>
                                   </div>
-                                  <div v-if="contract.ProjectOneTimeFeeContract !== null">
-                                    <div class="row ml-1">
-                                      <h6 id="hourly-rate">{{contract.ProjectOneTimeFeeContract.TotalAmount.Description}} - {{contract.ProjectOneTimeFeeContract.TotalAmount.Amount}}{{customerInfo.currency}}</h6>
-                                    </div>              
+                                </div>
+                                <div v-if="contract.RemoteMonitoringContract !== null">
+                                  <div class="row ml-1">
+                                    <h6
+                                      id="hourly-rate"
+                                    >{{contract.RemoteMonitoringContract.RatePerDevice.Description}} - {{contract.RemoteMonitoringContract.RatePerDevice.Amount}}{{customerInfo.currency}}</h6>
                                   </div>
-                                  <div v-if="contract.ProjectHourlyRateContract !== null">
-                                    <div class="row ml-1">
-                                      <h6 id="hourly-rate">{{contract.ProjectHourlyRateContract.PrimaryRate.Description}} - {{contract.ProjectHourlyRateContract.PrimaryRate.Amount}}{{customerInfo.currency}}</h6>
-                                    </div>
-                                    <div v-for="(rate, idx) in contract.ProjectHourlyRateContract.AdditionalRates" :key="idx" class="row ml-1">
-                                      <h6 id="hourly-rate">{{rate.Description}} - {{rate.Amount}}{{customerInfo.currency}}</h6>
-                                    </div>                        
+                                </div>
+                                <div v-if="contract.OnlineBackupContract !== null">
+                                  <div class="row ml-1">
+                                    <h6
+                                      id="hourly-rate"
+                                    >{{contract.OnlineBackupContract.RatePerGB.Description}} - {{contract.OnlineBackupContract.RatePerGB.Amount}}{{customerInfo.currency}}</h6>
                                   </div>
+                                </div>
+                                <div v-if="contract.ProjectOneTimeFeeContract !== null">
+                                  <div class="row ml-1">
+                                    <h6
+                                      id="hourly-rate"
+                                    >{{contract.ProjectOneTimeFeeContract.TotalAmount.Description}} - {{contract.ProjectOneTimeFeeContract.TotalAmount.Amount}}{{customerInfo.currency}}</h6>
+                                  </div>
+                                </div>
+                                <div v-if="contract.ProjectHourlyRateContract !== null">
+                                  <div class="row ml-1">
+                                    <h6
+                                      id="hourly-rate"
+                                    >{{contract.ProjectHourlyRateContract.PrimaryRate.Description}} - {{contract.ProjectHourlyRateContract.PrimaryRate.Amount}}{{customerInfo.currency}}</h6>
+                                  </div>
+                                  <div
+                                    v-for="(rate, idx) in contract.ProjectHourlyRateContract.AdditionalRates"
+                                    :key="idx"
+                                    class="row ml-1"
+                                  >
+                                    <h6
+                                      id="hourly-rate"
+                                    >{{rate.Description}} - {{rate.Amount}}{{customerInfo.currency}}</h6>
+                                  </div>
+                                </div>
                                 <div class="row ml-1">
                                   <div class="container p-0">
                                     <div class="text-right">
@@ -356,9 +390,9 @@
                                       <button
                                         class="btn btn-primary btn-sm text-right"
                                         data-toggle="tooltip"
-                                        title="Delete Contract" 
+                                        title="Delete Contract"
                                       >
-                                        <i class="fa fa-trash"></i> 
+                                        <i class="fa fa-trash"></i>
                                       </button>
                                     </div>
                                   </div>
@@ -372,7 +406,25 @@
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Assets">
-                  <b-card-text>Tab contents 2</b-card-text>
+                  <b-card-text>
+                    <div>
+                      <b-table
+                        show-empty
+                        outlined
+                        hover
+                        :items="items.assets"
+                        :fields="fields.assets"
+                        :per-page="0"
+                        :current-page="currentPage"
+                      ></b-table>
+                      <b-pagination
+                        size="md"
+                        v-model="currentPage"
+                        :total-rows="totalItems"
+                        :per-page="perPage"
+                      ></b-pagination>
+                    </div>
+                  </b-card-text>
                 </b-tab>
                 <b-tab title="Tickets">
                   <b-card-text>
@@ -381,8 +433,8 @@
                         show-empty
                         outlined
                         hover
-                        :items="tickets"
-                        :fields="ticketFields"
+                        :items="items.tickets"
+                        :fields="fields.tickets"
                         :per-page="0"
                         :current-page="currentPage"
                       >
@@ -407,7 +459,7 @@
                         :total-rows="totalItems"
                         :per-page="perPage"
                       ></b-pagination>
-                  </div>
+                    </div>
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Passwords">
@@ -1394,90 +1446,139 @@
       </div>
     </div>
     <!--Modals below here-->
-    <b-modal id="deletionModal" size="md" button-size="sm" ok-variant="danger" ok-title="YES" cancel-title="No" header-bg-variant="danger" header-text-variant="white" centered title='Delete Customer?'>
+    <b-modal
+      id="deletionModal"
+      size="md"
+      button-size="sm"
+      ok-variant="danger"
+      ok-title="YES"
+      cancel-title="No"
+      header-bg-variant="danger"
+      header-text-variant="white"
+      centered
+      title="Delete Customer?"
+    >
       <h5>Are you sure you want to delete the customer {{customerInfo.name}}</h5>
     </b-modal>
-    <b-modal centered id="editCustomerModal">
-
-    </b-modal>
-    <b-modal centered id="manageDomainModal">
-
-    </b-modal>
+    <b-modal centered id="editCustomerModal"></b-modal>
+    <b-modal centered id="manageDomainModal"></b-modal>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import dayjs from 'dayjs'
+import axios from "axios";
+import dayjs from "dayjs";
 
 export default {
   data() {
     return {
-      ticketFields: [
-        {
-          key: "ticket_id",
-          label: "Ticket ID"
-        },
-        {
-          key: "subject",
-          label: "Subject"
-        },
-        {
-          key: "created_date",
-          label: "Date of Creation"
-        },
-        {
-          key: "modified_date",
-          label: "Last Updated"
-        },
-        {
-          key: "status",
-          label: "Status"
-        },
-        {
-          key: "reply_status",
-          label: "Reply Status"
-        },
-      ],
+      fields: {
+        assets: [
+          {
+            key: "AgentID",
+            label: "Asset ID"
+          },
+          {
+            key: "AgentName",
+            label: "Asset Name"
+          },
+          {
+            key: "Online",
+            label: "Status",
+          },
+          {
+            key: "",
+            label: "Alerts",
+          },
+          {
+            key: "",
+            label: "Actions",
+          },
+          {
+            key: "",
+            label: "Visibility",
+          },
+        ],
+        tickets: [
+          {
+            key: "ticket_id",
+            label: "Ticket ID"
+          },
+          {
+            key: "subject",
+            label: "Subject"
+          },
+          {
+            key: "created_date",
+            label: "Date of Creation"
+          },
+          {
+            key: "modified_date",
+            label: "Last Updated"
+          },
+          {
+            key: "status",
+            label: "Status"
+          },
+          {
+            key: "reply_status",
+            label: "Reply Status"
+          }
+        ]
+      },
+      items: {
+        tickets: [],
+        contacts: [],
+        contracts: [],
+        assets: [],
+      },
       customerInfo: {},
       paymentTerms: {},
       customerGroup: 0,
-      contacts: [],
-      contracts: [],
-      tickets: [],
-      ateraid: {},
+      ateraid: 0,
       id: this.$route.query.customerID
     };
   },
   created() {
-    axios.all([
-      this.fetchData(`customer/${this.id}`),
-      this.fetchData(`customer/contacts/${this.id}`)
-    ]).then(axios.spread((...responses) => {
-      const customerData = responses[0].data
-      this.customerInfo = customerData.customer
-      this.customerGroup = customerData.customerGroup
-      this.ateraid = customerData.apiInfo
-      this.paymentTerms = customerData.paymentTerms
+    //Here we call the 
+    axios
+      .all([
+        this.fetchData(`customer/${this.id}`),
+        this.fetchData(`customer/contacts/${this.id}`)
+      ])
+      .then(
+        axios.spread((...responses) => {
+          const customerData = responses[0].data;
+          this.customerInfo = customerData.customer;
+          this.customerGroup = customerData.customerGroup;
+          this.ateraid = customerData.apiInfo;
+          this.paymentTerms = customerData.paymentTerms;
 
-      const contactData = responses[1].data
-      this.contacts = contactData.contacts
-    }))
-    console.log(`customer/tickets/${this.$route.query.customerID}/1/10`)
-    this.fetchData(`customer/tickets/${this.$route.query.customerID}/1/10`).then(
-      response => {
-        this.tickets = response.data.tickets;
-      }
-    );
+          const contactData = responses[1].data;
+          this.items.contacts = contactData.contacts;
+        })
+      );
+    this.fetchData(`assets/${this.ateraid}/1/5`)
+        .then(response => {
+          console.log(response.data.assets.items)
+          this.items.assets = response.data.assets.items;
+      })
+    this.fetchData(
+      `customer/tickets/${this.$route.query.customerID}/1/10`
+    ).then(response => {
+      this.items.tickets = response.data.tickets;
+    });
+    this.fetchData(`customer/contracts/${this.id}`)
+      .then(response => {
+        this.items.contracts = response.data.contracts;
+        console.log(response.data.contracts)
+      });
   },
   methods: {
     fetchData(endpoint) {
       return axios.get(process.env.VUE_APP_URL + endpoint);
     },
     loadContracts: function() {
-      this.fetchData('customer/contracts/' + this.ateraid).then(response => {
-        this.contracts = response.data.contracts;
-      });
     },
     dayjs: function() {
       return dayjs();
