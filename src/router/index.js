@@ -15,7 +15,7 @@ import Administration from '../components/views/Administration.vue'
 
 Vue.use(Router)
 
-export default new Router({
+const router =  new Router({
   mode: 'history',
   routes: [
     {
@@ -118,3 +118,10 @@ export default new Router({
     },
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title + ' - IT-Confidence Shell' || 'Something Went Wrong'
+  next();
+})
+
+export default router

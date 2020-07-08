@@ -642,8 +642,12 @@
       </div>
     </div>
     <!--Modals below here-->
-    <b-modal scrollable centered id="cSelectModal" title="Select Customer">
-
+    <b-modal scrollable hide-footer centered id="cSelectModal" title="Select Customer">
+      <b-list-group>
+        <b-list-group-item button v-for="(customer, idx) in customers" :key="idx">
+          <h6>{{customer.CustomerName}}</h6>
+        </b-list-group-item>
+      </b-list-group>
     </b-modal>
   </div>
 </template>
@@ -654,16 +658,24 @@ export default {
   data() {
     return {
       customers: [],
-      invoice: {}
+      invoice: {},
+      selectedCustomer: 0,
     }
   },
   created() {
-    this.fetchData('')
+    this.fetchData('customers')
+    .then(response => {
+      console.log(response.data.customers)
+      this.customers = response.data.customers;
+    })
   },
   methods: {
     fetchData(endpoint) {
       return axios.get(process.env.VUE_APP_URL + endpoint);
     },
+    loadInvoices(customerid) {
+      this.fetchData(`invoices/booked/${customerid}/${1}/${2}`)
+    }
   }
 };
 </script>
