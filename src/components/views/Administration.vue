@@ -56,7 +56,34 @@
                   ></b-pagination>
                 </div>
               </b-tab>
-              <b-tab title="Time Entries"></b-tab>
+              <b-tab title="Time Entries">
+                <div>
+                  <b-table
+                    show-empty
+                    outlined
+                    hover
+                    :items="items.tickets"
+                    :fields="fields.tickets"
+                    :per-page="0"
+                    :current-page="pagination.tickets.currentPage"
+                  >
+                    <template v-slot:cell(TicketTitle)="data">
+                      <b-link
+                        :to="{ path: '/ticket', query: {ticketID: data.item.TicketID}}"
+                      >{{ data.item.TicketTitle }}</b-link>
+                    </template>
+                    <template v-slot:cell(totalTime)="data">
+                      {{data.item | timeEntryTotal}}
+                    </template>
+                  </b-table>
+                  <b-pagination
+                    size="md"
+                    v-model="pagination.tickets.currentPage"
+                    :total-rows="pagination.tickets.totalItems"
+                    :per-page="pagination.tickets.perPage"
+                  ></b-pagination>
+                </div>
+              </b-tab>
             </b-tabs>
           </b-card>
 
@@ -879,13 +906,22 @@
 
 <script>
 import axios from "axios";
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+
+//It's necessary to use the utc plugin to account for yearly changes from CET to CEST.
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(duration);
+dayjs.extend(utc);
 
 export default {
   data() {
     return {
       items: {
         products: [],
-        productGroups: []
+        productGroups: [],
+        tickets: [],
       },
       fields: {
         products: [
@@ -912,8 +948,8 @@ export default {
         ],
         productGroups: [
           {
-            key: "productNumber",
-            label: "Product Number"
+            key: "productGroupNumber",
+            label: "Product Group Number"
           },
           {
             key: "name",
@@ -931,7 +967,18 @@ export default {
             key: "",
             label: "Options"
           }
-        ]
+        ],
+        tickets: [
+          {
+            key: "TicketID",
+            label: "Ticket ID"
+          },
+          {
+            key: "TicketTitle",
+            label: "Ticket Name"
+          },
+          "totalTime"
+        ],
       },
       pagination: {
         products: {
@@ -943,18 +990,25 @@ export default {
           currentPage: 1,
           perPage: 10,
           totalItems: 0
-        }
+        },
+        tickets: {
+          currentPage: 1,
+          perPage: 10,
+          totalItems: 0
+        },
       }
     };
   },
   created() {
-    this.updateProducts();
+    this.loadProducts();
+    this.loadProductGroups();
+    this.loadTickets();
   },
   methods: {
     fetchData(endpoint) {
       return axios.get(process.env.VUE_APP_URL + endpoint);
     },
-    updateProducts() {
+    loadProducts() {
       this.fetchData(
         `products/${this.pagination.products.currentPage}/${this.pagination.products.perPage}`
       ).then(result => {
@@ -962,17 +1016,58 @@ export default {
           result.data.products.pagination.results;
         this.items.products = result.data.products.collection;
       });
-    }
+    },
+    loadProductGroups() {
+      this.fetchData(
+        `productGroups/${this.pagination.productGroups.currentPage}/${this.pagination.productGroups.perPage}`
+      ).then(result => {
+        this.pagination.productGroups.totalItems =
+          result.data.productGroups.pagination.results;
+        this.items.productGroups = result.data.productGroups.collection;
+      });
+    },
+    loadTickets() {
+      this.fetchData(
+        `tickets/${this.pagination.tickets.currentPage}/${this.pagination.tickets.perPage}`
+      ).then(result => {
+        this.pagination.tickets.totalItems =
+          result.data.tickets.totalItemCount;
+        this.items.tickets = result.data.tickets.items;
+      });
+    },
   },
   computed: {
     productsCurrentPage: function() {
       return this.pagination.products.currentPage;
-    }
+    },
+    productGroupsCurrentPage: function() {
+      return this.pagination.productGroups.currentPage;
+    },
+    ticketsCurrentPage: function() {
+      return this.pagination.tickets.currentPage;
+    },
   },
   watch: {
     productsCurrentPage() {
       console.log(this.pagination.products.currentPage);
-      this.updateProducts();
+      this.loadProducts();
+    },
+    productGroupsCurrentPage() {
+      console.log(this.pagination.productGroups.currentPage);
+      this.loadProductGroups();
+    },
+    ticketsCurrentPage() {
+      console.log(this.pagination.tickets.currentPage);
+      this.loadTickets();
+    },
+  },
+  filters: {
+    timeEntryTotal: function(value) {
+      //Taking the total minutes and total seconds from each ticket.
+      var time = dayjs.duration({minutes: value.TotalDurationMinutes, seconds: value.TotalDurationSeconds})
+      
+      //Returning the formatted time object as milliseconds formatted at HH:mm:ss in the table.
+      return dayjs.utc(time.asMilliseconds()).format('HH:mm:ss');
     }
   }
 };
