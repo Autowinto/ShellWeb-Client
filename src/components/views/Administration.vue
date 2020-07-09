@@ -1073,6 +1073,10 @@ export default {
 };
 
 //TODO: Add selection for how many products to show
+//TODO: Add a dropdown for the time entries where the user can get more detailed information about time spent on the ticket.
+//This is necessary due to limitations in the Atera API that you need to use a specific Ticket ID to get all of the specific time entries as opposed to just them
+//when you get each ticket. We can't be making an API call for every single ticket as they're loaded in, as that's both slow and would result in filling up the
+//calls per minute immediately, which would break site functionality for a full minute.
 </script>
 
 <style>
