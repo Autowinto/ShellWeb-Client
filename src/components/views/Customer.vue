@@ -286,7 +286,7 @@
                                 <div class="row ml-1">
                                   <h5
                                     class="font-weight-bold"
-                                  >{{contract.StartDate | moment}} - {{contract.EndDate | moment}}</h5>
+                                  >{{contract.StartDate | dayjsDateTime}} - {{contract.EndDate | dayjsDateTime}}</h5>
                                 </div>
                                 <div
                                   v-if="contract.RetainerFlatFeeContract !== null"
@@ -416,7 +416,22 @@
                         :fields="fields.assets"
                         :per-page="0"
                         :current-page="pagination.assets.currentPage"
-                      ></b-table>
+                      >
+                        <template v-slot:cell(AgentName)="data">
+                          <b-link
+                            :to="{ path: '/asset', query: {assetID: data.item.AgentID}}"
+                          >{{ data.item.AgentName }}</b-link>
+                        </template>
+                        <template v-slot:cell(Online)="data">
+                          <h5 class="m-0 p-0">
+                          <b-badge v-if="data.item.Online" variant="success">Online</b-badge>
+                          <b-badge v-else variant="danger">Offline</b-badge>
+                          </h5>
+                        </template>
+                        <template v-slot:cell(LastPatchManagementReceived)="data">
+                          {{data.item.LastPatchManagementReceived | dayjsDateTime}}
+                        </template>
+                      </b-table>
                       <b-pagination
                         size="md"
                         v-model="pagination.assets.currentPage"
@@ -452,6 +467,14 @@
                         <template v-slot:cell(modified_date)="data">
                           <p class="m-0 p-0">{{data.item.modified_date | dayjsDateTime}}</p>
                         </template>
+                          <template v-slot:cell(status)="data">
+                            <h5 class="m-0 p-0">
+                            <b-badge v-if="data.item.status == 'Open'" variant="success">{{data.item.status}}</b-badge>
+                            <b-badge v-else-if="data.item.status == 'Closed'" variant="danger">{{data.item.status}}</b-badge>
+                            <b-badge v-else-if="data.item.status == 'Merged'" variant="warning">{{data.item.status}}</b-badge>
+                            <b-badge v-else-if="data.item.status == 'Resolved'" variant="primary">{{data.item.status}}</b-badge>
+                            </h5>
+                        </template>
                       </b-table>
                       <b-pagination
                         size="md"
@@ -470,7 +493,7 @@
                 </b-tab>
                 <b-tab title="Invoices">
                   <b-card-text>
-                  <div>
+                    <div>
                       <b-table
                         show-empty
                         outlined
@@ -512,6 +535,9 @@
                 </b-tab>
                 <b-tab title="Backup">
                   <b-card-text>Tab contents 2</b-card-text>
+                </b-tab>
+                <b-tab title="Log">
+                  WIP
                 </b-tab>
               </b-tabs>
             </b-card>
@@ -558,20 +584,12 @@ export default {
           },
           {
             key: "Online",
-            label: "Status",
+            label: "Status"
           },
           {
-            key: "",
-            label: "Alerts",
-          },
-          {
-            key: "",
-            label: "Actions",
-          },
-          {
-            key: "",
-            label: "Visibility",
-          },
+            key: "LastPatchManagementReceived",
+            label: "Last Patched"
+          }
         ],
         tickets: [
           {
@@ -599,35 +617,35 @@ export default {
             label: "Reply Status"
           }
         ],
-      invoices: [
-        {
-          key: "",
-          label: ""
-        },
-      ]
+        invoices: [
+          {
+            key: "",
+            label: ""
+          }
+        ]
       },
       items: {
         tickets: [],
         contacts: [],
         contracts: [],
         assets: [],
-        invoices: [],
+        invoices: []
       },
       pagination: {
         assets: {
           perPage: 18,
           currentPage: 1,
-          totalItems: 0,
+          totalItems: 0
         },
         invoices: {
           perPage: 10,
           currentPage: 1,
-          totalItems: 0,
+          totalItems: 0
         },
         tickets: {
           perPage: 10,
           currentPage: 1,
-          totalItems: 0,
+          totalItems: 0
         }
       },
       customerInfo: {},
@@ -638,7 +656,6 @@ export default {
     };
   },
   created() {
-    //Here we call the 
     axios
       .all([
         this.fetchData(`customer/${this.id}`),
@@ -656,28 +673,27 @@ export default {
           this.items.contacts = contactData.contacts;
         })
       );
-    this.fetchData(`assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`)
-        .then(response => {
-          this.items.assets = response.data.assets.items;
-          this.pagination.assets.totalItems = response.data.assets.totalItemCount;
-      })
+    this.fetchData(
+      `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
+    ).then(response => {
+      this.items.assets = response.data.assets.items;
+      this.pagination.assets.totalItems = response.data.assets.totalItemCount;
+    });
     this.fetchData(
       `customer/tickets/${this.$route.query.customerID}/1/10`
     ).then(response => {
       this.items.tickets = response.data.tickets;
     });
-    this.fetchData(`customer/contracts/${this.id}`)
-      .then(response => {
-        this.items.contracts = response.data.contracts;
-        console.log(response.data.contracts)
-      });
+    this.fetchData(`customer/contracts/${this.id}`).then(response => {
+      this.items.contracts = response.data.contracts;
+      console.log(response.data.contracts);
+    });
   },
   methods: {
     fetchData(endpoint) {
       return axios.get(process.env.VUE_APP_URL + endpoint);
     },
-    loadContracts: function() {
-    },
+    loadContracts: function() {},
     dayjs: function() {
       return dayjs();
     }
@@ -700,12 +716,13 @@ export default {
   },
   watch: {
     assetsCurrentPage() {
-    this.fetchData(`assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`)
-        .then(response => {
-          this.items.assets = response.data.assets.items;
-          this.pagination.assets.totalItems = response.data.assets.totalItemCount;
-      })
-    } 
+      this.fetchData(
+        `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
+      ).then(response => {
+        this.items.assets = response.data.assets.items;
+        this.pagination.assets.totalItems = response.data.assets.totalItemCount;
+      });
+    }
   }
-}
+};
 </script>

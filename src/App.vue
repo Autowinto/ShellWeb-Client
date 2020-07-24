@@ -9,16 +9,11 @@
 import NavBar from "./components/NavBar.vue";
 
 export default {
-  // data() {
-  //   return {
-  //     isLoading: true
-  //   }
-  // },
   name: "App",
   components: {
     NavBar
   }
-};
+}
 </script>
 
 <style>

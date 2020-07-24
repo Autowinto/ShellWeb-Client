@@ -1,9 +1,10 @@
 <template>
   <body class="bg-gradient-primary" style="height: 100vh">
     <b-container style="height: 100%">
-        <b-row style="height: 100%" align-v="center" align-h="center">
-            <div class="col-md-9 col-lg-12 col-xl-10">
-                <div class="card shadow-lg o-hidden border-0 my-5">
+        <b-row style="height: 100%;" align-v="start" align-h="center">
+            <div class="col-md-9 col-lg-12 col-xl-10 my-4">
+                <img src="../../assets/img/logo/logo-white.png" style="width: 901px">
+                <!-- <div class="card shadow-lg o-hidden border-0 my-5">
                     <div class="card-body p-0">
                         <div class="row">
                             <div class="col-lg-6">
@@ -28,16 +29,22 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
+        <b-button variant="primary" style="width: 50%; height: 8%" v-on:click="login">Login via Microsoft</b-button>
         </b-row>
     </b-container>
 </body>
 </template>
 
 <script>
-export default {
 
+export default {
+    methods: {
+        login() {
+            
+        }
+    }
 }
 </script>
 

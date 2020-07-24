@@ -35,9 +35,6 @@
           <b-nav-item  to="/administration">
             <i class="fas fa-table"></i>Administration
           </b-nav-item>
-          <b-nav-item  to="/login">
-            <i class="fas fa-table"></i>Login
-          </b-nav-item>
         </b-nav>
         <div class="text-center d-none d-md-inline">
           <button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button>
@@ -274,7 +271,7 @@
                       <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Activity log
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" role="presentation" href="#">
+                    <a class="dropdown-item" role="button" v-on:click="signOut">
                       <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout
                     </a>
                   </div>
@@ -300,10 +297,20 @@
 </template>
 
 <script>
+import authHandler from '../authentication'
+
 export default {
-  name: "NavBar",
+  created() {
+
+  },
   mounted() {
     console.log("Mounted NavBar");
+  },
+  methods: {
+    signOut() {
+      console.log('Ooga')
+      authHandler.logout();
+    }
   }
 };
 </script>

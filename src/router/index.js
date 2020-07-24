@@ -12,6 +12,8 @@ import Ticket from '../components/views/Ticket.vue'
 import Invoices from '../components/views/Invoices.vue'
 import TimeOverview from '../components/views/TimeOverview.vue'
 import Administration from '../components/views/Administration.vue'
+import Asset from '../components/views/Asset.vue'
+// import auth from '../authentication'
 
 Vue.use(Router)
 
@@ -23,7 +25,8 @@ const router =  new Router({
       name: 'dashboard',
       component: Dashboard,
       meta: {
-        title: 'Dashboard'
+        title: 'Dashboard',
+        requireAuth: true
       }
     },
     {
@@ -31,7 +34,8 @@ const router =  new Router({
       name: 'customers',
       component: Customers,
       meta: {
-        title: 'Customers'
+        title: 'Customers',
+        requireAuth: true
       }
     },
     {
@@ -39,7 +43,8 @@ const router =  new Router({
       name: 'profile',
       component: Profile,
       meta: {
-        title: 'Profile'
+        title: 'Profile',
+        requireAuth: true
       }
     },
     {
@@ -47,7 +52,8 @@ const router =  new Router({
       name: 'customer',
       component: Customer,
       meta: {
-        title: 'Customer'
+        title: 'Customer',
+        requireAuth: true
       }
     },
     {
@@ -55,7 +61,8 @@ const router =  new Router({
       name: 'contact',
       component: Contact,
       meta: {
-        title: 'Contact'
+        title: 'Contact',
+        requireAuth: true
       }
     },
     {
@@ -63,7 +70,8 @@ const router =  new Router({
       name: 'tickets',
       component: Tickets,
       meta: {
-        title: 'Tickets'
+        title: 'Tickets',
+        requireAuth: true
       }
     },
     {
@@ -71,7 +79,8 @@ const router =  new Router({
       name: 'ticket',
       component: Ticket,
       meta: {
-        title: 'Ticket'
+        title: 'Ticket',
+        requireAuth: true
       }
     },
     {
@@ -79,7 +88,8 @@ const router =  new Router({
       name: 'invoices',
       component: Invoices,
       meta: {
-        title: 'Invoices'
+        title: 'Invoices',
+        requireAuth: true
       }
     },
     {
@@ -87,7 +97,8 @@ const router =  new Router({
       name: 'timeoverview',
       component: TimeOverview,
       meta: {
-        title: 'Time Overview'
+        title: 'Time Overview',
+        requireAuth: true
       }
     },
     {
@@ -95,7 +106,17 @@ const router =  new Router({
       name: 'administration',
       component: Administration,
       meta: {
-        title: 'Administration'
+        title: 'Administration',
+        requireAuth: true
+      }
+    },
+    {
+      path: '/asset',
+      name: 'asset',
+      component: Asset,
+      meta: {
+        title: 'Asset',
+        requireAuth: true
       }
     },
     {
@@ -104,7 +125,7 @@ const router =  new Router({
       component: Login,
       meta: {
         hideNavBar: true,
-        title: 'Login'
+        title: 'Login',
       }
     },
     {
@@ -119,7 +140,8 @@ const router =  new Router({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeResolve((to, from, next) => {
+
   document.title = to.meta.title + ' - IT-Confidence Shell' || 'Something Went Wrong'
   next();
 })
