@@ -46,14 +46,16 @@ function signIn() {
 
 export default {
   loadAuth() {
-    return new Promise(function(resolve) {
+    return new Promise(function(resolve, reject) {
       const currentAccounts = app.getAllAccounts();
       console.log(currentAccounts)
       if (currentAccounts === null) {
         //No accounts signed in currently
         signIn().then(() => {
           resolve();
-        });
+        }).catch(() => {
+          reject();
+        })
       } else if (currentAccounts.length > 1) {
         //More than one account signed in currently
         for (var account in currentAccounts) {
