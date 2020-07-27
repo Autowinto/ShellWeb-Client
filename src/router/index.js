@@ -13,7 +13,6 @@ import Invoices from '../components/views/Invoices.vue'
 import TimeOverview from '../components/views/TimeOverview.vue'
 import Administration from '../components/views/Administration.vue'
 import Asset from '../components/views/Asset.vue'
-// import auth from '../authentication'
 
 Vue.use(Router)
 

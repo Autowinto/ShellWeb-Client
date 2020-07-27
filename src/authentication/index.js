@@ -4,66 +4,79 @@ const msalConfig = {
   auth: {
     clientId: process.env.VUE_APP_CLIENT_ID,
     authority: `https://login.microsoftonline.com/${process.env.VUE_APP_TENANT_ID}`,
-    redirectUri: "http://localhost:8080/authsuccess"
+    redirectUri: "http://localhost:8080/",
   },
   cache: {
     cacheLocation: "sessionStorage",
-    storeAuthStateInCookie: false
+    storeAuthStateInCookie: false, // Set this to true in the case of issues with Internet Explorer.
   },
 };
 
 const app = new msal.PublicClientApplication(msalConfig);
 
-//var currentAccount = null TODO: IMPLEMENT THIS PROPERLY
+var username = "";
 
-const request = {
-  scopes: ["User.Read"]
+const loginRequest = {
+  scopes: ["User.Read"],
 };
 
-const tokenRequestSilent = {
-  scopes: ["User.Read"]
-};
+// const tokenRequest = {
+//   scopes: ["User.Read"],
+//   forceRefresh: false, // If true, the auth will skip the cached token and go straight to the Azure server for authentication.
+// };
+
+function handleResponse(response) {
+  //Create a fucntion to handle the response of the promise. This way, we can set the username and have the value persist without having it be a promise.
+  if (response !== null) {
+    username = response.account.username;
+    console.log(username);
+  }
+}
+
+function signIn() {
+  //Create a popup with an interface for login credentials. This should only run if the authentication check fails, but currently this is not the case.
+  console.log("Login in progress");
+  return app
+    .loginPopup(loginRequest)
+    .then(handleResponse) //Instead of handling the response in a .then statement, we handle it in a callback function.
+    .catch((err) => {
+      console.error(err);
+    });
+}
 
 export default {
-   initialize() { //Return a promise such as to delay creating the webpage until authentication is finished.
-    return new Promise((resolve) => {
-      this.isAuthenticated()
-        .then((res) =>{
-          console.log(res)
-          if (res === true) {
+  loadAuth() {
+    return new Promise(function(resolve) {
+      const currentAccounts = app.getAllAccounts();
+      console.log(currentAccounts)
+      if (currentAccounts === null) {
+        //No accounts signed in currently
+        signIn().then(() => {
+          resolve();
+        });
+      } else if (currentAccounts.length > 1) {
+        //More than one account signed in currently
+        for (var account in currentAccounts) {
+          if (currentAccounts[account].tenantId == process.env.VUE_APP_TENANT_ID) {
             resolve();
-          } else {
-            this.login();
-            //reject();
           }
-        })
-    })
-  },
-  login() { //Create a popup with an interface for login credentials. This should only run if the authentication check fails, but currently this is not the case.
-    console.log('Login in progress')
-    app.loginPopup(request).then(
-      (res) => {
-        console.log(res)
-      },
-      (error) => {
-        console.log("Login error " + error);
+        }
+        console.log(currentAccounts);
+        resolve();
+      } else if (currentAccounts.length === 1) {
+        //Exactly one account signed in.
+        username = currentAccounts[0].username;
+        console.log('One account logged in', currentAccounts);
+        if (currentAccounts[0].tenantId == process.env.VUE_APP_TENANT_ID) {
+          resolve();
+        }
       }
-    );
-  },
-  logout() { //Logout the user. TODO: Add a reference to the current account so that the user is logged out without prompting.
-    console.log(this.app);
-    app.logout({
     });
   },
-  isAuthenticated() { //Test authentication status by acquiring a token.
-    return app
-      .acquireTokenPopup(tokenRequestSilent) //Replace this by the acquireTokenSilent method to avoid unnecessary popups. This requires having an account object in the tokenRequestSilent object.
-      .then(() => {
-        return true;
-      })
-      .catch((err) => {
-        console.log(err);
-        return false;
-      });
+  signOut() {
+    //Logout the user. TODO: Add a reference to the current account so that the user is logged out without prompting.
+    app.logout({
+      account: app.getAccountByUsername(username),
+    });
   },
 };

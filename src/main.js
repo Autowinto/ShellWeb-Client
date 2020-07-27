@@ -10,7 +10,7 @@ import authentication from './authentication';
 Vue.config.productionTip = false
 
 Vue.use(BootstrapVue)
-authentication.initialize()
+authentication.loadAuth()
 .then(() => {
   //Initialize authentication before creating the app
   new Vue({

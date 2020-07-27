@@ -309,7 +309,7 @@ export default {
   methods: {
     signOut() {
       console.log('Ooga')
-      authHandler.logout();
+      authHandler.signOut();
     }
   }
 };
