@@ -297,7 +297,6 @@
 </template>
 
 <script>
-import authHandler from '../authentication'
 
 export default {
   created() {
@@ -308,8 +307,7 @@ export default {
   },
   methods: {
     signOut() {
-      console.log('Ooga')
-      authHandler.signOut();
+      this.$signOut();
     }
   }
 };

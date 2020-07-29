@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@azure/msal-browser@^2.0.0":
+"@azure/msal-browser@^2.0.0", "@azure/msal-browser@^2.0.0-beta.4":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@azure/msal-browser/-/msal-browser-2.0.0.tgz#09eb3ed2112bdcd11c751f1c0b9cec588b49b8c6"
   integrity sha512-0L4XksaXmtl870bQTPxbHCkxMEMmSbsgkkVpb6bvXg8ngOLWnkxvV6tstj84JtQHcJPjNYkYY41jgBQxgC4/KQ==
@@ -5040,6 +5040,11 @@ lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
 
+lodash@^4.17.19:
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
+
 log-symbols@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/log-symbols/-/log-symbols-2.2.0.tgz#5740e1c5d6f0dfda4ad9323b5332107ef6b4c40a"
@@ -8062,6 +8067,15 @@ vue-loader@^15.9.2:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
+vue-msal-2@^1.1.38:
+  version "1.1.38"
+  resolved "https://registry.yarnpkg.com/vue-msal-2/-/vue-msal-2-1.1.38.tgz#7027461e80f39825db7202608b0ea44290661d22"
+  integrity sha512-9TNuphuX5KBx06e0DpBSys4CZSo4vvfYaPqDe1iiQUbn/89ZufyVZKlH5FfAvbCgzCE54fpH3fTPIEiIP0c/Vw==
+  dependencies:
+    "@azure/msal-browser" "^2.0.0-beta.4"
+    axios "^0.19.2"
+    lodash "^4.17.19"
+
 vue-msal@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/vue-msal/-/vue-msal-3.2.0.tgz#9e0ce4e491386d11304ce2b0b1f02e2b3ad1a92f"
@@ -8102,10 +8116,10 @@ vue@^2.6.11:
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha512-VfPwgcGABbGAue9+sfrD4PuwFar7gPb1yl1UK1MwXoQPAw0BKSqWfoYCT/ThFrdEVWoI51dBuyCoiNU9bZDZxQ==
 
-vuex@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/vuex/-/vuex-3.4.0.tgz#20cc086062d750769fce1febb34e7fceeaebde45"
-  integrity sha512-ajtqwEW/QhnrBZQsZxCLHThZZaa+Db45c92Asf46ZDXu6uHXgbfVuBaJ4gzD2r4UX0oMJHstFwd2r2HM4l8umg==
+vuex@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/vuex/-/vuex-3.5.1.tgz#f1b8dcea649bc25254cf4f4358081dbf5da18b3d"
+  integrity sha512-w7oJzmHQs0FM9LXodfskhw9wgKBiaB+totOdb8sNzbTB2KDCEEwEs29NzBZFh/lmEK1t5tDmM1vtsO7ubG1DFw==
 
 watchpack-chokidar2@^2.0.0:
   version "2.0.0"
