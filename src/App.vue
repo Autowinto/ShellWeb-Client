@@ -10,10 +10,12 @@ import NavBar from "./components/NavBar.vue";
 
 export default {
   created() {
-    if (!this.$checkAuthenticationStatus() ) {
-      console.log(this.$checkAuthenticationStatus())
-      this.$signIn()
-    }
+    console.log('Created App')
+    this.$checkAuthenticationStatus().then(() => {
+      if (!this.$store.state.isAuthenticated) {
+        this.$signIn()
+      }
+    })
   },
   name: "App",
   components: {
