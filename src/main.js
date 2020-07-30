@@ -18,6 +18,21 @@ Vue.use(BootstrapVue)
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
+  state: {
+    isAuthenticated: false, //Default to false
+    user: {
+      name: 'Magnus Test',
+    }
+  },
+  mutations: {
+    setAuthenticationStatus(state, status) {
+      if (typeof(status) === 'boolean') {
+        state.isAuthenticated = status;
+      } else {
+        console.warn('setAuthenticationStatus mutation only allows for boolean values')
+      }
+    }
+  }
 })
 
 //Initialize authentication before creating the app

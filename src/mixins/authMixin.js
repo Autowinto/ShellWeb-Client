@@ -22,10 +22,13 @@ var username = "";
 
 const app = new msal.PublicClientApplication(msalConfig);
 
+//Check authentication and update the isAuthenticated value in the vuex store.
+
 export const authMixin =  {
   data() {
     return {
       msalClient: null,
+      authenticated: false
     }
   },
   methods: {
@@ -33,9 +36,12 @@ export const authMixin =  {
       this.msalClient = app;
     },
     $signIn() {
-      app.loginPopup(loginRequest);
+      app.loginPopup(loginRequest).then(() => {
+        this.$store.commit('setAuthenticationStatus', true)
+      })
     },
-    $isAuthenticated() {
+    $checkAuthenticationStatus() {
+      console.log(this.$store.state.user.name)
       const currentAccounts = app.getAllAccounts();
 
       if (currentAccounts === null) {
@@ -44,7 +50,7 @@ export const authMixin =  {
         //More than one account signed in currently
         for (var account in currentAccounts) {
           if (currentAccounts[account].tenantId == process.env.VUE_APP_TENANT_ID) {
-            return true;
+            this.$store.commit('setAuthenticationStatus', true)
           }
         }
         console.log(currentAccounts);
@@ -53,11 +59,11 @@ export const authMixin =  {
         username = currentAccounts[0].username;
         console.log('One account logged in', currentAccounts);
         if (currentAccounts[0].tenantId == process.env.VUE_APP_TENANT_ID) {
-          return true;
+          this.$store.commit('setAuthenticationStatus', true)
         }
       }
       console.log(username)
-      return false;
+      this.$store.commit('setAuthenticationStatus', false)
     },
     $signOut() {
       app.logout({

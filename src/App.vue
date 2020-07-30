@@ -1,6 +1,6 @@
 <template>
     <NavBar v-if="!$route.meta.hideNavBar">
-        <router-view v-if="this.$isAuthenticated()"></router-view>
+        <router-view v-if="this.$store.state.isAuthenticated" :key="this.$store.state.isAuthenticated"></router-view>
     </NavBar>
     <router-view v-else></router-view>
 </template>
@@ -10,8 +10,8 @@ import NavBar from "./components/NavBar.vue";
 
 export default {
   created() {
-    if (!this.$isAuthenticated()) {
-      this.$signIn();
+    if (!this.$store.state.isAuthenticated) {
+      this.$signIn()
     }
   },
   name: "App",
