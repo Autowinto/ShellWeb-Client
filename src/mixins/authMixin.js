@@ -36,8 +36,9 @@ export const authMixin =  {
       this.msalClient = app;
     },
     $signIn() {
+      console.log('test')
       app.loginPopup(loginRequest).then(() => {
-        this.$store.commit('setAuthenticationStatus', true)
+        this.$store.commit('setAuthenticationStatus', true) //Upon succesful sign-in set authentication status to true.
       })
     },
     $checkAuthenticationStatus() {
@@ -46,11 +47,13 @@ export const authMixin =  {
 
       if (currentAccounts === null) {
         //No accounts signed in currently
+        return false;
       } else if (currentAccounts.length > 1) {
         //More than one account signed in currently
         for (var account in currentAccounts) {
           if (currentAccounts[account].tenantId == process.env.VUE_APP_TENANT_ID) {
             this.$store.commit('setAuthenticationStatus', true)
+            return true;
           }
         }
         console.log(currentAccounts);
@@ -60,12 +63,14 @@ export const authMixin =  {
         console.log('One account logged in', currentAccounts);
         if (currentAccounts[0].tenantId == process.env.VUE_APP_TENANT_ID) {
           this.$store.commit('setAuthenticationStatus', true)
+          return true;
         }
       }
       console.log(username)
       this.$store.commit('setAuthenticationStatus', false)
     },
     $signOut() {
+      this.$store.commit('setAuthenticationStatus', false)
       app.logout({
         //TODO: Add the specific account here
       })

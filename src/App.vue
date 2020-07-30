@@ -10,7 +10,8 @@ import NavBar from "./components/NavBar.vue";
 
 export default {
   created() {
-    if (!this.$store.state.isAuthenticated) {
+    if (!this.$checkAuthenticationStatus() ) {
+      console.log(this.$checkAuthenticationStatus())
       this.$signIn()
     }
   },
@@ -19,6 +20,7 @@ export default {
     NavBar
   },
   watch: {
+    
   }
 }
 </script>
