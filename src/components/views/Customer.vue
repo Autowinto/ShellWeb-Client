@@ -486,7 +486,20 @@
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Passwords">
-                  <b-card-text>Attachments</b-card-text>
+                  <b-card-text>
+                    <div>
+                      <b-table
+                        show-empty
+                        outlined
+                        hover
+                        :items="items.passwords"
+                        :fields="fields.passwords"
+                        :per-page="0"
+                        :current-page="currentPage">
+
+                      </b-table>
+                    </div>
+                  </b-card-text>
                 </b-tab>
                 <b-tab title="Attachments">
                   <b-card-text></b-card-text>
@@ -622,6 +635,28 @@ export default {
             key: "",
             label: ""
           }
+        ],
+        passwords: [
+          {
+            key: "name",
+            label: 'Name'
+          },
+          {
+            key: "domain"
+          },
+          {
+            key: "url",
+            label: "URL"
+          },
+          {
+            key: "username"
+          },
+          {
+            key: "password"
+          },
+          {
+            key: "access_level"
+          }
         ]
       },
       items: {
@@ -629,7 +664,8 @@ export default {
         contacts: [],
         contracts: [],
         assets: [],
-        invoices: []
+        invoices: [],
+        passwords: [],
       },
       pagination: {
         assets: {
@@ -646,7 +682,12 @@ export default {
           perPage: 10,
           currentPage: 1,
           totalItems: 0
-        }
+        },
+        passwords: {
+          perPage: 10,
+          currentPage: 1,
+          totalItems: 0
+        },
       },
       customerInfo: {},
       paymentTerms: {},
@@ -656,6 +697,7 @@ export default {
     };
   },
   created() {
+    this.$getAccountID();
     axios
       .all([
         this.fetchData(`customer/${this.id}`),
@@ -688,6 +730,12 @@ export default {
       this.items.contracts = response.data.contracts;
       console.log(response.data.contracts);
     });
+    this.fetchData(`customer/passwords/${this.$getAccountID()}/${this.pagination.passwords.currentPage}/${this.pagination.passwords.perPage}`
+    ).then(response => {
+      this.items.passwords = response.data.passwords
+      this.pagination.passwords.totalItems = response.data.passwords.length;
+
+    })
   },
   methods: {
     fetchData(endpoint) {

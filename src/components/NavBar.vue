@@ -309,6 +309,8 @@ export default {
     signOut() {
       this.$signOut();
     }
+  },
+  watch: {
   }
 };
 </script>

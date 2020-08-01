@@ -1,4 +1,5 @@
 import * as msal from "@azure/msal-browser";
+import axios from 'axios';
 
 const msalConfig = {
   auth: {
@@ -8,7 +9,7 @@ const msalConfig = {
     navigateToLoginRequestUrl: true,
   },
   cache: {
-    cacheLocation: "localStorage",
+    cacheLocation: "sessionStorage",
     storeAuthStateInCookie: false, // Set this to true in the case of issues with Internet Explorer.
   },
 };
@@ -22,6 +23,15 @@ var username = "";
 const app = new msal.PublicClientApplication(msalConfig);
 
 //Check authentication and update the isAuthenticated value in the vuex store.
+
+function loginBackend() {
+  axios.post(process.env.VUE_APP_URL + 'login', {
+    accountID: app.getAccountByUsername(username).homeAccountId
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+}
 
 export const authMixin = {
   data() {
@@ -54,6 +64,7 @@ export const authMixin = {
             if (
               currentAccounts[account].tenantId == process.env.VUE_APP_TENANT_ID
             ) {
+              loginBackend();
               this.$store.commit("setAuthenticationStatus", true);
               resolve(true);
             }
@@ -64,12 +75,16 @@ export const authMixin = {
           username = currentAccounts[0].username;
           console.log("One account logged in", currentAccounts);
           if (currentAccounts[0].tenantId == process.env.VUE_APP_TENANT_ID) {
+            loginBackend();
             this.$store.commit("setAuthenticationStatus", true);
             resolve(true)
           }
         }
         console.log(username);
       });
+    },
+    $getAccountID() {
+      return app.getAccountByUsername(username).homeAccountId;
     },
     $signOut() {
       this.$store.commit("setAuthenticationStatus", false);
