@@ -25,8 +25,10 @@ const app = new msal.PublicClientApplication(msalConfig);
 //Check authentication and update the isAuthenticated value in the vuex store.
 
 function loginBackend() {
+  const accountInfo = app.getAccountByUsername(username);
   axios.post(process.env.VUE_APP_URL + 'login', {
-    accountID: app.getAccountByUsername(username).homeAccountId
+    accountID: accountInfo.homeAccountId,
+    email: accountInfo.username
   })
   .catch((err) => {
     console.log(err)
