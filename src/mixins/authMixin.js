@@ -9,7 +9,7 @@ const msalConfig = {
     navigateToLoginRequestUrl: true,
   },
   cache: {
-    cacheLocation: "sessionStorage",
+    cacheLocation: "localStorage",
     storeAuthStateInCookie: false, // Set this to true in the case of issues with Internet Explorer.
   },
 };
@@ -54,6 +54,7 @@ export const authMixin = {
     },
     $checkAuthenticationStatus() {
       const currentAccounts = app.getAllAccounts();
+      console.log(currentAccounts)
 
       return new Promise((resolve) => {
         if (currentAccounts === null) {
@@ -68,6 +69,7 @@ export const authMixin = {
             ) {
               loginBackend();
               this.$store.commit("setAuthenticationStatus", true);
+              this.$store.commit("setAccount", currentAccounts[account])
               resolve(true);
             }
           }

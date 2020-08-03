@@ -20,9 +20,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     isAuthenticated: false, //Default to false
-    user: {
-      name: 'Magnus Test',
-    }
+    account: null
   },
   mutations: {
     setAuthenticationStatus(state, status) {
@@ -31,6 +29,9 @@ const store = new Vuex.Store({
       } else {
         console.warn('setAuthenticationStatus mutation only allows for boolean values')
       }
+    },
+    setAccount(state, status) {
+      state.account = status;
     }
   }
 })

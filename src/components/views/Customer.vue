@@ -730,7 +730,7 @@ export default {
       this.items.contracts = response.data.contracts;
       console.log(response.data.contracts);
     });
-    this.fetchData(`customer/passwords/${this.$getAccountID()}/${this.pagination.passwords.currentPage}/${this.pagination.passwords.perPage}`
+    this.fetchData(`customer/passwords/${this.$getAccountID()}/${this.id}/${this.pagination.passwords.currentPage}/${this.pagination.passwords.perPage}`
     ).then(response => {
       this.items.passwords = response.data.passwords
       this.pagination.passwords.totalItems = response.data.passwords.length;
