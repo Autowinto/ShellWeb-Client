@@ -256,7 +256,7 @@
                       {{this.user.displayName}}
                     </span>
                     <span class="small text-gray-500" style="position:absolute; bottom: 10px" >
-                      {{this.role.roleName}}
+                      {{this.user.role}}
                     </span>
                     <!-- <img
                       class="border rounded-circle img-profile"
@@ -309,7 +309,7 @@ export default {
     return {
       user: {
         displayName: "Not Logged In", //displayName is just "Not Logged In" per default, so that displays when the user isn't logged in properly
-        role: null
+        role: ''
       },
     };
   },
@@ -327,7 +327,8 @@ export default {
     fetchRole(accountId) {
       axios.get(`${process.env.VUE_APP_URL}employee/role/${accountId}`)
         .then(response => {
-          this.role = response.data
+          console.log(response)
+          this.user.role = response.data.roleName;
         })
     },
     handleMSGraph(value) {
