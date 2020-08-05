@@ -12,7 +12,7 @@ export default {
   created() {
     this.$checkAuthenticationStatus()
       .then(() => {
-        console.log('SUCCESS')
+        console.log('Successfully checked authentication')
       })
       .catch(() => {
         this.$signIn();

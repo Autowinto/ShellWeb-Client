@@ -23,16 +23,16 @@
           <b-nav-item to="/customers">
             <i class="fas fa-table"></i>Customers
           </b-nav-item>
-          <b-nav-item  to="/tickets">
+          <b-nav-item to="/tickets">
             <i class="fas fa-table"></i>Tickets
           </b-nav-item>
-          <b-nav-item  to="/invoices">
+          <b-nav-item to="/invoices">
             <i class="fas fa-table"></i>Invoices
           </b-nav-item>
-          <b-nav-item  to="/timeoverview">
+          <b-nav-item to="/timeoverview">
             <i class="fas fa-table"></i>Time Overview
           </b-nav-item>
-          <b-nav-item  to="/administration">
+          <b-nav-item to="/administration">
             <i class="fas fa-table"></i>Administration
           </b-nav-item>
         </b-nav>
@@ -251,11 +251,13 @@
                     aria-expanded="false"
                     href="#"
                   >
-                    <span class="d-none d-lg-inline mr-2 text-gray-600 small">{{this.user.displayName}}</span>
+                    <span
+                      class="d-none d-lg-inline mr-2 text-gray-600 small"
+                    >{{this.user.displayName}}</span>
                     <!-- <img
                       class="border rounded-circle img-profile"
                       src="../assets/img/avatars/avatar1.jpeg?h=0ecc82101fb9a10ca459432faa8c0656"
-                    /> -->
+                    />-->
                   </a>
                   <div
                     class="dropdown-menu shadow dropdown-menu-right animated--grow-in"
@@ -270,7 +272,7 @@
                     <a class="dropdown-item" role="presentation" href="#">
                       <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Activity log
                     </a>
-                    <div class="dropdown-divider"></div> -->
+                    <div class="dropdown-divider"></div>-->
                     <a class="dropdown-item" role="button" v-on:click="signOut">
                       <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout
                     </a>
@@ -297,39 +299,42 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
       user: {
-        displayName: 'Not Logged In'
-      }
+        displayName: "Not Logged In", //displayName is just "Not Logged In" per default, so that displays when the user isn't logged in properly
+      },
+    };
+  },
+  created() {
+    if (this.$store.state.account) {
+      /*Since App.vue is initialized before NavBar.vue, it can't react to any changes.
+      Therefore, upon creation, we check if auth has already happened by looking for an account in the state storage and then calling the MSGraph logic in that case */
+      this.handleMSGraph(this.$store.state.account);
     }
   },
   methods: {
-    created() {
-      
-    },
     signOut() {
       this.$signOut();
-    }
+    },
+    handleMSGraph(value) {
+      if (value !== null) {
+        this.$getAccountGraph(value).then((response) => {
+          this.user.displayName = response.data.displayName;
+        });
+      }
+    },
   },
   computed: {
-     authStatus() {
-       return this.$store.state.account;
-     }
+    authStatus() {
+      return this.$store.state.account;
+    },
   },
   watch: {
-    authStatus(value) {
-      if (value !== null) {
-        console.log(value)
-        this.$getAccountGraph(value)
-        .then((response) => {
-          console.log(response)
-          this.user.displayName = response.data.displayName;
-        })
-      }
-    }
-  }
+    authStatus(accountValue) {
+      this.handleMSGraph(accountValue);
+    },
+  },
 };
 </script>

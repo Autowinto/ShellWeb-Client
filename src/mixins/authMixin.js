@@ -106,10 +106,11 @@ export const authMixin = {
         } else if (currentAccounts.length === 1) {
           //Exactly one account signed in.
           username = currentAccounts[0].username;
-          console.log("One account logged in", currentAccounts);
+          console.log("One account logged in");
           if (currentAccounts[0].tenantId == process.env.VUE_APP_TENANT_ID) {
             loginBackend();
             this.$store.commit("setAuthenticationStatus", true);
+            this.$store.commit("setAccount", currentAccounts[0]);
             resolve(true);
           }
         }
@@ -120,7 +121,6 @@ export const authMixin = {
     },
     $getAccountGraph(accountValue) {
       return getGraphToken(accountValue).then((response) => {
-        console.log(response.accessToken)
         const options = {
           headers: {
             'Authorization': `Bearer ${response.accessToken}`
