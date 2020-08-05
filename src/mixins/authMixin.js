@@ -73,7 +73,6 @@ export const authMixin = {
   },
   methods: {
     $signIn() {
-      console.log("test");
       app.loginPopup(loginRequest).then(() => {
         this.username = app.getAllAccounts()[0].username; //Upon succesful login, there should only ever be one account logged in.
         this.$store.commit(
@@ -120,13 +119,19 @@ export const authMixin = {
       return app.getAccountByUsername(username).homeAccountId;
     },
     $getAccountGraph(accountValue) {
-      getGraphToken(accountValue).then((response) => {
-        const headers = new Headers({ Authorization: `Bearer ${response.accessToken}`})
-        const options = {headers}
+      return getGraphToken(accountValue).then((response) => {
+        console.log(response.accessToken)
+        const options = {
+          headers: {
+            'Authorization': `Bearer ${response.accessToken}`
+          }}
 
-        axios.get(msalConfig.graphEndpoints.graphUserEndpoint, options)
+        return axios.get(msalConfig.graphEndpoints.graphUserEndpoint, options)
         .then((graphResponse) => {
-          console.log(graphResponse)
+          return graphResponse
+        })
+        .catch((error) => {
+          console.log(error)
         })
       });
     },

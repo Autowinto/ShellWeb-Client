@@ -251,11 +251,11 @@
                     aria-expanded="false"
                     href="#"
                   >
-                    <span class="d-none d-lg-inline mr-2 text-gray-600 small">Valerie Luna</span>
-                    <img
+                    <span class="d-none d-lg-inline mr-2 text-gray-600 small">{{this.user.displayName}}</span>
+                    <!-- <img
                       class="border rounded-circle img-profile"
                       src="../assets/img/avatars/avatar1.jpeg?h=0ecc82101fb9a10ca459432faa8c0656"
-                    />
+                    /> -->
                   </a>
                   <div
                     class="dropdown-menu shadow dropdown-menu-right animated--grow-in"
@@ -299,6 +299,13 @@
 <script>
 
 export default {
+  data() {
+    return {
+      user: {
+        displayName: 'Not Logged In'
+      }
+    }
+  },
   methods: {
     created() {
       
@@ -315,8 +322,12 @@ export default {
   watch: {
     authStatus(value) {
       if (value !== null) {
-        console.log(value + " Test")
+        console.log(value)
         this.$getAccountGraph(value)
+        .then((response) => {
+          console.log(response)
+          this.user.displayName = response.data.displayName;
+        })
       }
     }
   }
