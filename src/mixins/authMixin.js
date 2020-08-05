@@ -3,7 +3,7 @@ import axios from "axios";
 
 const msalConfig = {
   graphEndpoints: {
-    graphUserEndpoint: 'https://graph.microsoft.com/User.Read'
+    graphUserEndpoint: 'https://graph.microsoft.com/v1.0/me'
   },
   authConfig: {
     auth: {
@@ -87,7 +87,7 @@ export const authMixin = {
       const currentAccounts = app.getAllAccounts();
 
       return new Promise((resolve, reject) => {
-        if (currentAccounts === null) {
+        if (currentAccounts.length === 0) {
           console.log("No accounts signed in");
           this.$store.commit("setAuthenticationStatus", false);
           reject();
@@ -114,7 +114,6 @@ export const authMixin = {
             resolve(true);
           }
         }
-        console.log(username);
       });
     },
     $getAccountID() {
@@ -124,6 +123,7 @@ export const authMixin = {
       getGraphToken(accountValue).then((response) => {
         const headers = new Headers({ Authorization: `Bearer ${response.accessToken}`})
         const options = {headers}
+
         axios.get(msalConfig.graphEndpoints.graphUserEndpoint, options)
         .then((graphResponse) => {
           console.log(graphResponse)

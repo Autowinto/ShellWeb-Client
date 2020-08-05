@@ -10,7 +10,6 @@ import NavBar from "./components/NavBar.vue";
 
 export default {
   created() {
-    console.log('Created App')
     this.$checkAuthenticationStatus()
       .then(() => {
         console.log('SUCCESS')
