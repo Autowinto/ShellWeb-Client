@@ -29,12 +29,11 @@ const app = new msal.PublicClientApplication(msalConfig.authConfig);
 
 //Check authentication and update the isAuthenticated value in the vuex store.
 
-function loginBackend() {
-  const accountInfo = app.getAccountByUsername(username);
+function loginBackend(account) {
   axios
     .post(process.env.VUE_APP_URL + "login", {
-      accountID: accountInfo.homeAccountId,
-      email: accountInfo.username,
+      accountID: account.homeAccountId,
+      email: account.username,
     })
     .catch((err) => {
       console.log(err);
@@ -96,7 +95,7 @@ export const authMixin = {
             if (
               currentAccounts[account].tenantId == process.env.VUE_APP_TENANT_ID
             ) {
-              loginBackend();
+              loginBackend(currentAccounts[account]);
               this.$store.commit("setAuthenticationStatus", true);
               this.$store.commit("setAccount", currentAccounts[account]);
               resolve(true);
@@ -108,7 +107,7 @@ export const authMixin = {
           username = currentAccounts[0].username;
           console.log("One account logged in");
           if (currentAccounts[0].tenantId == process.env.VUE_APP_TENANT_ID) {
-            loginBackend();
+            loginBackend(currentAccounts[0]);
             this.$store.commit("setAuthenticationStatus", true);
             this.$store.commit("setAccount", currentAccounts[0]);
             resolve(true);

@@ -252,7 +252,7 @@
                     href="#"
                   >
                     <span
-                      class="d-none d-lg-inline mr-2 text-gray-600 small"
+                      class="d-none d-lg-inline mr-2 text-gray-600 small font-weight-bold"
                     >{{this.user.displayName}}</span>
                     <!-- <img
                       class="border rounded-circle img-profile"
