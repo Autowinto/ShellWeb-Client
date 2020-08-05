@@ -252,8 +252,12 @@
                     href="#"
                   >
                     <span
-                      class="d-none d-lg-inline mr-2 text-gray-600 small font-weight-bold"
-                    >{{this.user.displayName}}</span>
+                      class=" mr-2 text-gray-600 small font-weight-bold">
+                      {{this.user.displayName}}
+                    </span>
+                    <span class="small text-gray-500" style="position:absolute; bottom: 10px" >
+                      {{this.role.roleName}}
+                    </span>
                     <!-- <img
                       class="border rounded-circle img-profile"
                       src="../assets/img/avatars/avatar1.jpeg?h=0ecc82101fb9a10ca459432faa8c0656"
@@ -299,11 +303,13 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   data() {
     return {
       user: {
         displayName: "Not Logged In", //displayName is just "Not Logged In" per default, so that displays when the user isn't logged in properly
+        role: null
       },
     };
   },
@@ -318,8 +324,15 @@ export default {
     signOut() {
       this.$signOut();
     },
+    fetchRole(accountId) {
+      axios.get(`${process.env.VUE_APP_URL}employee/role/${accountId}`)
+        .then(response => {
+          this.role = response.data
+        })
+    },
     handleMSGraph(value) {
       if (value !== null) {
+        this.fetchRole(value.homeAccountId)
         this.$getAccountGraph(value).then((response) => {
           this.user.displayName = response.data.displayName;
         });
