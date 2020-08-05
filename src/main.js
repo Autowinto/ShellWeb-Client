@@ -7,19 +7,21 @@ import('../src/assets/fonts/fontawesome-all.min.css')
 import BootstrapVue from 'bootstrap-vue';
 import { authMixin } from './mixins/authMixin.js';
 import Vuex from 'vuex';
+import { graphMixin } from './mixins/graphMixin'
 
 Vue.config.productionTip = false
 
-Vue.mixin(authMixin)
-
+//Register global mixins
+Vue.mixin(authMixin, graphMixin);
 
 //Extra vue libraries registration
 Vue.use(BootstrapVue)
 Vue.use(Vuex);
 
+//Initialize global storage with mutation functions. This is used for components to react to authentication
 const store = new Vuex.Store({
   state: {
-    isAuthenticated: false, //Default to false
+    isAuthenticated: false, //This authentication status doesn't have anything to do with accessing sensitive data. All it does is tell the front-end to render the page. In any case where this fails, no data is leaked.
     account: null
   },
   mutations: {

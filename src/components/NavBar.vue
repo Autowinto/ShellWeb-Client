@@ -261,7 +261,7 @@
                     class="dropdown-menu shadow dropdown-menu-right animated--grow-in"
                     role="menu"
                   >
-                    <a class="dropdown-item" role="presentation" href="#">
+                    <!-- <a class="dropdown-item" role="presentation" href="#">
                       <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile
                     </a>
                     <a class="dropdown-item" role="presentation" href="#">
@@ -270,7 +270,7 @@
                     <a class="dropdown-item" role="presentation" href="#">
                       <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Activity log
                     </a>
-                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-divider"></div> -->
                     <a class="dropdown-item" role="button" v-on:click="signOut">
                       <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout
                     </a>
@@ -299,18 +299,26 @@
 <script>
 
 export default {
-  created() {
-
-  },
-  mounted() {
-    console.log("Mounted NavBar");
-  },
   methods: {
+    created() {
+      
+    },
     signOut() {
       this.$signOut();
     }
   },
+  computed: {
+     authStatus() {
+       return this.$store.state.account;
+     }
+  },
   watch: {
+    authStatus(value) {
+      if (value !== null) {
+        console.log(value + " Test")
+        this.$getAccountGraph(value)
+      }
+    }
   }
 };
 </script>

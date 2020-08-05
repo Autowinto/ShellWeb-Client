@@ -1,16 +1,21 @@
 import * as msal from "@azure/msal-browser";
-import axios from 'axios';
+import axios from "axios";
 
 const msalConfig = {
-  auth: {
-    clientId: process.env.VUE_APP_CLIENT_ID,
-    authority: `https://login.microsoftonline.com/${process.env.VUE_APP_TENANT_ID}`,
-    redirectUri: process.env.VUE_APP_BASE_URL,
-    navigateToLoginRequestUrl: true,
+  graphEndpoints: {
+    graphUserEndpoint: 'https://graph.microsoft.com/User.Read'
   },
-  cache: {
-    cacheLocation: "localStorage",
-    storeAuthStateInCookie: false, // Set this to true in the case of issues with Internet Explorer.
+  authConfig: {
+    auth: {
+      clientId: process.env.VUE_APP_CLIENT_ID,
+      authority: `https://login.microsoftonline.com/${process.env.VUE_APP_TENANT_ID}`,
+      redirectUri: process.env.VUE_APP_BASE_URL,
+      navigateToLoginRequestUrl: true,
+    },
+    cache: {
+      cacheLocation: "localStorage",
+      storeAuthStateInCookie: false, // Set this to true in the case of issues with Internet Explorer.
+    },
   },
 };
 
@@ -20,47 +25,72 @@ const loginRequest = {
 
 var username = "";
 
-const app = new msal.PublicClientApplication(msalConfig);
+const app = new msal.PublicClientApplication(msalConfig.authConfig);
 
 //Check authentication and update the isAuthenticated value in the vuex store.
 
 function loginBackend() {
   const accountInfo = app.getAccountByUsername(username);
-  axios.post(process.env.VUE_APP_URL + 'login', {
-    accountID: accountInfo.homeAccountId,
-    email: accountInfo.username
-  })
-  .catch((err) => {
-    console.log(err)
-  })
+  axios
+    .post(process.env.VUE_APP_URL + "login", {
+      accountID: accountInfo.homeAccountId,
+      email: accountInfo.username,
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+function getGraphToken(accountValue) {
+  loginRequest.account = accountValue;
+  return app
+    .acquireTokenSilent(loginRequest)
+    .then((accessToken) => {
+      return accessToken;
+    })
+    .catch((error) => {
+      console.log(
+        "Error in acquiring the access token silently. Acquiring via popup instead",
+        error
+      );
+
+      return app
+        .acquireTokenPopup(this.loginRequest)
+        .then((accessToken) => {
+          return accessToken;
+        })
+        .catch((error) => {
+          console.log("Error in acquiring the access token via popup.", error);
+        });
+    });
 }
 
 export const authMixin = {
   data() {
     return {
-      msalClient: null,
       authenticated: false,
     };
   },
   methods: {
-    created() {
-      this.msalClient = app;
-    },
     $signIn() {
       console.log("test");
       app.loginPopup(loginRequest).then(() => {
+        this.username = app.getAllAccounts()[0].username; //Upon succesful login, there should only ever be one account logged in.
+        this.$store.commit(
+          "setAccount",
+          app.getAccountByUsername(this.username)
+        );
         this.$store.commit("setAuthenticationStatus", true); //Upon succesful sign-in set authentication status to true.
       });
     },
     $checkAuthenticationStatus() {
       const currentAccounts = app.getAllAccounts();
-      console.log(currentAccounts)
 
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         if (currentAccounts === null) {
-          console.log('No accounts signed in')
-          this.$store.commit('setAuthenticationStatus', false)
-          resolve();
+          console.log("No accounts signed in");
+          this.$store.commit("setAuthenticationStatus", false);
+          reject();
         } else if (currentAccounts.length > 1) {
           //More than one account signed in currently
           for (var account in currentAccounts) {
@@ -69,7 +99,7 @@ export const authMixin = {
             ) {
               loginBackend();
               this.$store.commit("setAuthenticationStatus", true);
-              this.$store.commit("setAccount", currentAccounts[account])
+              this.$store.commit("setAccount", currentAccounts[account]);
               resolve(true);
             }
           }
@@ -81,7 +111,7 @@ export const authMixin = {
           if (currentAccounts[0].tenantId == process.env.VUE_APP_TENANT_ID) {
             loginBackend();
             this.$store.commit("setAuthenticationStatus", true);
-            resolve(true)
+            resolve(true);
           }
         }
         console.log(username);
@@ -89,6 +119,16 @@ export const authMixin = {
     },
     $getAccountID() {
       return app.getAccountByUsername(username).homeAccountId;
+    },
+    $getAccountGraph(accountValue) {
+      getGraphToken(accountValue).then((response) => {
+        const headers = new Headers({ Authorization: `Bearer ${response.accessToken}`})
+        const options = {headers}
+        axios.get(msalConfig.graphEndpoints.graphUserEndpoint, options)
+        .then((graphResponse) => {
+          console.log(graphResponse)
+        })
+      });
     },
     $signOut() {
       this.$store.commit("setAuthenticationStatus", false);
