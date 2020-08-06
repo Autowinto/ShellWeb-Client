@@ -478,9 +478,9 @@
                       </b-table>
                       <b-pagination
                         size="md"
-                        v-model="currentPage"
-                        :total-rows="totalItems"
-                        :per-page="perPage"
+                        v-model="pagination.tickets.currentPage"
+                        :total-rows="pagination.tickets.totalItems"
+                        :per-page="pagination.tickets.perPage"
                       ></b-pagination>
                     </div>
                   </b-card-text>
@@ -495,7 +495,7 @@
                         :items="items.passwords"
                         :fields="fields.passwords"
                         :per-page="0"
-                        :current-page="currentPage">
+                        :current-page="pagination.passwords.currentPage">
 
                       </b-table>
                     </div>
@@ -514,7 +514,7 @@
                         :items="items.invoices"
                         :fields="fields.invoices"
                         :per-page="0"
-                        :current-page="currentPage"
+                        :current-page="pagination.invoices.currentPage"
                       >
                         <!--Template for storing the link to the ticket in the table column.-->
                         <template v-slot:cell(subject)="data">
@@ -533,9 +533,9 @@
                       </b-table>
                       <b-pagination
                         size="md"
-                        v-model="currentPage"
-                        :total-rows="totalItems"
-                        :per-page="perPage"
+                        v-model="pagination.invoices.currentPage"
+                        :total-rows="pagination.invoices.totalItems"
+                        :per-page="pagination.invoices.perPage"
                       ></b-pagination>
                     </div>
                   </b-card-text>
