@@ -40,6 +40,8 @@
                   <h4 class="small">{{assetInfo.LastLoginUser}}</h4>
                 </b-col>
               </b-row>
+              <b-card class="mb-2" no-body></b-card>
+              <b-button style="width: 100%;" :href="assetInfo.AppViewUrl" variant="primary">Go to asset</b-button>
             </b-card-body>
           </b-card>
         </b-col>
