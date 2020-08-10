@@ -83,12 +83,7 @@ export const authMixin = {
         this.$store.commit("setAuthenticationStatus", true); //Upon succesful sign-in set authentication status to true.
       });
     },
-    $checkAuthenticationStatus(accountValue) {
-      loginRequest.account = accountValue;
-      console.log(`Account: ${accountValue}`)
-
-
-
+    $checkAuthenticationStatus() {
       const currentAccounts = app.getAllAccounts();
 
       return new Promise((resolve, reject) => {
@@ -102,7 +97,7 @@ export const authMixin = {
             if (
               currentAccounts[account].tenantId == process.env.VUE_APP_TENANT_ID
             ) {
-              this.getGraphToken(currentAccounts[account]) //Attempt getting a graph token to truly make sure that the user is authenticated.
+              getGraphToken(currentAccounts[account]) //Attempt getting a graph token to truly make sure that the user is authenticated.
                 .then(() => {
                   loginBackend(currentAccounts[account]);
                   this.$store.commit("setAuthenticationStatus", true);
@@ -121,8 +116,9 @@ export const authMixin = {
           username = currentAccounts[0].username;
           console.log("One account logged in");
           if (currentAccounts[0].tenantId == process.env.VUE_APP_TENANT_ID) {
-            this.getGraphToken(currentAccounts[0]) //Attempt getting a graph token to truly make sure that the user is authenticated.
-              .then(() => {
+            getGraphToken(currentAccounts[0]) //Attempt getting a graph token to truly make sure that the user is authenticated.
+              .then(accessToken => {
+                console.log(accessToken)
                 loginBackend(currentAccounts[0]);
                 this.$store.commit("setAuthenticationStatus", true);
                 this.$store.commit("setAccount", currentAccounts[0]);

@@ -15,7 +15,8 @@ export default {
       .then(() => {
         console.log('Successfully checked authentication')
       })
-      .catch(() => {
+      .catch(error => {
+        console.log(error)
         this.$signIn();
       })
   },
