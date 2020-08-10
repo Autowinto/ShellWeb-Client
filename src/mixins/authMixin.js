@@ -72,16 +72,23 @@ export const authMixin = {
   },
   methods: {
     $signIn() {
+      console.log('Signing in')
       app.loginPopup(loginRequest).then(() => {
-        this.username = app.getAllAccounts()[0].username; //Upon succesful login, there should only ever be one account logged in.
+        const account = app.getAllAccounts()[0];
+        this.username = account.username; //Upon succesful login, there should only ever be one account logged in.
         this.$store.commit(
           "setAccount",
-          app.getAccountByUsername(this.username)
+          account
         );
         this.$store.commit("setAuthenticationStatus", true); //Upon succesful sign-in set authentication status to true.
       });
     },
-    $checkAuthenticationStatus() {
+    $checkAuthenticationStatus(accountValue) {
+      loginRequest.account = accountValue;
+      console.log(`Account: ${accountValue}`)
+
+
+
       const currentAccounts = app.getAllAccounts();
 
       return new Promise((resolve, reject) => {
@@ -95,10 +102,17 @@ export const authMixin = {
             if (
               currentAccounts[account].tenantId == process.env.VUE_APP_TENANT_ID
             ) {
-              loginBackend(currentAccounts[account]);
-              this.$store.commit("setAuthenticationStatus", true);
-              this.$store.commit("setAccount", currentAccounts[account]);
-              resolve(true);
+              this.getGraphToken(currentAccounts[account]) //Attempt getting a graph token to truly make sure that the user is authenticated.
+                .then(() => {
+                  loginBackend(currentAccounts[account]);
+                  this.$store.commit("setAuthenticationStatus", true);
+                  this.$store.commit("setAccount", currentAccounts[account]);
+                  resolve(true);
+                })
+                .catch(() => {
+                  console.log('Failed Authenticaton')
+                  reject();
+                })
             }
           }
           console.log(currentAccounts);
@@ -107,10 +121,17 @@ export const authMixin = {
           username = currentAccounts[0].username;
           console.log("One account logged in");
           if (currentAccounts[0].tenantId == process.env.VUE_APP_TENANT_ID) {
-            loginBackend(currentAccounts[0]);
-            this.$store.commit("setAuthenticationStatus", true);
-            this.$store.commit("setAccount", currentAccounts[0]);
-            resolve(true);
+            this.getGraphToken(currentAccounts[0]) //Attempt getting a graph token to truly make sure that the user is authenticated.
+              .then(() => {
+                loginBackend(currentAccounts[0]);
+                this.$store.commit("setAuthenticationStatus", true);
+                this.$store.commit("setAccount", currentAccounts[0]);
+                resolve(true);
+              })
+              .catch(() => {
+                console.log('Failed Authenticaton')
+                reject();
+              })
           }
         }
       });
