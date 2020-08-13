@@ -11,7 +11,7 @@
             <h6>Total: {{disk.Total}}MB</h6>
             <b-progress v-if="disk.Used / disk.Total * 100 < 50" variant="success" height="30px" show-progress :value="disk.Used / disk.Total * 100"></b-progress>
             <b-progress v-else-if="disk.Used / disk.Total * 100 >= 50" variant="warning" height="30px" show-progress :value="disk.Used / disk.Total * 100"></b-progress>
-            <b-progress v-else-if="20 >= 75" variant="danger" height="30px" show-progress :value="disk.Used / disk.Total * 100"></b-progress>
+            <b-progress v-else-if="disk.Used / disk.Total * 100 >= 75" variant="danger" height="30px" show-progress :value="disk.Used / disk.Total * 100"></b-progress>
           </b-card>
         </b-col>
       </b-row>

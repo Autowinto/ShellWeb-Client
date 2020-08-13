@@ -1064,7 +1064,7 @@ export default {
   filters: {
     timeEntryTotal: function(value) {
       //Taking the total minutes and total seconds from each ticket.
-      var time = dayjs.duration({minutes: value.TotalDurationMinutes, seconds: value.TotalDurationSeconds})
+      var time = dayjs.duration({seconds: value.TotalDurationSeconds})
       
       //Returning the formatted time object as milliseconds formatted at HH:mm:ss in the table.
       return dayjs.utc(time.asMilliseconds()).format('HH:mm:ss');
