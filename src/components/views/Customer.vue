@@ -424,13 +424,13 @@
                         </template>
                         <template v-slot:cell(Online)="data">
                           <h5 class="m-0 p-0">
-                          <b-badge v-if="data.item.Online" variant="success">Online</b-badge>
-                          <b-badge v-else variant="danger">Offline</b-badge>
+                            <b-badge v-if="data.item.Online" variant="success">Online</b-badge>
+                            <b-badge v-else variant="danger">Offline</b-badge>
                           </h5>
                         </template>
-                        <template v-slot:cell(LastPatchManagementReceived)="data">
-                          {{data.item.LastPatchManagementReceived | dayjsDateTime}}
-                        </template>
+                        <template
+                          v-slot:cell(LastPatchManagementReceived)="data"
+                        >{{data.item.LastPatchManagementReceived | dayjsDateTime}}</template>
                       </b-table>
                       <b-pagination
                         size="md"
@@ -467,13 +467,25 @@
                         <template v-slot:cell(modified_date)="data">
                           <p class="m-0 p-0">{{data.item.modified_date | dayjsDateTime}}</p>
                         </template>
-                          <template v-slot:cell(status)="data">
-                            <h5 class="m-0 p-0">
-                            <b-badge v-if="data.item.status == 'Open'" variant="success">{{data.item.status}}</b-badge>
-                            <b-badge v-else-if="data.item.status == 'Closed'" variant="danger">{{data.item.status}}</b-badge>
-                            <b-badge v-else-if="data.item.status == 'Merged'" variant="warning">{{data.item.status}}</b-badge>
-                            <b-badge v-else-if="data.item.status == 'Resolved'" variant="primary">{{data.item.status}}</b-badge>
-                            </h5>
+                        <template v-slot:cell(status)="data">
+                          <h5 class="m-0 p-0">
+                            <b-badge
+                              v-if="data.item.status == 'Open'"
+                              variant="success"
+                            >{{data.item.status}}</b-badge>
+                            <b-badge
+                              v-else-if="data.item.status == 'Closed'"
+                              variant="danger"
+                            >{{data.item.status}}</b-badge>
+                            <b-badge
+                              v-else-if="data.item.status == 'Merged'"
+                              variant="warning"
+                            >{{data.item.status}}</b-badge>
+                            <b-badge
+                              v-else-if="data.item.status == 'Resolved'"
+                              variant="primary"
+                            >{{data.item.status}}</b-badge>
+                          </h5>
                         </template>
                       </b-table>
                       <b-pagination
@@ -495,9 +507,8 @@
                         :items="items.passwords"
                         :fields="fields.passwords"
                         :per-page="0"
-                        :current-page="pagination.passwords.currentPage">
-
-                      </b-table>
+                        :current-page="pagination.passwords.currentPage"
+                      ></b-table>
                     </div>
                   </b-card-text>
                 </b-tab>
@@ -522,14 +533,12 @@
                         :options="pagination.invoices.filterOptions.options"
                       > 
 
-                      </b-form-checkbox-group> -->
-                      <b-select
-                        v-model="pagination.invoices.filterOptions.selected"
-                        :options="pagination.invoices.filterOptions.options"
-                        @change="loadInvoices"
-                      >
-
-                      </b-select>
+                        </b-form-checkbox-group>-->
+                        <b-select
+                          v-model="pagination.invoices.filterOptions.selected"
+                          :options="pagination.invoices.filterOptions.options"
+                          @change="loadInvoices"
+                        ></b-select>
                       </b-card>
 
                       <b-table
@@ -542,22 +551,32 @@
                         :current-page="pagination.invoices.currentPage"
                       >
                         <template v-slot:cell(paymentTerms)="data">
-                            <h5 class="m-0 p-0">
-                            <b-badge v-if="invoiceOverdue(data.item.dueDate) == 'overdue'" variant="danger">Overdue</b-badge>
+                          <h5 class="m-0 p-0">
+                            <b-badge
+                              v-if="invoiceOverdue(data.item.dueDate) == 'overdue'"
+                              variant="danger"
+                            >Overdue</b-badge>
                             <b-badge v-else variant="success">Not Due</b-badge>
-                            </h5>
+                          </h5>
                         </template>
-                        <template v-slot:cell(netAmount)="data">
-                          {{data.item.netAmount}} {{data.item.currency}}
-                        </template>
+                        <template
+                          v-slot:cell(netAmount)="data"
+                        >{{data.item.netAmount}} {{data.item.currency}}</template>
                         <template v-slot:cell(remainder)="data">
-                            <h5 class="m-0 p-0">
-                            <b-badge v-if="invoicePaid(data.item.remainder) == 'unpaid'" variant="danger">Unpaid</b-badge>
+                          <h5 class="m-0 p-0">
+                            <b-badge
+                              v-if="invoicePaid(data.item.remainder) == 'unpaid'"
+                              variant="danger"
+                            >Unpaid</b-badge>
                             <b-badge v-else variant="success">Paid</b-badge>
-                            </h5>
+                          </h5>
                         </template>
                         <template v-slot:cell(pdf)="data">
-                          <b-button variant="primary" class="fas fa-download" @click="downloadInvoice(data.item.pdf.download)"></b-button>
+                          <b-button
+                            variant="primary"
+                            class="fas fa-download"
+                            @click="downloadInvoice(data.item.pdf.download)"
+                          ></b-button>
                         </template>
                       </b-table>
                       <b-pagination
@@ -578,9 +597,7 @@
                 <b-tab title="Backup">
                   <b-card-text>Tab contents 2</b-card-text>
                 </b-tab>
-                <b-tab title="Log">
-                  WIP
-                </b-tab>
+                <b-tab title="Log">WIP</b-tab>
               </b-tabs>
             </b-card>
           </div>
@@ -619,98 +636,98 @@ export default {
         assets: [
           {
             key: "AgentID",
-            label: "Asset ID"
+            label: "Asset ID",
           },
           {
             key: "AgentName",
-            label: "Asset Name"
+            label: "Asset Name",
           },
           {
             key: "Online",
-            label: "Status"
+            label: "Status",
           },
           {
             key: "LastPatchManagementReceived",
-            label: "Last Patched"
-          }
+            label: "Last Patched",
+          },
         ],
         tickets: [
           {
             key: "ticket_id",
-            label: "Ticket ID"
+            label: "Ticket ID",
           },
           {
             key: "subject",
-            label: "Subject"
+            label: "Subject",
           },
           {
             key: "created_date",
-            label: "Date of Creation"
+            label: "Date of Creation",
           },
           {
             key: "modified_date",
-            label: "Last Updated"
+            label: "Last Updated",
           },
           {
             key: "status",
-            label: "Status"
+            label: "Status",
           },
           {
             key: "reply_status",
-            label: "Reply Status"
-          }
+            label: "Reply Status",
+          },
         ],
         invoices: [
           {
             key: "bookedInvoiceNumber", //Fix this so it fits all invoices and not just the booked ones
-            label: "Invoice Number"
+            label: "Invoice Number",
           },
           {
             key: "date",
-            label: "Date Created"
+            label: "Date Created",
           },
           {
             key: "dueDate",
-            label: "Due On"
+            label: "Due On",
           },
           {
             key: "paymentTerms",
-            label: "Status"
+            label: "Status",
           },
           {
             key: "netAmount",
           },
           {
             key: "remainder",
-            label: "Payment Status"
+            label: "Payment Status",
           },
           {
-            key:"pdf",
-            label:""
+            key: "pdf",
+            label: "",
           },
         ],
         passwords: [
           {
             key: "name",
-            label: 'Name'
+            label: "Name",
           },
           {
-            key: "domain"
+            key: "domain",
           },
           {
             key: "url",
-            label: "URL"
+            label: "URL",
           },
           {
-            key: "username"
+            key: "username",
           },
           {
-            key: "password"
+            key: "password",
           },
           {
-            key: "access_level"
-          }
-        ]
+            key: "access_level",
+          },
+        ],
       },
       items: {
         tickets: [],
@@ -724,7 +741,7 @@ export default {
         assets: {
           perPage: 18,
           currentPage: 1,
-          totalItems: 0
+          totalItems: 0,
         },
         invoices: {
           perPage: 10,
@@ -732,35 +749,34 @@ export default {
           totalItems: 0,
           filterOptions: {
             options: [
-              { text: 'Booked', value: 'booked'},
-              { text: 'Drafts', value: 'drafts'},
+              { text: "Booked", value: "booked" },
+              { text: "Drafts", value: "drafts" },
               // { text: 'Unpaid', value: 'unpaid'},
               // { text: 'Paid', value: 'paid'},
               // { text: 'Overdue', value: 'overdue'},
               // { text: 'Not Due', value: 'not-due'},
             ],
             allSelected: true,
-            selected: 'booked',
+            selected: "booked",
             indeterminate: false,
-
-          }
+          },
         },
         tickets: {
           perPage: 10,
           currentPage: 1,
-          totalItems: 0
+          totalItems: 0,
         },
         passwords: {
           perPage: 10,
           currentPage: 1,
-          totalItems: 0
+          totalItems: 0,
         },
       },
       customerInfo: {},
       paymentTerms: {},
       customerGroup: 0,
       ateraid: 0,
-      id: this.$route.query.customerID
+      id: this.$route.query.customerID,
     };
   },
   created() {
@@ -771,7 +787,7 @@ export default {
     axios
       .all([
         this.fetchData(`customer/${this.id}`),
-        this.fetchData(`customer/contacts/${this.id}`)
+        this.fetchData(`customer/contacts/${this.id}`),
       ])
       .then(
         axios.spread((...responses) => {
@@ -787,23 +803,26 @@ export default {
       );
     this.fetchData(
       `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
-    ).then(response => {
+    ).then((response) => {
       this.items.assets = response.data.assets.items;
       this.pagination.assets.totalItems = response.data.assets.totalItemCount;
     });
     this.fetchData(
       `customer/tickets/${this.$route.query.customerID}/1/10`
-    ).then(response => {
+    ).then((response) => {
       this.items.tickets = response.data.tickets;
     });
-    this.fetchData(`customer/contracts/${this.id}`).then(response => {
+    this.fetchData(`customer/contracts/${this.id}`).then((response) => {
       this.items.contracts = response.data.contracts;
     });
-    this.fetchData(`customer/passwords/${this.$getAccountID()}/${this.id}/${this.pagination.passwords.currentPage}/${this.pagination.passwords.perPage}`
-    ).then(response => {
-      this.items.passwords = response.data.passwords
+    this.fetchData(
+      `customer/passwords/${this.$getAccountID()}/${this.id}/${
+        this.pagination.passwords.currentPage
+      }/${this.pagination.passwords.perPage}`
+    ).then((response) => {
+      this.items.passwords = response.data.passwords;
       this.pagination.passwords.totalItems = response.data.passwords.length;
-    })
+    });
 
     this.loadInvoices();
 
@@ -820,61 +839,64 @@ export default {
     fetchData(endpoint) {
       return axios.get(process.env.VUE_APP_URL + endpoint);
     },
-    loadContracts: function() {},
-    dayjs: function() {
+    loadContracts: function () {},
+    dayjs: function () {
       return dayjs();
     },
     loadInvoices() {
-      axios.get(`${process.env.VUE_APP_URL}invoices/${this.id}/1/10`, {
-      params: {
-        type: this.pagination.invoices.filterOptions.selected
-      }
-    })
-    .then(response => {
-      console.log(response.data.collection)
-      this.items.invoices = response.data.collection;
-      this.pagination.invoices.totalItems = response.data.collection.length;
-      // this.fields.invoices[0].key = `${this.pagination.invoices.filterOptions.selected}InvoiceNumber`
-    })
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/${this.id}/1/10`, {
+          params: {
+            type: this.pagination.invoices.filterOptions.selected,
+          },
+        })
+        .then((response) => {
+          console.log(response.data.collection);
+          this.items.invoices = response.data.collection;
+          this.pagination.invoices.totalItems = response.data.collection.length;
+          // this.fields.invoices[0].key = `${this.pagination.invoices.filterOptions.selected}InvoiceNumber`
+        });
     },
     downloadInvoice(link) {
-      axios.get(`${process.env.VUE_APP_URL}invoices/pdf`, {
-        responseType: 'blob',
-        params: {
-          link: link
-        }
-      })
-      .then(response => {
-        console.log(response.data)
-        fileDownload(response.data, 'invoice.pdf')
-      })
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/pdf`, {
+          responseType: "blob",
+          params: {
+            link: link,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          fileDownload(response.data, "invoice.pdf");
+        });
     },
     invoiceOverdue(date) {
       const today = new Date();
       const dueDate = dayjs(date);
 
       if (dueDate.isBefore(today)) {
-        return 'overdue';
+        return "overdue";
       } else {
-        return 'notDue';
+        return "notDue";
       }
     },
     invoicePaid(remainder) {
       if (remainder === 0) {
-        return 'paid';
+        return "paid";
       } else {
-        return 'unpaid'
+        return "unpaid";
       }
-    }
+    },
     // toggleAll(checked) {
     //   this.pagination.invoices.filterOptions.selected = checked ? this.pagination.invoices.filterOptions.optionsValues.slice() : []
     // }
   },
-  filters: { //These need to be made global filters at some point.
-    dayjsDateOnly: function(date) {
+  filters: {
+    //These need to be made global filters at some point.
+    dayjsDateOnly: function (date) {
       return dayjs(date).format("MMM D, YYYY");
     },
-    dayjsDateTime: function(date) {
+    dayjsDateTime: function (date) {
       return dayjs(date).format("MMM D, YYYY, h:mm:ss a");
     },
   },
@@ -884,17 +906,17 @@ export default {
     },
     ticketsCurrentPage() {
       return this.pagination.tickets.currentPage;
-    }
+    },
   },
   watch: {
     assetsCurrentPage() {
       this.fetchData(
         `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
-      ).then(response => {
+      ).then((response) => {
         this.items.assets = response.data.assets.items;
         this.pagination.assets.totalItems = response.data.assets.totalItemCount;
       });
-    }
-  }
+    },
+  },
 };
 </script>
