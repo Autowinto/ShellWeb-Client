@@ -844,12 +844,9 @@ export default {
       return dayjs();
     },
     loadInvoices() {
+      const selected = this.pagination.invoices.filterOptions.selected
       axios
-        .get(`${process.env.VUE_APP_URL}invoices/${this.id}/1/10`, {
-          params: {
-            type: this.pagination.invoices.filterOptions.selected,
-          },
-        })
+        .get(`${process.env.VUE_APP_URL}invoices/${this.id}/${selected}/1/10`)
         .then((response) => {
           console.log(response.data.collection);
           this.items.invoices = response.data.collection;
