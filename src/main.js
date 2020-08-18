@@ -7,12 +7,11 @@ import('../src/assets/fonts/fontawesome-all.min.css')
 import BootstrapVue from 'bootstrap-vue';
 import { authMixin } from './mixins/authMixin.js';
 import Vuex from 'vuex';
-import { graphMixin } from './mixins/graphMixin'
 
 Vue.config.productionTip = false
 
 //Register global mixins
-Vue.mixin(authMixin, graphMixin);
+Vue.mixin(authMixin);
 
 //Extra vue libraries registration
 Vue.use(BootstrapVue)

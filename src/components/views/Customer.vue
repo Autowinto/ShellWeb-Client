@@ -507,6 +507,31 @@
                 <b-tab title="Invoices">
                   <b-card-text>
                     <div>
+                      <b-card bg-variant="light">
+                        <!-- <b-form-checkbox
+                          v-model="pagination.invoices.filterOptions.allSelected"
+                          :indeterminate="pagination.invoices.filterOptions.indeterminate"
+                          aria-describedby="pagination.invoices.filterOptions.options"
+                          aria-controls="pagination.invoices.filterOptions.options"
+                          @change="toggleAll"
+                        >
+                          {{ pagination.invoices.filterOptions.allSelected ? 'Deselect All' : 'Select All'}}
+                        </b-form-checkbox>
+                      <b-form-checkbox-group
+                        v-model="pagination.invoices.filterOptions.selected"
+                        :options="pagination.invoices.filterOptions.options"
+                      > 
+
+                      </b-form-checkbox-group> -->
+                      <b-select
+                        v-model="pagination.invoices.filterOptions.selected"
+                        :options="pagination.invoices.filterOptions.options"
+                        @change="loadInvoices"
+                      >
+
+                      </b-select>
+                      </b-card>
+
                       <b-table
                         show-empty
                         outlined
@@ -516,19 +541,23 @@
                         :per-page="0"
                         :current-page="pagination.invoices.currentPage"
                       >
-                        <!--Template for storing the link to the ticket in the table column.-->
-                        <template v-slot:cell(subject)="data">
-                          <b-link
-                            :to="{ path: '/', query: {ticketID: data.item.ticket_id}}"
-                          >{{ data.item.subject }}</b-link>
+                        <template v-slot:cell(paymentTerms)="data">
+                            <h5 class="m-0 p-0">
+                            <b-badge v-if="invoiceOverdue(data.item.dueDate) == 'overdue'" variant="danger">Overdue</b-badge>
+                            <b-badge v-else variant="success">Not Due</b-badge>
+                            </h5>
                         </template>
-                        <!--Template for formatting the creation date-->
-                        <template v-slot:cell(created_date)="data">
-                          <p class="m-0 p-0">{{data.item.created_date | dayjsDateTime}}</p>
+                        <template v-slot:cell(netAmount)="data">
+                          {{data.item.netAmount}} {{data.item.currency}}
                         </template>
-                        <!--Template for formatting the updated date-->
-                        <template v-slot:cell(modified_date)="data">
-                          <p class="m-0 p-0">{{data.item.modified_date | dayjsDateTime}}</p>
+                        <template v-slot:cell(remainder)="data">
+                            <h5 class="m-0 p-0">
+                            <b-badge v-if="invoicePaid(data.item.remainder) == 'unpaid'" variant="danger">Unpaid</b-badge>
+                            <b-badge v-else variant="success">Paid</b-badge>
+                            </h5>
+                        </template>
+                        <template v-slot:cell(pdf)="data">
+                          <b-button variant="primary" class="fas fa-download" @click="downloadInvoice(data.item.pdf.download)"></b-button>
                         </template>
                       </b-table>
                       <b-pagination
@@ -581,6 +610,7 @@
 <script>
 import axios from "axios";
 import dayjs from "dayjs";
+import fileDownload from "js-file-download";
 
 export default {
   data() {
@@ -632,9 +662,32 @@ export default {
         ],
         invoices: [
           {
-            key: "",
-            label: ""
-          }
+            key: "bookedInvoiceNumber", //Fix this so it fits all invoices and not just the booked ones
+            label: "Invoice Number"
+          },
+          {
+            key: "date",
+            label: "Date Created"
+          },
+          {
+            key: "dueDate",
+            label: "Due On"
+          },
+          {
+            key: "paymentTerms",
+            label: "Status"
+          },
+          {
+            key: "netAmount",
+          },
+          {
+            key: "remainder",
+            label: "Payment Status"
+          },
+          {
+            key:"pdf",
+            label:""
+          },
         ],
         passwords: [
           {
@@ -676,7 +729,21 @@ export default {
         invoices: {
           perPage: 10,
           currentPage: 1,
-          totalItems: 0
+          totalItems: 0,
+          filterOptions: {
+            options: [
+              { text: 'Booked', value: 'booked'},
+              { text: 'Drafts', value: 'drafts'},
+              // { text: 'Unpaid', value: 'unpaid'},
+              // { text: 'Paid', value: 'paid'},
+              // { text: 'Overdue', value: 'overdue'},
+              // { text: 'Not Due', value: 'not-due'},
+            ],
+            allSelected: true,
+            selected: 'booked',
+            indeterminate: false,
+
+          }
         },
         tickets: {
           perPage: 10,
@@ -697,6 +764,9 @@ export default {
     };
   },
   created() {
+    // //Set all invoice filter options to be selected once mounted.
+    // this.toggleAll(true)
+
     this.$getAccountID();
     axios
       .all([
@@ -728,14 +798,23 @@ export default {
     });
     this.fetchData(`customer/contracts/${this.id}`).then(response => {
       this.items.contracts = response.data.contracts;
-      console.log(response.data.contracts);
     });
     this.fetchData(`customer/passwords/${this.$getAccountID()}/${this.id}/${this.pagination.passwords.currentPage}/${this.pagination.passwords.perPage}`
     ).then(response => {
       this.items.passwords = response.data.passwords
       this.pagination.passwords.totalItems = response.data.passwords.length;
-
     })
+
+    this.loadInvoices();
+
+    // axios.get(`${process.env.VUE_APP_URL}invoices/${this.id}/1/10`, { //This is temporary and will be replaced, however it isn't a priority at this time
+    //   params: {
+    //     types: this.pagination.invoices.filterOptions.selected
+    //   }
+    // })
+    // .then(response => {
+    //   console.log(response)
+    // })
   },
   methods: {
     fetchData(endpoint) {
@@ -744,15 +823,60 @@ export default {
     loadContracts: function() {},
     dayjs: function() {
       return dayjs();
+    },
+    loadInvoices() {
+      axios.get(`${process.env.VUE_APP_URL}invoices/${this.id}/1/10`, {
+      params: {
+        type: this.pagination.invoices.filterOptions.selected
+      }
+    })
+    .then(response => {
+      console.log(response.data.collection)
+      this.items.invoices = response.data.collection;
+      this.pagination.invoices.totalItems = response.data.collection.length;
+      // this.fields.invoices[0].key = `${this.pagination.invoices.filterOptions.selected}InvoiceNumber`
+    })
+    },
+    downloadInvoice(link) {
+      axios.get(`${process.env.VUE_APP_URL}invoices/pdf`, {
+        responseType: 'blob',
+        params: {
+          link: link
+        }
+      })
+      .then(response => {
+        console.log(response.data)
+        fileDownload(response.data, 'invoice.pdf')
+      })
+    },
+    invoiceOverdue(date) {
+      const today = new Date();
+      const dueDate = dayjs(date);
+
+      if (dueDate.isBefore(today)) {
+        return 'overdue';
+      } else {
+        return 'notDue';
+      }
+    },
+    invoicePaid(remainder) {
+      if (remainder === 0) {
+        return 'paid';
+      } else {
+        return 'unpaid'
+      }
     }
+    // toggleAll(checked) {
+    //   this.pagination.invoices.filterOptions.selected = checked ? this.pagination.invoices.filterOptions.optionsValues.slice() : []
+    // }
   },
-  filters: {
+  filters: { //These need to be made global filters at some point.
     dayjsDateOnly: function(date) {
       return dayjs(date).format("MMM D, YYYY");
     },
     dayjsDateTime: function(date) {
       return dayjs(date).format("MMM D, YYYY, h:mm:ss a");
-    }
+    },
   },
   computed: {
     assetsCurrentPage() {
