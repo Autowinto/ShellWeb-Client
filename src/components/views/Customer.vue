@@ -856,14 +856,12 @@ export default {
     },
     downloadInvoice(link) {
       axios
-        .get(`${process.env.VUE_APP_URL}invoices/pdf`, {
-          responseType: "blob",
-          params: {
-            link: link,
-          },
+        .post(`${process.env.VUE_APP_URL}invoices/pdf`,  {
+          link: link
+        }, {
+          responseType: 'blob'
         })
         .then((response) => {
-          console.log(response.data);
           fileDownload(response.data, "invoice.pdf");
         });
     },
