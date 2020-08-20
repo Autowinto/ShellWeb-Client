@@ -454,7 +454,7 @@
                         :current-page="pagination.tickets.currentPage"
                       >
                         <!--Template for storing the link to the ticket in the table column.-->
-                        <template v-slot:cell(subject)="data">
+                        <template v-slot:cell(subject)="data"> 
                           <b-link
                             :to="{ path: '/ticket', query: {ticketID: data.item.ticket_id}}"
                           >{{ data.item.subject }}</b-link>
