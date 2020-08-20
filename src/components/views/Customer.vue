@@ -504,11 +504,25 @@
                         show-empty
                         outlined
                         hover
+                        ref="passTable"
                         :items="items.passwords"
                         :fields="fields.passwords"
                         :per-page="0"
                         :current-page="pagination.passwords.currentPage"
-                      ></b-table>
+                      >
+                        <template v-slot:cell(password)=data>
+                          <span v-if="data.item.password">{{data.item.password}}</span>
+                          <span v-else>********</span>
+                        </template>
+                        <template v-slot:cell(togglePass)=data>
+                          <b-button
+                            class="fas fa-eye" 
+                            variant="primary" 
+                            @click="getPassword(data.item.password_id)">
+                          </b-button>
+                        </template>
+                      
+                      </b-table>
                     </div>
                   </b-card-text>
                 </b-tab>
@@ -550,25 +564,23 @@
                         :per-page="0"
                         :current-page="pagination.invoices.currentPage"
                       >
-                        <template v-slot:cell(paymentTerms)="data">
-                          <h5 class="m-0 p-0">
-                            <b-badge
-                              v-if="invoiceOverdue(data.item.dueDate) == 'overdue'"
-                              variant="danger"
-                            >Overdue</b-badge>
-                            <b-badge v-else variant="success">Not Due</b-badge>
-                          </h5>
-                        </template>
                         <template
                           v-slot:cell(netAmount)="data"
                         >{{data.item.netAmount}} {{data.item.currency}}</template>
                         <template v-slot:cell(remainder)="data">
                           <h5 class="m-0 p-0">
                             <b-badge
-                              v-if="invoicePaid(data.item.remainder) == 'unpaid'"
+                              v-if="getInvoiceStatus(data.item.dueDate, data.item.remainder) == 'overdue'"
                               variant="danger"
+                            >Overdue</b-badge>
+                            <b-badge
+                              v-else-if="getInvoiceStatus(data.item.dueDate, data.item.remainder) == 'unpaid'"
+                              variant="warning"
                             >Unpaid</b-badge>
-                            <b-badge v-else variant="success">Paid</b-badge>
+                            <b-badge
+                              v-else-if="getInvoiceStatus(data.item.dueDate, data.item.remainder) == 'paid'"
+                              variant="success"
+                            >Paid</b-badge>
                           </h5>
                         </template>
                         <template v-slot:cell(pdf)="data">
@@ -691,15 +703,11 @@ export default {
             label: "Due On",
           },
           {
-            key: "paymentTerms",
-            label: "Status",
-          },
-          {
             key: "netAmount",
           },
           {
             key: "remainder",
-            label: "Payment Status",
+            label: "Payment",
           },
           {
             key: "pdf",
@@ -727,6 +735,10 @@ export default {
           {
             key: "access_level",
           },
+          {
+            key: "togglePass",
+            label: ""
+          }
         ],
       },
       items: {
@@ -844,7 +856,7 @@ export default {
       return dayjs();
     },
     loadInvoices() {
-      const selected = this.pagination.invoices.filterOptions.selected
+      const selected = this.pagination.invoices.filterOptions.selected;
       axios
         .get(`${process.env.VUE_APP_URL}invoices/${this.id}/${selected}/1/10`)
         .then((response) => {
@@ -856,14 +868,32 @@ export default {
     },
     downloadInvoice(link) {
       axios
-        .post(`${process.env.VUE_APP_URL}invoices/pdf`,  {
-          link: link
-        }, {
-          responseType: 'blob'
-        })
+        .post(
+          `${process.env.VUE_APP_URL}invoices/pdf`,
+          {
+            link: link,
+          },
+          {
+            responseType: "blob",
+          }
+        )
         .then((response) => {
           fileDownload(response.data, "invoice.pdf");
         });
+    },
+    getInvoiceStatus(date, remainder) {
+      const today = new Date();
+      const dueDate = dayjs(date);
+
+      if (remainder === 0) {
+        return "paid"; //If the remaining payment required is 0, return the status as paid.
+      } else {
+        if (dueDate.isAfter(today)) {
+          return "unpaid"; //If the invoice is due after the current time, return the status as unpaid.
+        } else {
+          return "overdue"; //If the invoice is overdue, return the status as overdue.
+        }
+      }
     },
     invoiceOverdue(date) {
       const today = new Date();
@@ -881,6 +911,19 @@ export default {
       } else {
         return "unpaid";
       }
+    },
+    getPassword(passwordId) {
+      axios.get(`${process.env.VUE_APP_URL}password/${passwordId}`)
+        .then(response => {
+          console.log(response)
+          const passwords = this.items.passwords;
+          for (var item in passwords) {
+            if (passwords[item].password_id === passwordId) {
+              passwords[item].password = response.data;
+              this.$refs.passTable.refresh();
+            }
+          }
+        })
     },
     // toggleAll(checked) {
     //   this.pagination.invoices.filterOptions.selected = checked ? this.pagination.invoices.filterOptions.optionsValues.slice() : []
