@@ -319,7 +319,7 @@ export default {
     },
     submitCustomer() {
       console.log("Submitting logic here");
-      axios.post(`${process.env.VUE_APP_URL}createCustomer`, this.form)
+      axios.post(`${process.env.VUE_APP_URL}customer`, this.form)
       .then(response => {
         console.log(response)
           //Refresh table of customers

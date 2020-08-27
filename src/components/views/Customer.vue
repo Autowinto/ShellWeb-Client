@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper">
     <div class="container-fluid">
-      <h3 class="text-dark mb-4">{{customerInfo.name}} ({{customerInfo.customerNumber}})</h3>
+      <h3 class="text-dark mb-4">{{customerInfo.economic.name}} ({{customerInfo.economic.customerNumber}})</h3>
       <div class="row mb-3">
         <div class="col-3">
           <div class="row mb-3">
@@ -19,11 +19,11 @@
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Name</h4>
-                        <h4 class="small">{{customerInfo.name}}</h4>
+                        <h4 class="small">{{customerInfo.economic.name}}</h4>
                       </div>
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Currency</h4>
-                        <h4 class="small">{{customerInfo.currency}}</h4>
+                        <h4 class="small">{{customerInfo.economic.currency}}</h4>
                       </div>
                     </div>
                     <div class="col">
@@ -43,16 +43,16 @@
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Phone Number</h4>
                         <h4
-                          v-if="customerInfo.telephoneAndFaxNumber"
+                          v-if="customerInfo.economic.telephoneAndFaxNumber"
                           class="small"
-                        >{{customerInfo.telephoneAndFaxNumber}}</h4>
+                        >{{customerInfo.economic.telephoneAndFaxNumber}}</h4>
                         <h4 v-else class="small">N/A</h4>
                       </div>
                     </div>
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">E-mail</h4>
-                        <h4 class="small">{{customerInfo.email}}</h4>
+                        <h4 class="small">{{customerInfo.economic.email}}</h4>
                       </div>
                     </div>
                   </div>
@@ -61,21 +61,21 @@
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Address</h4>
-                        <h4 class="small">{{customerInfo.address}}</h4>
+                        <h4 class="small">{{customerInfo.economic.address}}</h4>
                       </div>
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">ZIP Code</h4>
-                        <h4 class="small">{{customerInfo.zip}}</h4>
+                        <h4 class="small">{{customerInfo.economic.zip}}</h4>
                       </div>
                     </div>
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">City</h4>
-                        <h4 class="small">{{customerInfo.city}}</h4>
+                        <h4 class="small">{{customerInfo.economic.city}}</h4>
                       </div>
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Country</h4>
-                        <h4 class="small">{{customerInfo.country}}</h4>
+                        <h4 class="small">{{customerInfo.economic.country}}</h4>
                       </div>
                     </div>
                   </div>
@@ -90,7 +90,7 @@
                     <div class="col">
                       <button
                         class="btn btn-primary w-100"
-                        v-b-modal.editCustomerModal
+                        v-b-modal.customerEditModal
                       >Edit Customer</button>
                     </div>
                   </div>
@@ -454,7 +454,7 @@
                         :current-page="pagination.tickets.currentPage"
                       >
                         <!--Template for storing the link to the ticket in the table column.-->
-                        <template v-slot:cell(subject)="data"> 
+                        <template v-slot:cell(subject)="data">
                           <b-link
                             :to="{ path: '/ticket', query: {ticketID: data.item.ticket_id}}"
                           >{{ data.item.subject }}</b-link>
@@ -510,18 +510,17 @@
                         :per-page="0"
                         :current-page="pagination.passwords.currentPage"
                       >
-                        <template v-slot:cell(password)=data>
+                        <template v-slot:cell(password)="data">
                           <span v-if="data.item.password">{{data.item.password}}</span>
                           <span v-else>********</span>
                         </template>
-                        <template v-slot:cell(togglePass)=data>
+                        <template v-slot:cell(togglePass)="data">
                           <b-button
-                            class="fas fa-eye" 
-                            variant="primary" 
-                            @click="getPassword(data.item.password_id)">
-                          </b-button>
+                            class="fas fa-eye"
+                            variant="primary"
+                            @click="getPassword(data.item.password_id)"
+                          ></b-button>
                         </template>
-                      
                       </b-table>
                     </div>
                   </b-card-text>
@@ -629,9 +628,201 @@
       centered
       title="Delete Customer?"
     >
-      <h5>Are you sure you want to delete the customer {{customerInfo.name}}</h5>
+      <h5>Are you sure you want to delete the customer {{customerInfo.economic.name}}</h5>
     </b-modal>
-    <b-modal centered id="editCustomerModal"></b-modal>
+                <b-modal
+                  body-class="p-0"
+                  id="customerEditModal"
+                  ref="customerEditModal"
+                  centered
+                  title="Edit Customer"
+                  hide-footer
+                  size="lg"
+                >
+                  <b-card bg-variant="light" body-class="p-0">
+                    <b-form @submit="submitCustomerEdit" onsubmit="return false;" class="p-3">
+                      <b-form-group
+                        label-cols-lg="3"
+                        label="Basic Information:"
+                        label-size="lg"
+                        label-class="font-weight-bold pt-0 p-0 text-dark"
+                        class="mb-0"
+                      >
+                        <b-form-group
+                          label-cols-sm="3"
+                          label="Name:"
+                          label-align-sm="right"
+                          label-for="input-name"
+                          description="Required"
+                        >
+                          <b-input
+                            placeholder="Company Name"
+                            v-model="form.name"
+                            id="input-name"
+                            type="text"
+                            required
+                          ></b-input>
+                        </b-form-group>
+                        <b-form-group
+                          label-cols-sm="3"
+                          label="Domain:"
+                          label-align-sm="right"
+                          label-for="input-domain"
+                        >
+                          <b-input
+                            id="input-domain"
+                            type="text"
+                            v-model="form.domain"
+                            placeholder="domain.dk"
+                          ></b-input>
+                        </b-form-group>
+                        <b-form-group
+                          label-cols-sm="3"
+                          label="Phone:"
+                          label-align-sm="right"
+                          label-for="input-phone"
+                        >
+                          <b-input
+                            id="input-phone"
+                            v-model="form.phone"
+                            type="number"
+                            placeholder="12345678"
+                          ></b-input>
+                        </b-form-group>
+                      </b-form-group>
+                      <b-card no-body class="mb-3"></b-card>
+                      <b-form-group
+                        label-cols-lg="3"
+                        label="Financial Information:"
+                        label-size="lg"
+                        label-class="font-weight-bold pt-0 p-0 text-dark"
+                        class="mb-0"
+                      >
+                        <b-form-group
+                          label-cols-sm="3"
+                          label="Customer Group:"
+                          label-align-sm="right"
+                          label-for="input-group"
+                          description="Required"
+                        >
+                          <b-form-select
+                            id="input-group"
+                            v-model="form.selectedGroup"
+                            :options="dropdownData.customerGroups"
+                            required
+                          ></b-form-select>
+                        </b-form-group>
+                        <b-form-group
+                          label-cols-sm="3"
+                          label="Currency:"
+                          label-align-sm="right"
+                          label-for="input-currency"
+                          description="Required"
+                        >
+                          <b-form-select
+                            id="input-currency"
+                            required
+                            v-model="form.selectedCurrency"
+                            :options="dropdownData.currencies"
+                          ></b-form-select>
+                        </b-form-group>
+                        <b-form-group
+                          label-cols-sm="3"
+                          label="Payment Terms:"
+                          label-align-sm="right"
+                          label-for="input-terms"
+                          description="Required"
+                        >
+                          <b-form-select
+                            id="input-terms"
+                            required
+                            v-model="form.selectedPaymentTerms"
+                            :options="dropdownData.paymentTerms"
+                          ></b-form-select>
+                        </b-form-group>
+                        <b-form-group
+                          label-cols-sm="3"
+                          label="VAT Zone:"
+                          label-align-sm="right"
+                          label-for="input-vat"
+                          description="Required"
+                        >
+                          <b-form-select
+                            id="input-vat"
+                            required
+                            v-model="form.selectedVatZone"
+                            :options="dropdownData.vatZones"
+                          ></b-form-select>
+                        </b-form-group>
+                      </b-form-group>
+                      <b-card class="mb-3" no-body></b-card>
+                      <b-form-group
+                        label-cols-lg="3"
+                        label="Location:"
+                        label-size="lg"
+                        label-class="font-weight-bold pt-0 p-0 text-dark"
+                        class="mb-0"
+                      >
+                        <b-form-group
+                          label-cols-sm="3"
+                          label="Address:"
+                          label-align-sm="right"
+                          label-for="input-address"
+                        >
+                          <b-input
+                            id="input-address"
+                            v-model="form.address"
+                            placeholder="Address"
+                            type="text"
+                          ></b-input>
+                        </b-form-group>
+                        <b-form-group
+                          label-cols-sm="3"
+                          label="ZIP Code:"
+                          label-align-sm="right"
+                          label-for="input-zip"
+                        >
+                          <b-input
+                            id="input-zip"
+                            v-model="form.zip"
+                            placeholder="0000"
+                            type="number"
+                          ></b-input>
+                        </b-form-group>
+                        <b-form-group
+                          label-cols-sm="3"
+                          label="City:"
+                          label-align-sm="right"
+                          label-for="input-city"
+                        >
+                          <b-input
+                            id="input-city"
+                            v-model="form.city"
+                            placeholder="City"
+                            type="text"
+                          ></b-input>
+                        </b-form-group>
+                        <b-form-group
+                          label-cols-sm="3"
+                          label="Country:"
+                          label-align-sm="right"
+                          label-for="input-country"
+                        >
+                          <b-input
+                            id="input-country"
+                            v-model="form.country"
+                            placeholder="Country"
+                            type="text"
+                          ></b-input>
+                        </b-form-group>
+                      </b-form-group>
+                      <b-button-group>
+                        <b-button type="submit" variant="primary">Edit</b-button>
+                        <!-- <b-button type="reset" variant="danger">Reset</b-button> -->
+                      </b-button-group>
+                    </b-form>
+                  </b-card>
+                </b-modal>
     <b-modal centered id="manageDomainModal"></b-modal>
   </div>
 </template>
@@ -644,6 +835,13 @@ import fileDownload from "js-file-download";
 export default {
   data() {
     return {
+      dropdownData: {
+        paymentTerms: [],
+        customerGroups: [],
+        currencies: [],
+        vatZones: [],
+      },
+      form: {},
       fields: {
         assets: [
           {
@@ -737,8 +935,8 @@ export default {
           },
           {
             key: "togglePass",
-            label: ""
-          }
+            label: "",
+          },
         ],
       },
       items: {
@@ -784,7 +982,10 @@ export default {
           totalItems: 0,
         },
       },
-      customerInfo: {},
+      customerInfo: {
+        atera: {},
+        economic: {}
+      },
       paymentTerms: {},
       customerGroup: 0,
       ateraid: 0,
@@ -796,23 +997,8 @@ export default {
     // this.toggleAll(true)
 
     this.$getAccountID();
-    axios
-      .all([
-        this.fetchData(`customer/${this.id}`),
-        this.fetchData(`customer/contacts/${this.id}`),
-      ])
-      .then(
-        axios.spread((...responses) => {
-          const customerData = responses[0].data;
-          this.customerInfo = customerData.customer;
-          this.customerGroup = customerData.customerGroup;
-          this.ateraid = customerData.apiInfo;
-          this.paymentTerms = customerData.paymentTerms;
 
-          const contactData = responses[1].data;
-          this.items.contacts = contactData.contacts;
-        })
-      );
+    this.getCustomerInfo();
     this.fetchData(
       `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
     ).then((response) => {
@@ -835,6 +1021,47 @@ export default {
       this.items.passwords = response.data.passwords;
       this.pagination.passwords.totalItems = response.data.passwords.length;
     });
+    axios.get(`${process.env.VUE_APP_URL}customerGroups`)
+      .then(response => {
+        for (var item in response.data.customerGroups) {
+          console.log(item)
+          const group = response.data.customerGroups[item];
+          this.dropdownData.customerGroups.push(
+            {
+              value: group.customerGroupNumber, text: group.name
+            })
+        }
+      })
+    axios.get(`${process.env.VUE_APP_URL}currencies`)
+      .then(response => {
+        for (var item in response.data.currencies) {
+          const currency = response.data.currencies[item];
+          this.dropdownData.currencies.push(
+            {
+              value: currency.code, text: currency.name
+            })
+        }
+      })
+    axios.get(`${process.env.VUE_APP_URL}paymentTerms`)
+      .then(response => {
+        for (var item in response.data.paymentTerms) {
+          const term = response.data.paymentTerms[item];
+          this.dropdownData.paymentTerms.push(
+            {
+              value: term.paymentTermsNumber, text: term.name
+            })
+        }
+      })
+    axios.get(`${process.env.VUE_APP_URL}vatZones`)
+      .then(response => {
+        for (var item in response.data.vatZones) {
+          const vatZone = response.data.vatZones[item];
+          this.dropdownData.vatZones.push(
+            {
+              value: vatZone.vatZoneNumber, text: vatZone.name
+            })
+        }
+      })
 
     this.loadInvoices();
 
@@ -848,6 +1075,30 @@ export default {
     // })
   },
   methods: {
+    getCustomerInfo() {
+      axios
+      .all([
+        this.fetchData(`customer/${this.id}`),
+        this.fetchData(`customer/contacts/${this.id}`),
+      ])
+      .then(
+        axios.spread((...responses) => {
+          const customerData = responses[0].data;
+          this.customerInfo = customerData.customer;
+          this.customerGroup = customerData.customerGroup;
+          this.ateraid = customerData.apiInfo;
+          this.paymentTerms = customerData.paymentTerms;
+
+          this.populateForm();
+
+          const contactData = responses[1].data;
+          this.items.contacts = contactData.contacts;
+        })
+      )
+      .catch(error => {
+        console.log(error)
+      })
+    },
     fetchData(endpoint) {
       return axios.get(process.env.VUE_APP_URL + endpoint);
     },
@@ -913,9 +1164,10 @@ export default {
       }
     },
     getPassword(passwordId) {
-      axios.get(`${process.env.VUE_APP_URL}password/${passwordId}`)
-        .then(response => {
-          console.log(response)
+      axios
+        .get(`${process.env.VUE_APP_URL}password/${passwordId}`)
+        .then((response) => {
+          console.log(response);
           const passwords = this.items.passwords;
           for (var item in passwords) {
             if (passwords[item].password_id === passwordId) {
@@ -923,7 +1175,33 @@ export default {
               this.$refs.passTable.refresh();
             }
           }
-        })
+        });
+    },
+    populateForm() {
+      this.form = {
+        name: this.customerInfo.economic.name,
+        businessNumber: this.customerInfo.economic.corporateIdentificationNumber,
+        domain: this.customerInfo.atera.Domain,
+        country: this.customerInfo.economic.country,
+        city: this.customerInfo.economic.city,
+        address: this.customerInfo.economic.address,
+        zip: this.customerInfo.economic.zip,
+        phone: this.customerInfo.economic.telephoneAndFaxNumber,
+        selectedPaymentTerms: this.customerInfo.economic.paymentTerms.paymentTermsNumber,
+        selectedGroup: this.customerInfo.economic.customerGroup.customerGroupNumber,
+        selectedCurrency: this.customerInfo.economic.currency,
+        selectedVatZone: this.customerInfo.economic.vatZone.vatZoneNumber,
+      }
+    },
+    submitCustomerEdit() {
+      console.log('Submitting')
+      axios.put(`${process.env.VUE_APP_URL}customer/${this.id}`,
+      this.form)
+      .then(response => {
+        console.log(response);
+        this.$refs['customerEditModal'].hide()
+        this.getCustomerInfo();
+      })
     },
     // toggleAll(checked) {
     //   this.pagination.invoices.filterOptions.selected = checked ? this.pagination.invoices.filterOptions.optionsValues.slice() : []

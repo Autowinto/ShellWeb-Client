@@ -9,20 +9,6 @@
   dependencies:
     "@azure/msal-common" "^1.1.0"
 
-"@azure/msal-browser@^2.0.0-beta.4":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@azure/msal-browser/-/msal-browser-2.0.0.tgz#09eb3ed2112bdcd11c751f1c0b9cec588b49b8c6"
-  integrity sha512-0L4XksaXmtl870bQTPxbHCkxMEMmSbsgkkVpb6bvXg8ngOLWnkxvV6tstj84JtQHcJPjNYkYY41jgBQxgC4/KQ==
-  dependencies:
-    "@azure/msal-common" "1.0.0"
-
-"@azure/msal-common@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@azure/msal-common/-/msal-common-1.0.0.tgz#421f4859e6cb68cfacb03bb2c6c873efdffc76f0"
-  integrity sha512-l/+1Z9kQWLAlMwJ/c3MGhy4ujtEAK/3CMUaUXHvjUIsQknLFRb9+b3id5YSuToPfAvdUkAQGDZiQXosv1I+eLA==
-  dependencies:
-    debug "^4.1.1"
-
 "@azure/msal-common@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@azure/msal-common/-/msal-common-1.1.0.tgz#6ff32dc7be9b722d56b4d448dbce7cdc4cb2315d"
@@ -1660,7 +1646,7 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.10.0.tgz#a17b3a8ea811060e74d47d306122400ad4497ae2"
   integrity sha512-3YDiu347mtVtjpyV3u5kVqQLP242c06zwDOgpeRnybmXlYYsLbtTrUBUm8i8srONt+FWobl5aibnU1030PeeuA==
 
-axios@^0.19.0, axios@^0.19.2:
+axios@^0.19.2:
   version "0.19.2"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
   integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
@@ -5059,11 +5045,6 @@ lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
 
-lodash@^4.17.19:
-  version "4.17.19"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
-  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
-
 log-symbols@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/log-symbols/-/log-symbols-2.2.0.tgz#5740e1c5d6f0dfda4ad9323b5332107ef6b4c40a"
@@ -5379,7 +5360,7 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-msal@^1.3.2, msal@^1.3.3:
+msal@^1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/msal/-/msal-1.3.3.tgz#4947a658a31cb11660c6bc633528eae3f0d2683f"
   integrity sha512-1gscQA6OZ4EMvIw3PdkE9GECOcqGZkA8JOOHP5HqGlhmUvFkz64FTtu0Z71iuyt803Z1PwGnvE0w2bETd9u59w==
@@ -8086,24 +8067,6 @@ vue-loader@^15.9.2:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
-vue-msal-2@^1.1.38:
-  version "1.1.38"
-  resolved "https://registry.yarnpkg.com/vue-msal-2/-/vue-msal-2-1.1.38.tgz#7027461e80f39825db7202608b0ea44290661d22"
-  integrity sha512-9TNuphuX5KBx06e0DpBSys4CZSo4vvfYaPqDe1iiQUbn/89ZufyVZKlH5FfAvbCgzCE54fpH3fTPIEiIP0c/Vw==
-  dependencies:
-    "@azure/msal-browser" "^2.0.0-beta.4"
-    axios "^0.19.2"
-    lodash "^4.17.19"
-
-vue-msal@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/vue-msal/-/vue-msal-3.2.0.tgz#9e0ce4e491386d11304ce2b0b1f02e2b3ad1a92f"
-  integrity sha512-912Gxu33dpNJbBm9FE6VPVAAj/1OdUwZkoTQLxYnnYu1cf+RhejsnF8O5B7TSo/U8qZMz3Bpkxggk1SfyfneUw==
-  dependencies:
-    axios "^0.19.0"
-    lodash "^4.17.15"
-    msal "^1.3.2"
-
 vue-router@^3.3.4:
   version "3.3.4"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.3.4.tgz#4e38abc34a11c41b6c3d8244449a2e363ba6250b"
@@ -8172,7 +8135,7 @@ wcwidth@^1.0.1:
   dependencies:
     defaults "^1.0.3"
 
-webpack-bundle-analyzer@^3.7.0:
+webpack-bundle-analyzer@^3.7.0, webpack-bundle-analyzer@^3.8.0:
   version "3.8.0"
   resolved "https://registry.yarnpkg.com/webpack-bundle-analyzer/-/webpack-bundle-analyzer-3.8.0.tgz#ce6b3f908daf069fd1f7266f692cbb3bded9ba16"
   integrity sha512-PODQhAYVEourCcOuU+NiYI7WdR8QyELZGgPvB1y2tjbUpbmcQOt5Q7jEK+ttd5se0KSBKD9SXHCEozS++Wllmw==
