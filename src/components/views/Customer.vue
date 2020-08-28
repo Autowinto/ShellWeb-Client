@@ -44,17 +44,14 @@
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Phone Number</h4>
-                        <h4
-                          v-if="customerInfo.economic.telephoneAndFaxNumber"
-                          class="small"
-                        >{{customerInfo.economic.telephoneAndFaxNumber}}</h4>
+                        <b-link v-if="customerInfo.economic.telephoneAndFaxNumber" class="small" :href="'tel:' + customerInfo.economic.telephoneAndFaxNumber">{{customerInfo.economic.telephoneAndFaxNumber}}</b-link>
                         <h4 v-else class="small">N/A</h4>
                       </div>
                     </div>
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">E-mail</h4>
-                        <h4 class="small">{{customerInfo.economic.email}}</h4>
+                        <b-link v-if="customerInfo.economic.telephoneAndFaxNumber" class="small" :href="'mailto:' + customerInfo.economic.email">{{customerInfo.economic.email}}</b-link>
                       </div>
                     </div>
                   </div>
