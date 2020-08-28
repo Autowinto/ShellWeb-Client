@@ -1,7 +1,9 @@
 <template>
   <div id="wrapper">
     <div class="container-fluid">
-      <h3 class="text-dark mb-4">{{customerInfo.economic.name}} ({{customerInfo.economic.customerNumber}})</h3>
+      <h3
+        class="text-dark mb-4"
+      >{{customerInfo.economic.name}} ({{customerInfo.economic.customerNumber}})</h3>
       <div class="row mb-3">
         <div class="col-3">
           <div class="row mb-3">
@@ -81,12 +83,6 @@
                   </div>
                   <div class="card shadow mb-3"></div>
                   <div class="row mb-3">
-                    <div class="col">
-                      <button
-                        class="btn btn-primary w-100"
-                        v-b-modal.manageDomainModal
-                      >Manage Domain</button>
-                    </div>
                     <div class="col">
                       <button
                         class="btn btn-primary w-100"
@@ -238,6 +234,12 @@
               <b-tabs card fill>
                 <b-tab title="Employees" active>
                   <b-card-text>
+                    <b-row class="mb-2">
+                      <b-col>
+                      <b-button v-b-modal.createContactModal class="float-right" variant="success" size="sm">Create Contact</b-button>
+                      </b-col>
+                    </b-row>
+                    <b-card no-body class="mb-2"></b-card>
                     <b-row v-if="items.contacts.length">
                       <div v-for="(contact, idx) in items.contacts" :key="idx" class="col-4">
                         <div class="card mb-3 p-3" style="height: 140px;">
@@ -630,200 +632,235 @@
     >
       <h5>Are you sure you want to delete the customer {{customerInfo.economic.name}}</h5>
     </b-modal>
-                <b-modal
-                  body-class="p-0"
-                  id="customerEditModal"
-                  ref="customerEditModal"
-                  centered
-                  title="Edit Customer"
-                  hide-footer
-                  size="lg"
-                >
-                  <b-card bg-variant="light" body-class="p-0">
-                    <b-form @submit="submitCustomerEdit" onsubmit="return false;" class="p-3">
-                      <b-form-group
-                        label-cols-lg="3"
-                        label="Basic Information:"
-                        label-size="lg"
-                        label-class="font-weight-bold pt-0 p-0 text-dark"
-                        class="mb-0"
-                      >
-                        <b-form-group
-                          label-cols-sm="3"
-                          label="Name:"
-                          label-align-sm="right"
-                          label-for="input-name"
-                          description="Required"
-                        >
-                          <b-input
-                            placeholder="Company Name"
-                            v-model="form.name"
-                            id="input-name"
-                            type="text"
-                            required
-                          ></b-input>
-                        </b-form-group>
-                        <b-form-group
-                          label-cols-sm="3"
-                          label="Domain:"
-                          label-align-sm="right"
-                          label-for="input-domain"
-                        >
-                          <b-input
-                            id="input-domain"
-                            type="text"
-                            v-model="form.domain"
-                            placeholder="domain.dk"
-                          ></b-input>
-                        </b-form-group>
-                        <b-form-group
-                          label-cols-sm="3"
-                          label="Phone:"
-                          label-align-sm="right"
-                          label-for="input-phone"
-                        >
-                          <b-input
-                            id="input-phone"
-                            v-model="form.phone"
-                            type="number"
-                            placeholder="12345678"
-                          ></b-input>
-                        </b-form-group>
-                      </b-form-group>
-                      <b-card no-body class="mb-3"></b-card>
-                      <b-form-group
-                        label-cols-lg="3"
-                        label="Financial Information:"
-                        label-size="lg"
-                        label-class="font-weight-bold pt-0 p-0 text-dark"
-                        class="mb-0"
-                      >
-                        <b-form-group
-                          label-cols-sm="3"
-                          label="Customer Group:"
-                          label-align-sm="right"
-                          label-for="input-group"
-                          description="Required"
-                        >
-                          <b-form-select
-                            id="input-group"
-                            v-model="form.selectedGroup"
-                            :options="dropdownData.customerGroups"
-                            required
-                          ></b-form-select>
-                        </b-form-group>
-                        <b-form-group
-                          label-cols-sm="3"
-                          label="Currency:"
-                          label-align-sm="right"
-                          label-for="input-currency"
-                          description="Required"
-                        >
-                          <b-form-select
-                            id="input-currency"
-                            required
-                            v-model="form.selectedCurrency"
-                            :options="dropdownData.currencies"
-                          ></b-form-select>
-                        </b-form-group>
-                        <b-form-group
-                          label-cols-sm="3"
-                          label="Payment Terms:"
-                          label-align-sm="right"
-                          label-for="input-terms"
-                          description="Required"
-                        >
-                          <b-form-select
-                            id="input-terms"
-                            required
-                            v-model="form.selectedPaymentTerms"
-                            :options="dropdownData.paymentTerms"
-                          ></b-form-select>
-                        </b-form-group>
-                        <b-form-group
-                          label-cols-sm="3"
-                          label="VAT Zone:"
-                          label-align-sm="right"
-                          label-for="input-vat"
-                          description="Required"
-                        >
-                          <b-form-select
-                            id="input-vat"
-                            required
-                            v-model="form.selectedVatZone"
-                            :options="dropdownData.vatZones"
-                          ></b-form-select>
-                        </b-form-group>
-                      </b-form-group>
-                      <b-card class="mb-3" no-body></b-card>
-                      <b-form-group
-                        label-cols-lg="3"
-                        label="Location:"
-                        label-size="lg"
-                        label-class="font-weight-bold pt-0 p-0 text-dark"
-                        class="mb-0"
-                      >
-                        <b-form-group
-                          label-cols-sm="3"
-                          label="Address:"
-                          label-align-sm="right"
-                          label-for="input-address"
-                        >
-                          <b-input
-                            id="input-address"
-                            v-model="form.address"
-                            placeholder="Address"
-                            type="text"
-                          ></b-input>
-                        </b-form-group>
-                        <b-form-group
-                          label-cols-sm="3"
-                          label="ZIP Code:"
-                          label-align-sm="right"
-                          label-for="input-zip"
-                        >
-                          <b-input
-                            id="input-zip"
-                            v-model="form.zip"
-                            placeholder="0000"
-                            type="number"
-                          ></b-input>
-                        </b-form-group>
-                        <b-form-group
-                          label-cols-sm="3"
-                          label="City:"
-                          label-align-sm="right"
-                          label-for="input-city"
-                        >
-                          <b-input
-                            id="input-city"
-                            v-model="form.city"
-                            placeholder="City"
-                            type="text"
-                          ></b-input>
-                        </b-form-group>
-                        <b-form-group
-                          label-cols-sm="3"
-                          label="Country:"
-                          label-align-sm="right"
-                          label-for="input-country"
-                        >
-                          <b-input
-                            id="input-country"
-                            v-model="form.country"
-                            placeholder="Country"
-                            type="text"
-                          ></b-input>
-                        </b-form-group>
-                      </b-form-group>
-                      <b-button-group>
-                        <b-button type="submit" variant="primary">Edit</b-button>
-                        <!-- <b-button type="reset" variant="danger">Reset</b-button> -->
-                      </b-button-group>
-                    </b-form>
-                  </b-card>
-                </b-modal>
-    <b-modal centered id="manageDomainModal"></b-modal>
+    <b-modal
+      body-class="p-0"
+      id="customerEditModal"
+      ref="customerEditModal"
+      centered
+      title="Edit Customer"
+      hide-footer
+      size="lg"
+    >
+      <b-card bg-variant="light" body-class="p-0">
+        <b-form @submit="submitCustomerEdit" onsubmit="return false;" class="p-3">
+          <b-form-group
+            label-cols-lg="3"
+            label="Basic Information:"
+            label-size="lg"
+            label-class="font-weight-bold pt-0 p-0 text-dark"
+            class="mb-0"
+          >
+            <b-form-group
+              label-cols-sm="3"
+              label="Name:"
+              label-align-sm="right"
+              label-for="input-name"
+              description="Required"
+            >
+              <b-input
+                placeholder="Company Name"
+                v-model="form.name"
+                id="input-name"
+                type="text"
+                required
+              ></b-input>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Domain:"
+              label-align-sm="right"
+              label-for="input-domain"
+            >
+              <b-input id="input-domain" type="text" v-model="form.domain" placeholder="domain.dk"></b-input>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Phone:"
+              label-align-sm="right"
+              label-for="input-phone"
+            >
+              <b-input id="input-phone" v-model="form.phone" type="number" placeholder="12345678"></b-input>
+            </b-form-group>
+          </b-form-group>
+          <b-card no-body class="mb-3"></b-card>
+          <b-form-group
+            label-cols-lg="3"
+            label="Financial Information:"
+            label-size="lg"
+            label-class="font-weight-bold pt-0 p-0 text-dark"
+            class="mb-0"
+          >
+            <b-form-group
+              label-cols-sm="3"
+              label="Customer Group:"
+              label-align-sm="right"
+              label-for="input-group"
+              description="Required"
+            >
+              <b-form-select
+                id="input-group"
+                v-model="form.selectedGroup"
+                :options="dropdownData.customerGroups"
+                required
+              ></b-form-select>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Currency:"
+              label-align-sm="right"
+              label-for="input-currency"
+              description="Required"
+            >
+              <b-form-select
+                id="input-currency"
+                required
+                v-model="form.selectedCurrency"
+                :options="dropdownData.currencies"
+              ></b-form-select>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Payment Terms:"
+              label-align-sm="right"
+              label-for="input-terms"
+              description="Required"
+            >
+              <b-form-select
+                id="input-terms"
+                required
+                v-model="form.selectedPaymentTerms"
+                :options="dropdownData.paymentTerms"
+              ></b-form-select>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="VAT Zone:"
+              label-align-sm="right"
+              label-for="input-vat"
+              description="Required"
+            >
+              <b-form-select
+                id="input-vat"
+                required
+                v-model="form.selectedVatZone"
+                :options="dropdownData.vatZones"
+              ></b-form-select>
+            </b-form-group>
+          </b-form-group>
+          <b-card class="mb-3" no-body></b-card>
+          <b-form-group
+            label-cols-lg="3"
+            label="Location:"
+            label-size="lg"
+            label-class="font-weight-bold pt-0 p-0 text-dark"
+            class="mb-0"
+          >
+            <b-form-group
+              label-cols-sm="3"
+              label="Address:"
+              label-align-sm="right"
+              label-for="input-address"
+            >
+              <b-input id="input-address" v-model="form.address" placeholder="Address" type="text"></b-input>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="ZIP Code:"
+              label-align-sm="right"
+              label-for="input-zip"
+            >
+              <b-input id="input-zip" v-model="form.zip" placeholder="0000" type="number"></b-input>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="City:"
+              label-align-sm="right"
+              label-for="input-city"
+            >
+              <b-input id="input-city" v-model="form.city" placeholder="City" type="text"></b-input>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Country:"
+              label-align-sm="right"
+              label-for="input-country"
+            >
+              <b-input id="input-country" v-model="form.country" placeholder="Country" type="text"></b-input>
+            </b-form-group>
+          </b-form-group>
+          <b-button-group>
+            <b-button type="submit" variant="success">Save</b-button>
+            <!-- <b-button type="reset" variant="danger">Reset</b-button> -->
+          </b-button-group>
+        </b-form>
+      </b-card>
+    </b-modal>
+    <b-modal
+      centered
+      id="createContactModal"
+      body-class="p-0"
+      ref="createContactModal"
+      title="Create Contact"
+      hide-footer
+      size="lg">
+      <b-card bg-variant="light" body-class="p-0">
+        <b-form @submit="submitContact" onsubmit="return false;" class="p-3">
+          <b-form-group
+            label-cols-lg="3"
+            label="Basic Information:"
+            label-size="lg"
+            label-class="font-weight-bold pt-0 p-0 text-dark"
+            class="mb-0"
+          >
+            <b-form-group
+              label-cols-sm="3"
+              label="First Name:"
+              label-align-sm="right"
+              label-for="input-firstName"
+              description="Required"
+            >
+              <b-input id="input-firstName" required type="text" v-model="contactForm.firstName" placeholder="John"></b-input>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Last Name:"
+              label-align-sm="right"
+              label-for="input-lastName"
+              description="Required"
+            >
+              <b-input id="input-lastName" required type="text" v-model="contactForm.lastName" placeholder="Doe"></b-input>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Job Title:"
+              label-align-sm="right"
+              label-for="input-title"
+            >
+              <b-input id="input-title" type="text" v-model="contactForm.title" placeholder="Title"></b-input>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Phone:"
+              label-align-sm="right"
+              label-for="input-phone"
+            >
+              <b-input id="input-phone" v-model="contactForm.phone" type="number" placeholder="12345678"></b-input>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="E-mail:"
+              label-align-sm="right"
+              label-for="input-email"
+            >
+              <b-input id="input-email" v-model="contactForm.email" type="email" placeholder="email@email.com"></b-input>
+            </b-form-group>
+          </b-form-group>
+          <b-button-group>
+            <b-button type="submit" variant="success">Create</b-button>
+          </b-button-group>
+        </b-form>
+      </b-card>
+    </b-modal>
   </div>
 </template>
 
@@ -842,6 +879,7 @@ export default {
         vatZones: [],
       },
       form: {},
+      contactForm: {},
       fields: {
         assets: [
           {
@@ -984,7 +1022,7 @@ export default {
       },
       customerInfo: {
         atera: {},
-        economic: {}
+        economic: {},
       },
       paymentTerms: {},
       customerGroup: 0,
@@ -1021,47 +1059,43 @@ export default {
       this.items.passwords = response.data.passwords;
       this.pagination.passwords.totalItems = response.data.passwords.length;
     });
-    axios.get(`${process.env.VUE_APP_URL}customerGroups`)
-      .then(response => {
-        for (var item in response.data.customerGroups) {
-          console.log(item)
-          const group = response.data.customerGroups[item];
-          this.dropdownData.customerGroups.push(
-            {
-              value: group.customerGroupNumber, text: group.name
-            })
-        }
-      })
-    axios.get(`${process.env.VUE_APP_URL}currencies`)
-      .then(response => {
-        for (var item in response.data.currencies) {
-          const currency = response.data.currencies[item];
-          this.dropdownData.currencies.push(
-            {
-              value: currency.code, text: currency.name
-            })
-        }
-      })
-    axios.get(`${process.env.VUE_APP_URL}paymentTerms`)
-      .then(response => {
-        for (var item in response.data.paymentTerms) {
-          const term = response.data.paymentTerms[item];
-          this.dropdownData.paymentTerms.push(
-            {
-              value: term.paymentTermsNumber, text: term.name
-            })
-        }
-      })
-    axios.get(`${process.env.VUE_APP_URL}vatZones`)
-      .then(response => {
-        for (var item in response.data.vatZones) {
-          const vatZone = response.data.vatZones[item];
-          this.dropdownData.vatZones.push(
-            {
-              value: vatZone.vatZoneNumber, text: vatZone.name
-            })
-        }
-      })
+    axios.get(`${process.env.VUE_APP_URL}customerGroups`).then((response) => {
+      for (var item in response.data.customerGroups) {
+        console.log(item);
+        const group = response.data.customerGroups[item];
+        this.dropdownData.customerGroups.push({
+          value: group.customerGroupNumber,
+          text: group.name,
+        });
+      }
+    });
+    axios.get(`${process.env.VUE_APP_URL}currencies`).then((response) => {
+      for (var item in response.data.currencies) {
+        const currency = response.data.currencies[item];
+        this.dropdownData.currencies.push({
+          value: currency.code,
+          text: currency.name,
+        });
+      }
+    });
+    axios.get(`${process.env.VUE_APP_URL}paymentTerms`).then((response) => {
+      for (var item in response.data.paymentTerms) {
+        const term = response.data.paymentTerms[item];
+        this.dropdownData.paymentTerms.push({
+          value: term.paymentTermsNumber,
+          text: term.name,
+        });
+      }
+    });
+    axios.get(`${process.env.VUE_APP_URL}vatZones`).then((response) => {
+      for (var item in response.data.vatZones) {
+        const vatZone = response.data.vatZones[item];
+        this.dropdownData.vatZones.push({
+          value: vatZone.vatZoneNumber,
+          text: vatZone.name,
+        });
+      }
+    });
 
     this.loadInvoices();
 
@@ -1077,27 +1111,27 @@ export default {
   methods: {
     getCustomerInfo() {
       axios
-      .all([
-        this.fetchData(`customer/${this.id}`),
-        this.fetchData(`customer/contacts/${this.id}`),
-      ])
-      .then(
-        axios.spread((...responses) => {
-          const customerData = responses[0].data;
-          this.customerInfo = customerData.customer;
-          this.customerGroup = customerData.customerGroup;
-          this.ateraid = customerData.apiInfo;
-          this.paymentTerms = customerData.paymentTerms;
+        .all([
+          this.fetchData(`customer/${this.id}`),
+          this.fetchData(`customer/contacts/${this.id}`),
+        ])
+        .then(
+          axios.spread((...responses) => {
+            const customerData = responses[0].data;
+            this.customerInfo = customerData.customer;
+            this.customerGroup = customerData.customerGroup;
+            this.ateraid = customerData.apiInfo;
+            this.paymentTerms = customerData.paymentTerms;
 
-          this.populateForm();
+            this.populateForm();
 
-          const contactData = responses[1].data;
-          this.items.contacts = contactData.contacts;
-        })
-      )
-      .catch(error => {
-        console.log(error)
-      })
+            const contactData = responses[1].data;
+            this.items.contacts = contactData.contacts;
+          })
+        )
+        .catch((error) => {
+          console.log(error);
+        });
     },
     fetchData(endpoint) {
       return axios.get(process.env.VUE_APP_URL + endpoint);
@@ -1180,26 +1214,41 @@ export default {
     populateForm() {
       this.form = {
         name: this.customerInfo.economic.name,
-        businessNumber: this.customerInfo.economic.corporateIdentificationNumber,
+        businessNumber: this.customerInfo.economic
+          .corporateIdentificationNumber,
         domain: this.customerInfo.atera.Domain,
         country: this.customerInfo.economic.country,
         city: this.customerInfo.economic.city,
         address: this.customerInfo.economic.address,
         zip: this.customerInfo.economic.zip,
         phone: this.customerInfo.economic.telephoneAndFaxNumber,
-        selectedPaymentTerms: this.customerInfo.economic.paymentTerms.paymentTermsNumber,
-        selectedGroup: this.customerInfo.economic.customerGroup.customerGroupNumber,
+        selectedPaymentTerms: this.customerInfo.economic.paymentTerms
+          .paymentTermsNumber,
+        selectedGroup: this.customerInfo.economic.customerGroup
+          .customerGroupNumber,
         selectedCurrency: this.customerInfo.economic.currency,
         selectedVatZone: this.customerInfo.economic.vatZone.vatZoneNumber,
-      }
+      };
     },
     submitCustomerEdit() {
-      console.log('Submitting')
-      axios.put(`${process.env.VUE_APP_URL}customer/${this.id}`,
-      this.form)
+      console.log("Submitting");
+      axios
+        .put(`${process.env.VUE_APP_URL}customer/${this.id}`, this.form)
+        .then((response) => {
+          console.log(response);
+          this.$refs["customerEditModal"].hide();
+          this.getCustomerInfo();
+        });
+    },
+    submitContact() {
+      console.log('Creating contact')
+      var requestBody = this.contactForm;
+      requestBody.businessNumber = this.id;
+
+      axios.post(`${process.env.VUE_APP_URL}contacts`, requestBody)
       .then(response => {
-        console.log(response);
-        this.$refs['customerEditModal'].hide()
+        console.log(response)
+        this.$refs["createContactModal"].hide();
         this.getCustomerInfo();
       })
     },
