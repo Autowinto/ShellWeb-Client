@@ -1109,7 +1109,7 @@ export default {
     getCustomerInfo() {
       axios
         .all([
-          this.fetchData(`customer/${this.id}`),
+          this.fetchData(`customers/${this.id}`),
           this.fetchData(`customer/contacts/${this.id}`),
         ])
         .then(
