@@ -6,7 +6,7 @@ import Profile from "../components/views/Profile.vue";
 import Customer from "../components/views/Customer.vue";
 import Contact from "../components/views/Contact.vue";
 import Login from "../components/views/Login.vue";
-import NotFound from "../components/views/NotFound.vue";
+// import NotFound from "../components/views/NotFound.vue";
 import Tickets from "../components/views/Tickets.vue";
 import Ticket from "../components/views/Ticket.vue";
 import Invoices from "../components/views/Invoices.vue";
@@ -137,15 +137,15 @@ const router = new Router({
         title: "Authentication",
       },
     },
-    {
-      path: "*",
-      name: "404",
-      component: NotFound,
-      meta: {
-        hideNavBar: true,
-        title: "404",
-      },
-    },
+    // {
+    //   path: "*",
+    //   name: "404",
+    //   component: NotFound,
+    //   meta: {
+    //     hideNavBar: true,
+    //     title: "404",
+    //   },
+    // },
   ],
 });
 
