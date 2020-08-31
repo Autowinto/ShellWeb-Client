@@ -15,7 +15,7 @@
                 style="border-top-right-radius: 0; border-bottom-right-radius: 0;"
                 class="btn btn-primary w-100"
               >
-                <span>Ticket: {{this.items.TicketID}} || </span>
+                <span>Ticket: {{items.TicketID}} || </span>
                 <span style="color: lightgreen;" id="timeCounter">1:27:45</span>
               </button>
             </div>
@@ -114,7 +114,7 @@
               </div>
             </form>
           </div>
-          <h3 class="text-dark mb-4">Ticket ID: {{this.items.TicketID}}</h3>
+          <h3 class="text-dark mb-4">Ticket ID: {{items.TicketID}}</h3>
           <div class="row">
             <b-col cols="3">
               <div class="card shadow mb-3">
@@ -125,23 +125,23 @@
                   <div class="row mb-3">
                     <div class="col">
                       <p class="text-primary m-0 font-weight-bold">Customer ID</p>
-                      <p>{{this.items.CustomerBusinessNumber || N/A}}</p>
+                      <p>{{items.CustomerBusinessNumber || N/A}}</p>
                     </div>
                     <div class="col">
                       <p class="text-primary m-0 font-weight-bold">Employee</p>
-                      <p>{{this.items.EndUserFirstName}} {{this.items.EndUserLastName}}</p>
+                      <p>{{items.EndUserFirstName}} {{items.EndUserLastName}}</p>
                     </div>
                   </div>
                   <div class="row mb-3">
                     <div class="col">
                       <p class="text-primary m-0 font-weight-bold">Subject</p>
-                      <p class="m-0">{{this.items.TicketTitle}}</p>
+                      <p class="m-0">{{items.TicketTitle}}</p>
                     </div>
                   </div>
                   <div class="row mb-3">
                     <div class="col">
                       <p class="text-primary m-0 font-weight-bold">Description</p>
-                      <p class="m-0">{{this.items.FirstComment}}</p>
+                      <p class="m-0">{{items.FirstComment | stripHTML}}</p>
                     </div>
                   </div>
                   <div class="row mb-3">
@@ -157,19 +157,19 @@
                   <div class="row mb-3">
                     <div class="col">
                       <p class="text-primary m-0 font-weight-bold">Date of creation</p>
-                      <p class="m-0">{{this.items.TicketCreatedDate | dayjsDateOnly}}</p>
+                      <p class="m-0">{{items.TicketCreatedDate | dayjsDateOnly}}</p>
                     </div>
                   </div>
-                  <div class="row mb-3" v-if="this.items.TicketResolvedDate">
+                  <div class="row mb-3" v-if="items.TicketResolvedDate">
                     <div class="col">
                       <p class="text-primary m-0 font-weight-bold">Last updated</p>
-                      <p class="m-0">{{this.items.TicketResolvedDate | dayjsDateOnly}}</p>
+                      <p class="m-0">{{items.TicketResolvedDate | dayjsDateOnly}}</p>
                     </div>
                   </div>
                   <div class="row mb-3">
                     <div class="col">
                       <p class="text-primary m-0 font-weight-bold">Consultant</p>
-                      <p class="m-0">{{this.items.TechnicianFullName}}</p>
+                      <p class="m-0">{{items.TechnicianFullName}}</p>
                     </div>
                   </div>
                 </div>
@@ -182,15 +182,15 @@
                 </div>
                 <div class="card-body p4">
                   <div class="row m-0 mb-3">
-                    <div v-if="this.comments.length" class="rounded border w-100 p-3" style="background-color: #f9f9f9;">
+                    <div v-if="comments.length" class="rounded border w-100 p-3" style="background-color: #f9f9f9;">
                       <div id="info" class="mb-2">
                         <span
                           class="small"
-                        >{{this.comments[0].FirstName}} {{this.comments[0].LastName}} |</span>
-                        <span class="small" style="color:limegreen;">{{this.comments[0].Email}} |</span>
-                        <span class="small">{{this.comments[0].Date | dayjsDateTime}}</span>
+                        >{{comments[0].FirstName}} {{comments[0].LastName}} |</span>
+                        <span class="small" style="color:limegreen;">{{comments[0].Email}} |</span>
+                        <span class="small">{{comments[0].Date | dayjsDateTime}}</span>
                       </div>
-                      <div class="mb-3">{{this.comments[0].Comment}}</div>
+                      <div class="mb-3">{{comments[0].Comment | stripHTML}}</div>
                     </div>
                   </div>
                 </div>
@@ -212,7 +212,7 @@
                         <span class="small" style="color:limegreen;">{{comment.Email}} |</span>
                         <span class="small">{{comment.Date | dayjsDateTime}}</span>
                       </div>
-                      <div class="mb-3">{{comment.Comment}}</div>
+                      <div class="mb-3" :inner-html.prop="comment.Comment | stripHTML"></div>
                     </div>
                     <div
                       class="rounded border w-100 p-3"
@@ -275,6 +275,19 @@ export default {
     },
     dayjsDateTime: function(date) {
       return dayjs(date).format("MMM D, YYYY, h:mm:ss a");
+    },
+    stripHTML: function(value) {
+      if (value == null) {
+        return '';
+      }
+      var div = document.createElement("div");
+
+      value = value.replace(/[^{]*{[^}]*[^-]*[}]/g, ''); //TODO: This RegEx needs some work and isn't fully functional.
+      value = value.replace(/&nbsp;&zwnj;/g, '')
+      console.log(value)
+      div.innerHTML = value;
+      var text = div.textContent || div.innerText || "";
+      return text;
     }
   }
 };

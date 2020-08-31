@@ -98,7 +98,10 @@ export default {
   methods: {
     fetchData() {
       axios
-        .get(process.env.VUE_APP_URL + 'tickets/' + this.currentPage + '/' + this.perPage)
+        .get(`${process.env.VUE_APP_URL}tickets`, { params: {
+          page: this.currentPage,
+          results: this.perPage,
+        }})
         .then(response => {
           const data = response.data;
           console.log(data)
