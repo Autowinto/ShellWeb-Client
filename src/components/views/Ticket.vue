@@ -284,7 +284,6 @@ export default {
 
       value = value.replace(/[^{]*{[^}]*[^-]*[}]/g, ''); //TODO: This RegEx needs some work and isn't fully functional.
       value = value.replace(/&nbsp;&zwnj;/g, '')
-      console.log(value)
       div.innerHTML = value;
       var text = div.textContent || div.innerText || "";
       return text;
