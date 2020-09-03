@@ -898,7 +898,7 @@ export default {
         ],
         tickets: [
           {
-            key: "ticket_id",
+            key: "ticketId",
             label: "Ticket ID",
           },
           {
