@@ -1041,9 +1041,14 @@ export default {
       this.pagination.assets.totalItems = response.data.assets.totalItemCount;
     });
     this.fetchData(
-      `customer/tickets/${this.$route.query.customerID}/1/10`
+      `tickets/customers/${this.$route.query.customerID}`, { params:
+        {
+          page: this.pagination.tickets.currentPage,
+          results: this.pagination.tickets.perPage
+        }
+      }
     ).then((response) => {
-      this.items.tickets = response.data.tickets;
+      this.items.tickets = response.data;
     });
     this.fetchData(`customer/contracts/${this.id}`).then((response) => {
       this.items.contracts = response.data.contracts;
@@ -1130,8 +1135,12 @@ export default {
           console.log(error);
         });
     },
-    fetchData(endpoint) {
-      return axios.get(process.env.VUE_APP_URL + endpoint);
+    fetchData(endpoint, params) {
+      if (params) {
+        return axios.get(process.env.VUE_APP_URL + endpoint, params);
+      } else {
+        return axios.get(process.env.VUE_APP_URL + endpoint);
+      }
     },
     loadContracts: function () {},
     dayjs: function () {

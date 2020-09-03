@@ -1028,7 +1028,10 @@ export default {
     },
     loadTickets() {
       this.fetchData(
-        `tickets/${this.pagination.tickets.currentPage}/${this.pagination.tickets.perPage}`
+        `tickets`, {params: {
+          page: this.pagination.tickets.page,
+          results: this.pagination.tickets.perPage
+        }}
       ).then(result => {
         this.pagination.tickets.totalItems =
           result.data.tickets.totalItemCount;
