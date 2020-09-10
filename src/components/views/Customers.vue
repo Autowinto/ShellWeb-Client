@@ -148,6 +148,14 @@
             >
               <b-form-select id="input-vat" required v-model="form.selectedVatZone" :options="dropdownData.vatZones"></b-form-select>
             </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Disable E-Invoicing:"
+              label-align-sm="right"
+              label-for="input-invoice"
+            >
+              <b-form-checkbox id="input-invoice" required v-model="form.eInvoicingDisabledByDefault" :options="dropdownData.eInvoicingDisabledByDefault"></b-form-checkbox>
+            </b-form-group>
           </b-form-group>
           <b-card class="mb-3" no-body></b-card>
           <b-form-group
@@ -191,7 +199,7 @@
             </b-form-group>
           </b-form-group>
           <b-button-group>
-            <b-button type="submit" variant="primary">Create</b-button>
+            <b-button type="submit" variant="success">Create</b-button>
             <!-- <b-button type="reset" variant="danger">Reset</b-button> -->
           </b-button-group>
         </b-form>
@@ -227,6 +235,7 @@ export default {
         selectedGroup: null,
         selectedCurrency: null,
         selectedVatZone: null,
+        eInvoicingDisabledByDefault: null
       },
       fields: [
         {
@@ -299,15 +308,15 @@ export default {
   methods: {
     fetchData() {
       axios
-        .get(
-          process.env.VUE_APP_URL +
-            "customers/" +
-            this.currentPage +
-            "/" +
-            this.perPage
-        )
+        .get(`${process.env.VUE_APP_URL}customers`,
+          { 
+            params: { 
+              page: this.currentPage, 
+              results: this.perPage 
+            }})
         .then((response) => {
-          const data = response.data.customers;
+          console.log(response)
+          const data = response.data;
           this.items = data.collection;
           this.currentPage = parseInt(data.pagination.skipPages) + 1;
           this.totalItems = data.pagination.results;

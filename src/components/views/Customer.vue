@@ -231,12 +231,12 @@
               <b-tabs card fill>
                 <b-tab title="Employees" active>
                   <b-card-text>
-                    <b-row class="mb-2">
-                      <b-col>
-                      <b-button v-b-modal.createContactModal class="float-right" variant="success" size="sm">Create Contact</b-button>
-                      </b-col>
-                    </b-row>
-                    <b-card no-body class="mb-2"></b-card>
+                      <b-card bg-variant="light" class="mb-3">
+                        <b-col>
+                          <b-button v-b-modal.createContactModal class="float-right" variant="success">Create Contact</b-button>
+                        </b-col>
+
+                      </b-card>
                     <b-row v-if="items.contacts.length">
                       <div v-for="(contact, idx) in items.contacts" :key="idx" class="col-4">
                         <div class="card mb-3 p-3" style="height: 140px;">
@@ -268,6 +268,27 @@
                 </b-tab>
                 <b-tab title="Contracts">
                   <b-card-text>
+                      <b-card bg-variant="light" class="mb-3">
+                        <b-form inline @submit="submitContractRates" onsubmit="return false;" class="inline">
+                          <div role="group" class="mx-auto py-0">
+                            <label>Driving ({{customerInfo.economic.currency}}):</label>
+                            <b-form-input type="number" v-model="items.contractRates.drivingRate"></b-form-input>
+                          </div>
+                          <div role="group" class="mx-auto py-0">
+                            <label>Support ({{customerInfo.economic.currency}}):</label>
+                            <b-form-input type="number" v-model="items.contractRates.supportRate"></b-form-input>
+                          </div>
+                          <div role="group" class="mx-auto py-0">
+                            <label>Junior Consultant ({{customerInfo.economic.currency}}):</label>
+                            <b-form-input type="number" v-model="items.contractRates.juniorRate"></b-form-input>
+                          </div>
+                          <div role="group" class="mx-auto py-0">
+                            <label>Senior Consultant ({{customerInfo.economic.currency}}):</label>
+                            <b-form-input type="number" v-model="items.contractRates.seniorRate"></b-form-input>
+                          </div>
+                          <b-button type="submit" variant="success" class="mx-auto">Apply</b-button>
+                        </b-form>
+                      </b-card>
                     <b-row v-if="items.contracts">
                       <div v-for="(contract, idx) in items.contracts" :key="idx" class="pl-4 col-6">
                         <div class="card mb-3" style="color: black;">
@@ -530,7 +551,7 @@
                 <b-tab title="Invoices">
                   <b-card-text>
                     <div>
-                      <b-card bg-variant="light">
+                      <b-card bg-variant="light" class="mb-3">
                         <!-- <b-form-checkbox
                           v-model="pagination.invoices.filterOptions.allSelected"
                           :indeterminate="pagination.invoices.filterOptions.indeterminate"
@@ -742,6 +763,15 @@
                 v-model="form.selectedVatZone"
                 :options="dropdownData.vatZones"
               ></b-form-select>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Disable E-Invoicing:"
+              label-align-sm="right"
+              label-for="input-invoice"
+              description="Currently not enabled on backend. Will be enabled once implemented"
+            >
+              <b-form-checkbox disabled id="input-invoice" required v-model="form.eInvoicingDisabledByDefault" :options="dropdownData.eInvoicingDisabledByDefault"></b-form-checkbox>
             </b-form-group>
           </b-form-group>
           <b-card class="mb-3" no-body></b-card>
@@ -978,6 +1008,7 @@ export default {
         tickets: [],
         contacts: [],
         contracts: [],
+        contractRates: {},
         assets: [],
         invoices: [],
         passwords: [],
@@ -1053,6 +1084,9 @@ export default {
     this.fetchData(`customer/contracts/${this.id}`).then((response) => {
       this.items.contracts = response.data.contracts;
     });
+    this.fetchData(`customers/${this.id}/rates`).then(response => {
+      this.items.contractRates = response.data
+    })
     this.fetchData(
       `customer/passwords/${this.$getAccountID()}/${this.id}/${
         this.pagination.passwords.currentPage
@@ -1234,6 +1268,7 @@ export default {
           .customerGroupNumber,
         selectedCurrency: this.customerInfo.economic.currency,
         selectedVatZone: this.customerInfo.economic.vatZone.vatZoneNumber,
+        eInvoicingDisabledByDefault: this.customerInfo.economic.eInvoicingDisabledByDefault
       };
     },
     submitCustomerEdit() {
@@ -1258,6 +1293,12 @@ export default {
         this.getCustomerInfo();
       })
     },
+    submitContractRates() {
+      axios.put(`${process.env.VUE_APP_URL}customers/${this.id}/rates`, this.items.contractRates)
+      .then(response => {
+        console.log(response)
+      })
+    }
     // toggleAll(checked) {
     //   this.pagination.invoices.filterOptions.selected = checked ? this.pagination.invoices.filterOptions.optionsValues.slice() : []
     // }
