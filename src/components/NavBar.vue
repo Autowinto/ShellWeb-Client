@@ -397,6 +397,8 @@ export default {
       })
       .then(() => {
         this.$refs["smsModal"].hide();
+        this.textMessageForm.message = null
+        this.textMessageForm.receiver = null
       })
     }
   },
