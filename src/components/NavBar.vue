@@ -99,7 +99,7 @@
                   </form>
                 </div>
               </li>
-              <li class="nav-item dropdown no-arrow mx-1" role="presentation">
+              <!-- <li class="nav-item dropdown no-arrow mx-1" role="presentation">
                 <div class="nav-item dropdown no-arrow">
                   <a
                     class="dropdown-toggle nav-link"
@@ -241,7 +241,52 @@
                   class="shadow dropdown-list dropdown-menu dropdown-menu-right"
                   aria-labelledby="alertsDropdown"
                 ></div>
+              </li>-->
+              <li class="nav-item dropdown no-arrow mx-1" role="presentation">
+                <div>
+                  <a class="nav-link" v-b-modal.smsModal href="#">
+                    <i class="fas fa-sms fa-fw fa-lg"></i>
+                  </a>
+                </div>
               </li>
+              <b-modal id="smsModal" ref="smsModal" centered hide-footer body-class="p-0" size="lg" title="Compose Message From ITC">
+                <b-card bg-variant="light" body-class="p-0">
+                  <b-form class="p-3" @submit="submitTextMessage" onsubmit="return false;">
+                    <b-form-group
+                      label-cols-sm="3"
+                      label="Phone:"
+                      label-align-sm="right"
+                      label-for="input-number"
+                      description="Required"
+                    >
+                      <b-input
+                        id="input-number"
+                        required
+                        type="number"
+                        v-model="textMessageForm.receiver"
+                      ></b-input>
+                    </b-form-group>
+                    <b-form-group
+                      label-cols-sm="3"
+                      label="Message:"
+                      label-align-sm="right"
+                      label-for="input-message"
+                      description="Required"
+                    >
+                      <textarea
+                        v-model="textMessageForm.message"
+                        rows="6"
+                        style="width:100%;"
+                      >
+                      
+                      </textarea>
+                    </b-form-group>
+                    <b-button-group>
+                      <b-button id="smsSubmitBtn" type="submit" variant="success">Send</b-button>
+                    </b-button-group>
+                  </b-form>
+                </b-card>
+              </b-modal>
               <div class="d-none d-sm-block topbar-divider"></div>
               <li class="nav-item dropdown no-arrow" role="presentation">
                 <div class="nav-item dropdown no-arrow">
@@ -252,12 +297,12 @@
                     href="#"
                   >
                     <span
-                      class=" mr-2 text-gray-600 small font-weight-bold">
-                      {{this.user.displayName}}
-                    </span>
-                    <span class="small text-gray-500" style="position:absolute; bottom: 10px" >
-                      {{this.user.role}}
-                    </span>
+                      class="mr-2 text-gray-600 small font-weight-bold"
+                    >{{this.user.displayName}}</span>
+                    <span
+                      class="small text-gray-500"
+                      style="position:absolute; bottom: 10px"
+                    >{{this.user.role}}</span>
                     <!-- <img
                       class="border rounded-circle img-profile"
                       src="../assets/img/avatars/avatar1.jpeg?h=0ecc82101fb9a10ca459432faa8c0656"
@@ -303,14 +348,18 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 export default {
   data() {
     return {
       user: {
         displayName: "Not Logged In", //displayName is just "Not Logged In" per default, so that displays when the user isn't logged in properly
-        role: ''
+        role: "",
       },
+      textMessageForm: {
+        message: null,
+        receiver: null
+      }
     };
   },
   created() {
@@ -325,20 +374,31 @@ export default {
       this.$signOut();
     },
     fetchRole(accountId) {
-      axios.get(`${process.env.VUE_APP_URL}employee/role/${accountId}`)
-        .then(response => {
-          console.log(response)
+      axios
+        .get(`${process.env.VUE_APP_URL}employee/role/${accountId}`)
+        .then((response) => {
+          console.log(response);
           this.user.role = response.data.roleName;
-        })
+        });
     },
     handleMSGraph(value) {
       if (value !== null) {
-        this.fetchRole(value.homeAccountId)
+        this.fetchRole(value.homeAccountId);
         this.$getAccountGraph(value).then((response) => {
           this.user.displayName = response.data.displayName;
         });
       }
     },
+    submitTextMessage() {
+      console.log('Submitting text message')
+      axios.post(`${process.env.VUE_APP_URL}sms`, {
+        message: this.textMessageForm.message,
+        receiver: this.textMessageForm.receiver
+      })
+      .then(() => {
+        this.$refs["smsModal"].hide();
+      })
+    }
   },
   computed: {
     authStatus() {
