@@ -367,7 +367,7 @@
                         <!--Template for storing the link to the ticket in the table column.-->
                         <template v-slot:cell(subject)="data">
                           <b-link
-                            :to="{ path: '/ticket', query: {ticketID: data.item.ticket_id}}"
+                            :to="{ path: '/ticket', query: {ticketID: data.item.ticketId}}"
                           >{{ data.item.subject }}</b-link>
                         </template>
                         <!--Template for formatting the creation date-->
