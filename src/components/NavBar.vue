@@ -242,7 +242,7 @@
                   aria-labelledby="alertsDropdown"
                 ></div>
               </li>-->
-              <li class="nav-item dropdown no-arrow mx-1" role="presentation">
+              <li v-if="this.$store.state.isAuthenticated" class="nav-item dropdown no-arrow mx-1" role="presentation">
                 <div>
                   <a class="nav-link" v-b-modal.smsModal href="#">
                     <i class="fas fa-sms fa-fw fa-lg"></i>
