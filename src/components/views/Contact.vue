@@ -143,7 +143,7 @@ export default {
     };
   },
   created() {
-    this.fetchData(`contact/${this.$route.query.contactid}`).then(response => {
+    this.fetchData(`contacts/${this.$route.query.contactid}`).then(response => {
       this.contactInfo = response.data.contactInfo;
     });
     this.fetchData(`contact/tickets/${this.$route.query.contactid}/1/10`).then(
