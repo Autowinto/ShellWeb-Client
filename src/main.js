@@ -5,8 +5,11 @@ import 'bootstrap'
 import('../src/assets/bootstrap/css/bootstrap.min.css')
 import('../src/assets/fonts/fontawesome-all.min.css')
 import BootstrapVue from 'bootstrap-vue';
-import { authMixin } from './mixins/authMixin.js';
-import Vuex from 'vuex';
+import { authMixin } from './mixins/authMixin.js'
+import Vuex from 'vuex'
+import VueCompositionAPI from '@vue/composition-api'
+import VueFileAgent from 'vue-file-agent'
+import 'vue-file-agent/dist/vue-file-agent.css'
 
 Vue.config.productionTip = false
 
@@ -16,6 +19,8 @@ Vue.mixin(authMixin);
 //Extra vue libraries registration
 Vue.use(BootstrapVue)
 Vue.use(Vuex);
+Vue.use(VueCompositionAPI)
+Vue.use(VueFileAgent)
 
 //Initialize global storage with mutation functions. This is used for components to react to authentication
 const store = new Vuex.Store({

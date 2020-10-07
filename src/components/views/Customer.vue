@@ -1,9 +1,11 @@
 <template>
   <div id="wrapper">
     <div class="container-fluid">
-      <h3
-        class="text-dark mb-4"
-      >{{customerInfo.economic.name}} ({{customerInfo.economic.customerNumber}})</h3>
+      <h3 class="text-dark mb-4">
+        {{ customerInfo.economic.name }} ({{
+          customerInfo.economic.customerNumber
+        }})
+      </h3>
       <div class="row mb-3">
         <div class="col-3">
           <div class="row mb-3">
@@ -12,7 +14,9 @@
                 <div class="card-header py-3">
                   <div class="row">
                     <div class="col">
-                      <h6 class="text-primary m-0 font-weight-bold">Customer Information</h6>
+                      <h6 class="text-primary m-0 font-weight-bold">
+                        Customer Information
+                      </h6>
                     </div>
                   </div>
                 </div>
@@ -21,21 +25,23 @@
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Name</h4>
-                        <h4 class="small">{{customerInfo.economic.name}}</h4>
+                        <h4 class="small">{{ customerInfo.economic.name }}</h4>
                       </div>
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Currency</h4>
-                        <h4 class="small">{{customerInfo.economic.currency}}</h4>
+                        <h4 class="small">
+                          {{ customerInfo.economic.currency }}
+                        </h4>
                       </div>
                     </div>
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Customer Group</h4>
-                        <h4 class="small">{{customerGroup}}</h4>
+                        <h4 class="small">{{ customerGroup }}</h4>
                       </div>
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Payment Terms</h4>
-                        <h4 class="small">{{paymentTerms}}</h4>
+                        <h4 class="small">{{ paymentTerms }}</h4>
                       </div>
                     </div>
                   </div>
@@ -44,14 +50,28 @@
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Phone Number</h4>
-                        <b-link v-if="customerInfo.economic.telephoneAndFaxNumber" class="small" :href="'tel:' + customerInfo.economic.telephoneAndFaxNumber">{{customerInfo.economic.telephoneAndFaxNumber}}</b-link>
+                        <b-link
+                          v-if="customerInfo.economic.telephoneAndFaxNumber"
+                          class="small"
+                          :href="
+                            'tel:' + customerInfo.economic.telephoneAndFaxNumber
+                          "
+                          >{{
+                            customerInfo.economic.telephoneAndFaxNumber
+                          }}</b-link
+                        >
                         <h4 v-else class="small">N/A</h4>
                       </div>
                     </div>
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">E-mail</h4>
-                        <b-link v-if="customerInfo.economic.telephoneAndFaxNumber" class="small" :href="'mailto:' + customerInfo.economic.email">{{customerInfo.economic.email}}</b-link>
+                        <b-link
+                          v-if="customerInfo.economic.telephoneAndFaxNumber"
+                          class="small"
+                          :href="'mailto:' + customerInfo.economic.email"
+                          >{{ customerInfo.economic.email }}</b-link
+                        >
                       </div>
                     </div>
                   </div>
@@ -60,35 +80,42 @@
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Address</h4>
-                        <h4 class="small">{{customerInfo.economic.address}}</h4>
+                        <h4 class="small">
+                          {{ customerInfo.economic.address }}
+                        </h4>
                       </div>
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">ZIP Code</h4>
-                        <h4 class="small">{{customerInfo.economic.zip}}</h4>
+                        <h4 class="small">{{ customerInfo.economic.zip }}</h4>
                       </div>
                     </div>
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">City</h4>
-                        <h4 class="small">{{customerInfo.economic.city}}</h4>
+                        <h4 class="small">{{ customerInfo.economic.city }}</h4>
                       </div>
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Country</h4>
-                        <h4 class="small">{{customerInfo.economic.country}}</h4>
+                        <h4 class="small">
+                          {{ customerInfo.economic.country }}
+                        </h4>
                       </div>
                     </div>
                   </div>
-                  <div class="card shadow mb-3"></div>
-                  <div class="row mb-3">
+                  <div class="card shadow mb-2"></div>
+                  <div class="row mb-2">
                     <div class="col">
                       <button
                         class="btn btn-primary w-100"
                         v-b-modal.customerEditModal
-                      >Edit Customer</button>
+                      >
+                        Edit Customer
+                      </button>
                     </div>
                   </div>
-                  <div class="card shadow mb-3"></div>
-                  <button class="btn btn-danger w-100" v-b-modal.deletionModal>Delete Customer</button>
+                  <button class="btn btn-danger w-100" v-b-modal.deletionModal>
+                    Delete Customer
+                  </button>
                 </div>
               </div>
             </div>
@@ -97,127 +124,156 @@
             <div class="col">
               <div class="card shadow">
                 <div class="card-header">
-                  <h6 class="text-primary font-weight-bold">Customer Call Log</h6>
+                  <h6 class="text-primary font-weight-bold">
+                    Customer Call Log
+                  </h6>
                 </div>
-                <div class="card-body" style="height: 500px; max-height: 500px; overflow-y: auto;">
+                <div
+                  class="card-body"
+                  style="height: 500px; max-height: 500px; overflow-y: auto"
+                >
                   <div
                     class="rounded border w-100 pl-3 py-2 mb-3"
-                    style="background-color: #f9f9f9;"
+                    style="background-color: #f9f9f9"
                   >
                     <div class="row">
                       <span class="small">06/05/2020 14:45:26</span>
                     </div>
                     <div class="row">
                       <span class="mr-1">Incoming Call from</span>
-                      <span class="mr-1" style="color: limegreen;">12345678</span>
+                      <span class="mr-1" style="color: limegreen"
+                        >12345678</span
+                      >
                       <span class="mr-1">to</span>
-                      <span class="mr-1" style="color: limegreen;">87654321</span>
+                      <span class="mr-1" style="color: limegreen"
+                        >87654321</span
+                      >
                     </div>
                     <div class="row">
                       <span class="mr-1">Duration:</span>
-                      <span class="mr-1" style="color: limegreen;">0:21:45</span>
+                      <span class="mr-1" style="color: limegreen">0:21:45</span>
                     </div>
                     <div class="row">
                       <span class="mr-1">Waited for:</span>
-                      <span class="mr-1" style="color: limegreen;">0:05:45</span>
+                      <span class="mr-1" style="color: limegreen">0:05:45</span>
                     </div>
                   </div>
                   <div
                     class="rounded border w-100 pl-3 py-2 mb-3"
-                    style="background-color: #e2f4d0;"
+                    style="background-color: #e2f4d0"
                   >
                     <div class="row">
                       <span class="small">06/05/2020 14:45:26</span>
                     </div>
                     <div class="row">
                       <span class="mr-1">Outgoing Call from</span>
-                      <span class="mr-1" style="color: limegreen;">12345678</span>
+                      <span class="mr-1" style="color: limegreen"
+                        >12345678</span
+                      >
                       <span class="mr-1">to</span>
-                      <span class="mr-1" style="color: limegreen;">87654321</span>
+                      <span class="mr-1" style="color: limegreen"
+                        >87654321</span
+                      >
                     </div>
                     <div class="row">
                       <span class="mr-1">Duration:</span>
-                      <span class="mr-1" style="color: limegreen;">0:21:45</span>
+                      <span class="mr-1" style="color: limegreen">0:21:45</span>
                     </div>
                   </div>
                   <div
                     class="rounded border w-100 pl-3 py-2 mb-3"
-                    style="background-color: #f9f9f9;"
+                    style="background-color: #f9f9f9"
                   >
                     <div class="row">
                       <span class="small">06/05/2020 14:45:26</span>
                     </div>
                     <div class="row">
                       <span class="mr-1">Incoming Call from</span>
-                      <span class="mr-1" style="color: limegreen;">12345678</span>
+                      <span class="mr-1" style="color: limegreen"
+                        >12345678</span
+                      >
                       <span class="mr-1">to</span>
-                      <span class="mr-1" style="color: limegreen;">87654321</span>
+                      <span class="mr-1" style="color: limegreen"
+                        >87654321</span
+                      >
                     </div>
                     <div class="row">
                       <span class="mr-1">Duration:</span>
-                      <span class="mr-1" style="color: limegreen;">0:21:45</span>
+                      <span class="mr-1" style="color: limegreen">0:21:45</span>
                     </div>
                     <div class="row">
                       <span class="mr-1">Waited for:</span>
-                      <span class="mr-1" style="color: limegreen;">0:05:45</span>
+                      <span class="mr-1" style="color: limegreen">0:05:45</span>
                     </div>
                   </div>
                   <div
                     class="rounded border w-100 pl-3 py-2 mb-3"
-                    style="background-color: #e2f4d0;"
+                    style="background-color: #e2f4d0"
                   >
                     <div class="row">
                       <span class="small">06/05/2020 14:45:26</span>
                     </div>
                     <div class="row">
                       <span class="mr-1">Outgoing Call from</span>
-                      <span class="mr-1" style="color: limegreen;">12345678</span>
+                      <span class="mr-1" style="color: limegreen"
+                        >12345678</span
+                      >
                       <span class="mr-1">to</span>
-                      <span class="mr-1" style="color: limegreen;">87654321</span>
+                      <span class="mr-1" style="color: limegreen"
+                        >87654321</span
+                      >
                     </div>
                     <div class="row">
                       <span class="mr-1">Duration:</span>
-                      <span class="mr-1" style="color: limegreen;">0:21:45</span>
+                      <span class="mr-1" style="color: limegreen">0:21:45</span>
                     </div>
                   </div>
                   <div
                     class="rounded border w-100 pl-3 py-2 mb-3"
-                    style="background-color: #f9f9f9;"
+                    style="background-color: #f9f9f9"
                   >
                     <div class="row">
                       <span class="small">06/05/2020 14:45:26</span>
                     </div>
                     <div class="row">
                       <span class="mr-1">Incoming Call from</span>
-                      <span class="mr-1" style="color: limegreen;">12345678</span>
+                      <span class="mr-1" style="color: limegreen"
+                        >12345678</span
+                      >
                       <span class="mr-1">to</span>
-                      <span class="mr-1" style="color: limegreen;">87654321</span>
+                      <span class="mr-1" style="color: limegreen"
+                        >87654321</span
+                      >
                     </div>
                     <div class="row">
                       <span class="mr-1">Duration:</span>
-                      <span class="mr-1" style="color: limegreen;">0:21:45</span>
+                      <span class="mr-1" style="color: limegreen">0:21:45</span>
                     </div>
                     <div class="row">
                       <span class="mr-1">Waited for:</span>
-                      <span class="mr-1" style="color: limegreen;">0:05:45</span>
+                      <span class="mr-1" style="color: limegreen">0:05:45</span>
                     </div>
                   </div>
                   <div
                     class="rounded border w-100 pl-3 py-2 mb-3"
-                    style="background-color: #e2f4d0;"
+                    style="background-color: #e2f4d0"
                   >
                     <div class="row">
                       <span class="small">06/05/2020 14:45:26</span>
                     </div>
                     <div class="row">
                       <span class="mr-1">Outgoing Call from</span>
-                      <span class="mr-1" style="color: limegreen;">12345678</span>
+                      <span class="mr-1" style="color: limegreen"
+                        >12345678</span
+                      >
                       <span class="mr-1">to</span>
-                      <span class="mr-1" style="color: limegreen;">87654321</span>
+                      <span class="mr-1" style="color: limegreen"
+                        >87654321</span
+                      >
                     </div>
                     <div class="row">
                       <span class="mr-1">Duration:</span>
-                      <span class="mr-1" style="color: limegreen;">0:21:45</span>
+                      <span class="mr-1" style="color: limegreen">0:21:45</span>
                     </div>
                   </div>
                 </div>
@@ -225,38 +281,75 @@
             </div>
           </div>
         </div>
-        <b-col style="position: relative;">
-          <div style="height: 100%;">
-            <b-card no-body shadow style="height: 100%;">
+        <b-col style="position: relative">
+          <div style="height: 100%">
+            <b-card no-body shadow style="height: 100%">
               <b-tabs card fill>
-                <b-tab title="Employees" active>
+                <b-tab title="Contacts" active>
                   <b-card-text>
-                      <b-card bg-variant="light" class="mb-3">
-                        <b-col>
-                          <b-button v-b-modal.createContactModal class="float-right" variant="success">Create Contact</b-button>
-                        </b-col>
-
-                      </b-card>
+                    <b-card bg-variant="light" class="mb-3">
+                      <b-col>
+                        <b-button
+                          v-b-modal.createContactModal
+                          class="float-right"
+                          variant="success"
+                          >Create Contact</b-button
+                        >
+                      </b-col>
+                    </b-card>
                     <b-row v-if="items.contacts.length">
-                      <div v-for="(contact, idx) in items.contacts" :key="idx" class="col-4">
-                        <div class="card mb-3 p-3" style="height: 140px;">
+                      <div
+                        v-for="(contact, idx) in items.contacts"
+                        :key="idx"
+                        class="col-4"
+                      >
+                        <div class="card mb-3 p-3" style="height: 140px">
                           <div class="row ml-3">
                             <b-link
                               class="font-weight-bold"
-                              style="color: black; font-size: 120%;"
-                              :to="{ path: '/contact/', query: {contactid: contact.contact_id}}"
-                            >{{contact.first_name}} {{contact.last_name}}</b-link>
+                              style="color: black; font-size: 120%"
+                              :to="{
+                                path: '/contact/',
+                                query: { contactid: contact.contactId },
+                              }"
+                              >{{ contact.firstName }}
+                              {{ contact.lastName }}</b-link
+                            >
                           </div>
-                          <div class="row ml-3" v-if="contact.job_title !== 'null'">
-                            <h6 class="small">{{contact.job_title}}</h6>
+                          <div
+                            class="row ml-3"
+                            v-if="contact.jobTitle !== 'null'"
+                          >
+                            <h6 class="small">{{ contact.jobTitle }}</h6>
                           </div>
-                          <div v-if="contact.phone && contact.phone !== 'null'" class="row ml-3">
-                            <span style="color: black;" class="fa fa-phone fa-fw mr-1"></span>
-                            <b-link :href="'tel:' + contact.phone">{{contact.phone}}</b-link>
+                          <div
+                            v-if="contact.email && contact.email !== 'null'"
+                            class="row ml-3"
+                          >
+                            <span
+                              style="color: black"
+                              class="fa fa-at fa-fw mr-1"
+                            ></span>
+                            <b-link :href="'mailto:' + contact.email">{{
+                              contact.email
+                            }}</b-link>
                           </div>
-                          <div v-if="contact.email && contact.email !== 'null'" class="row ml-3">
-                            <span style="color: black;" class="fa fa-at fa-fw mr-1"></span>
-                            <b-link :href="'mailto:' + contact.email">{{contact.email}}</b-link>
+                          <div
+                            v-if="contact.phones && contact.phones !== 'null'"
+                            class="row ml-3"
+                          >
+                            <div
+                              v-for="phone in contact.phones"
+                              :key="phone.phone"
+                            >
+                              <span
+                                style="color: black"
+                                class="fa fa-phone fa-fw mr-1"
+                              ></span>
+                              <b-link :href="'tel:' + phone.phone"
+                                >{{ phone.name }}: {{ phone.phone }}</b-link
+                              >
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -268,45 +361,94 @@
                 </b-tab>
                 <b-tab title="Contracts">
                   <b-card-text>
-                      <b-card bg-variant="light" class="mb-3">
-                        <b-form inline @submit="submitContractRates" onsubmit="return false;" class="inline">
-                          <div role="group" class="mx-auto py-0">
-                            <label>Driving ({{customerInfo.economic.currency}}):</label>
-                            <b-form-input type="number" v-model="items.contractRates.drivingRate"></b-form-input>
-                          </div>
-                          <div role="group" class="mx-auto py-0">
-                            <label>Support ({{customerInfo.economic.currency}}):</label>
-                            <b-form-input type="number" v-model="items.contractRates.supportRate"></b-form-input>
-                          </div>
-                          <div role="group" class="mx-auto py-0">
-                            <label>Junior Consultant ({{customerInfo.economic.currency}}):</label>
-                            <b-form-input type="number" v-model="items.contractRates.juniorRate"></b-form-input>
-                          </div>
-                          <div role="group" class="mx-auto py-0">
-                            <label>Senior Consultant ({{customerInfo.economic.currency}}):</label>
-                            <b-form-input type="number" v-model="items.contractRates.seniorRate"></b-form-input>
-                          </div>
-                          <b-button type="submit" variant="success" class="mx-auto">Apply</b-button>
-                        </b-form>
-                      </b-card>
+                    <b-card bg-variant="light" class="mb-3">
+                      <b-form
+                        inline
+                        @submit="submitContractRates"
+                        onsubmit="return false;"
+                        class="inline"
+                      >
+                        <div role="group" class="mx-auto py-0">
+                          <label
+                            >Driving ({{
+                              customerInfo.economic.currency
+                            }}):</label
+                          >
+                          <b-form-input
+                            type="number"
+                            v-model="items.contractRates.drivingRate"
+                          ></b-form-input>
+                        </div>
+                        <div role="group" class="mx-auto py-0">
+                          <label
+                            >Support ({{
+                              customerInfo.economic.currency
+                            }}):</label
+                          >
+                          <b-form-input
+                            type="number"
+                            v-model="items.contractRates.supportRate"
+                          ></b-form-input>
+                        </div>
+                        <div role="group" class="mx-auto py-0">
+                          <label
+                            >Junior Consultant ({{
+                              customerInfo.economic.currency
+                            }}):</label
+                          >
+                          <b-form-input
+                            type="number"
+                            v-model="items.contractRates.juniorRate"
+                          ></b-form-input>
+                        </div>
+                        <div role="group" class="mx-auto py-0">
+                          <label
+                            >Senior Consultant ({{
+                              customerInfo.economic.currency
+                            }}):</label
+                          >
+                          <b-form-input
+                            type="number"
+                            v-model="items.contractRates.seniorRate"
+                          ></b-form-input>
+                        </div>
+                        <b-button
+                          type="submit"
+                          variant="success"
+                          class="mx-auto"
+                          >Apply</b-button
+                        >
+                      </b-form>
+                    </b-card>
                     <b-row v-if="items.contracts">
-                      <div v-for="(contract, idx) in items.contracts" :key="idx" class="pl-4 col-6">
-                        <div class="card mb-3" style="color: black;">
+                      <div
+                        v-for="(contract, idx) in items.contracts"
+                        :key="idx"
+                        class="pl-4 col-6"
+                      >
+                        <div class="card mb-3" style="color: black">
                           <div class="container h-100 pl-0">
                             <div class="row">
                               <div
                                 class="col-2 bg-success d-flex align-items-center justify-content-center"
                               >
-                                <i class="fa rel fa-bookmark" style="font-size: 30px;"></i>
+                                <i
+                                  class="fa rel fa-bookmark"
+                                  style="font-size: 30px"
+                                ></i>
                               </div>
                               <div class="col py-3">
                                 <div class="row ml-1">
-                                  <h6 class>{{contract.ContractName}} - {{contract.ContractType}}</h6>
+                                  <h6 class>
+                                    {{ contract.ContractName }} -
+                                    {{ contract.ContractType }}
+                                  </h6>
                                 </div>
                                 <div class="row ml-1">
-                                  <h5
-                                    class="font-weight-bold"
-                                  >{{contract.StartDate | dayjsDateTime}} - {{contract.EndDate | dayjsDateTime}}</h5>
+                                  <h5 class="font-weight-bold">
+                                    {{ contract.StartDate | dayjsDateTime }} -
+                                    {{ contract.EndDate | dayjsDateTime }}
+                                  </h5>
                                 </div>
                               </div>
                             </div>
@@ -330,18 +472,28 @@
                       >
                         <template v-slot:cell(AgentName)="data">
                           <b-link
-                            :to="{ path: '/asset', query: {assetID: data.item.AgentID}}"
-                          >{{ data.item.AgentName }}</b-link>
+                            :to="{
+                              path: '/asset',
+                              query: { assetID: data.item.AgentID },
+                            }"
+                            >{{ data.item.AgentName }}</b-link
+                          >
                         </template>
                         <template v-slot:cell(Online)="data">
                           <h5 class="m-0 p-0">
-                            <b-badge v-if="data.item.Online" variant="success">Online</b-badge>
+                            <b-badge v-if="data.item.Online" variant="success"
+                              >Online</b-badge
+                            >
                             <b-badge v-else variant="danger">Offline</b-badge>
                           </h5>
                         </template>
                         <template
                           v-slot:cell(LastPatchManagementReceived)="data"
-                        >{{data.item.LastPatchManagementReceived | dayjsDateTime}}</template>
+                          >{{
+                            data.item.LastPatchManagementReceived
+                              | dayjsDateTime
+                          }}</template
+                        >
                       </b-table>
                       <b-pagination
                         size="md"
@@ -367,35 +519,47 @@
                         <!--Template for storing the link to the ticket in the table column.-->
                         <template v-slot:cell(subject)="data">
                           <b-link
-                            :to="{ path: '/ticket', query: {ticketID: data.item.ticketId}}"
-                          >{{ data.item.subject }}</b-link>
+                            :to="{
+                              path: '/ticket',
+                              query: { ticketID: data.item.ticketId },
+                            }"
+                            >{{ data.item.subject }}</b-link
+                          >
                         </template>
                         <!--Template for formatting the creation date-->
                         <template v-slot:cell(created_date)="data">
-                          <p class="m-0 p-0">{{data.item.created_date | dayjsDateTime}}</p>
+                          <p class="m-0 p-0">
+                            {{ data.item.created_date | dayjsDateTime }}
+                          </p>
                         </template>
                         <!--Template for formatting the updated date-->
                         <template v-slot:cell(modified_date)="data">
-                          <p class="m-0 p-0">{{data.item.modified_date | dayjsDateTime}}</p>
+                          <p class="m-0 p-0">
+                            {{ data.item.modified_date | dayjsDateTime }}
+                          </p>
                         </template>
                         <template v-slot:cell(status)="data">
                           <h5 class="m-0 p-0">
                             <b-badge
                               v-if="data.item.status == 'Open'"
                               variant="success"
-                            >{{data.item.status}}</b-badge>
+                              >{{ data.item.status }}</b-badge
+                            >
                             <b-badge
                               v-else-if="data.item.status == 'Closed'"
                               variant="danger"
-                            >{{data.item.status}}</b-badge>
+                              >{{ data.item.status }}</b-badge
+                            >
                             <b-badge
                               v-else-if="data.item.status == 'Merged'"
                               variant="warning"
-                            >{{data.item.status}}</b-badge>
+                              >{{ data.item.status }}</b-badge
+                            >
                             <b-badge
                               v-else-if="data.item.status == 'Resolved'"
                               variant="primary"
-                            >{{data.item.status}}</b-badge>
+                              >{{ data.item.status }}</b-badge
+                            >
                           </h5>
                         </template>
                       </b-table>
@@ -422,7 +586,9 @@
                         :current-page="pagination.passwords.currentPage"
                       >
                         <template v-slot:cell(password)="data">
-                          <span v-if="data.item.password">{{data.item.password}}</span>
+                          <span v-if="data.item.password">{{
+                            data.item.password
+                          }}</span>
                           <span v-else>********</span>
                         </template>
                         <template v-slot:cell(togglePass)="data">
@@ -437,7 +603,52 @@
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Attachments">
-                  <b-card-text></b-card-text>
+                  <b-card-text>
+                    <b-card bg-variant="light">
+                      <VueFileAgent
+                        id="attachmentAgent"
+                        class="mb-2"
+                        :uploadHeaders="uploadHeaders"
+                        :multiple="true"
+                        :deletable="true"
+                        :editable="true"
+                        :theme="'list'"
+                        :meta="true"
+                        :helpText="'Browse or drag & drop here'"
+                        v-model="fileRecords"
+                        ref="attachmentFileAgent"
+                        @beforedelete="beforeDeleteFileRecord($event)"
+                      ></VueFileAgent>
+                      <b-button variant="success"
+                        :disabled="!fileRecords.length"
+                        @click="uploadAttachments"
+                      >Upload {{fileRecords.length}}</b-button>
+                    </b-card>
+                    <b-table
+                        show-empty
+                        outlined
+                        hover
+                        ref="attachmentsTable"
+                        :items="items.attachments"
+                        :fields="fields.attachments"
+                        :per-page="0"
+                        :current-page="pagination.attachments.currentPage"
+                      >
+                        <template v-slot:cell(attachmentId)="data">
+                          <b-button
+                            variant="primary"
+                            class="fas fa-download"
+                            @click="downloadAttachment(data.item.attachmentId, data.item.fileName, data.item.fileType)"
+                          ></b-button>
+                        </template>
+                    </b-table>
+                      <b-pagination
+                        size="md"
+                        v-model="pagination.attachments.currentPage"
+                        :total-rows="pagination.attachments.totalItems"
+                        :per-page="pagination.attachments.perPage"
+                      ></b-pagination>
+                  </b-card-text>
                 </b-tab>
                 <b-tab title="Invoices">
                   <b-card-text>
@@ -474,23 +685,42 @@
                         :per-page="0"
                         :current-page="pagination.invoices.currentPage"
                       >
-                        <template
-                          v-slot:cell(netAmount)="data"
-                        >{{data.item.netAmount}} {{data.item.currency}}</template>
+                        <template v-slot:cell(netAmount)="data"
+                          >{{ data.item.netAmount }}
+                          {{ data.item.currency }}</template
+                        >
                         <template v-slot:cell(remainder)="data">
                           <h5 class="m-0 p-0">
                             <b-badge
-                              v-if="getInvoiceStatus(data.item.dueDate, data.item.remainder) == 'overdue'"
+                              v-if="
+                                getInvoiceStatus(
+                                  data.item.dueDate,
+                                  data.item.remainder
+                                ) == 'overdue'
+                              "
                               variant="danger"
-                            >Overdue</b-badge>
+                              >Overdue</b-badge
+                            >
                             <b-badge
-                              v-else-if="getInvoiceStatus(data.item.dueDate, data.item.remainder) == 'unpaid'"
+                              v-else-if="
+                                getInvoiceStatus(
+                                  data.item.dueDate,
+                                  data.item.remainder
+                                ) == 'unpaid'
+                              "
                               variant="warning"
-                            >Unpaid</b-badge>
+                              >Unpaid</b-badge
+                            >
                             <b-badge
-                              v-else-if="getInvoiceStatus(data.item.dueDate, data.item.remainder) == 'paid'"
+                              v-else-if="
+                                getInvoiceStatus(
+                                  data.item.dueDate,
+                                  data.item.remainder
+                                ) == 'paid'
+                              "
                               variant="success"
-                            >Paid</b-badge>
+                              >Paid</b-badge
+                            >
                           </h5>
                         </template>
                         <template v-slot:cell(pdf)="data">
@@ -539,7 +769,10 @@
       centered
       title="Delete Customer?"
     >
-      <h5>Are you sure you want to delete the customer {{customerInfo.economic.name}}</h5>
+      <h5>
+        Are you sure you want to delete the customer
+        {{ customerInfo.economic.name }}
+      </h5>
     </b-modal>
     <b-modal
       body-class="p-0"
@@ -551,7 +784,11 @@
       size="lg"
     >
       <b-card bg-variant="light" body-class="p-0">
-        <b-form @submit="submitCustomerEdit" onsubmit="return false;" class="p-3">
+        <b-form
+          @submit="submitCustomerEdit"
+          onsubmit="return false;"
+          class="p-3"
+        >
           <b-form-group
             label-cols-lg="3"
             label="Basic Information:"
@@ -580,7 +817,12 @@
               label-align-sm="right"
               label-for="input-domain"
             >
-              <b-input id="input-domain" type="text" v-model="form.domain" placeholder="domain.dk"></b-input>
+              <b-input
+                id="input-domain"
+                type="text"
+                v-model="form.domain"
+                placeholder="domain.dk"
+              ></b-input>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -588,7 +830,12 @@
               label-align-sm="right"
               label-for="input-phone"
             >
-              <b-input id="input-phone" v-model="form.phone" type="number" placeholder="12345678"></b-input>
+              <b-input
+                id="input-phone"
+                v-model="form.phone"
+                type="number"
+                placeholder="12345678"
+              ></b-input>
             </b-form-group>
           </b-form-group>
           <b-card no-body class="mb-3"></b-card>
@@ -662,7 +909,13 @@
               label-for="input-invoice"
               description="Currently not enabled on backend. Will be enabled once implemented"
             >
-              <b-form-checkbox disabled id="input-invoice" required v-model="form.eInvoicingDisabledByDefault" :options="dropdownData.eInvoicingDisabledByDefault"></b-form-checkbox>
+              <b-form-checkbox
+                disabled
+                id="input-invoice"
+                required
+                v-model="form.eInvoicingDisabledByDefault"
+                :options="dropdownData.eInvoicingDisabledByDefault"
+              ></b-form-checkbox>
             </b-form-group>
           </b-form-group>
           <b-card class="mb-3" no-body></b-card>
@@ -679,7 +932,12 @@
               label-align-sm="right"
               label-for="input-address"
             >
-              <b-input id="input-address" v-model="form.address" placeholder="Address" type="text"></b-input>
+              <b-input
+                id="input-address"
+                v-model="form.address"
+                placeholder="Address"
+                type="text"
+              ></b-input>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -687,7 +945,12 @@
               label-align-sm="right"
               label-for="input-zip"
             >
-              <b-input id="input-zip" v-model="form.zip" placeholder="0000" type="number"></b-input>
+              <b-input
+                id="input-zip"
+                v-model="form.zip"
+                placeholder="0000"
+                type="number"
+              ></b-input>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -695,7 +958,12 @@
               label-align-sm="right"
               label-for="input-city"
             >
-              <b-input id="input-city" v-model="form.city" placeholder="City" type="text"></b-input>
+              <b-input
+                id="input-city"
+                v-model="form.city"
+                placeholder="City"
+                type="text"
+              ></b-input>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -703,7 +971,12 @@
               label-align-sm="right"
               label-for="input-country"
             >
-              <b-input id="input-country" v-model="form.country" placeholder="Country" type="text"></b-input>
+              <b-input
+                id="input-country"
+                v-model="form.country"
+                placeholder="Country"
+                type="text"
+              ></b-input>
             </b-form-group>
           </b-form-group>
           <b-button-group>
@@ -720,7 +993,8 @@
       ref="createContactModal"
       title="Create Contact"
       hide-footer
-      size="lg">
+      size="lg"
+    >
       <b-card bg-variant="light" body-class="p-0">
         <b-form @submit="submitContact" onsubmit="return false;" class="p-3">
           <b-form-group
@@ -737,7 +1011,13 @@
               label-for="input-firstName"
               description="Required"
             >
-              <b-input id="input-firstName" required type="text" v-model="contactForm.firstName" placeholder="John"></b-input>
+              <b-input
+                id="input-firstName"
+                required
+                type="text"
+                v-model="contactForm.firstName"
+                placeholder="John"
+              ></b-input>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -746,7 +1026,13 @@
               label-for="input-lastName"
               description="Required"
             >
-              <b-input id="input-lastName" required type="text" v-model="contactForm.lastName" placeholder="Doe"></b-input>
+              <b-input
+                id="input-lastName"
+                required
+                type="text"
+                v-model="contactForm.lastName"
+                placeholder="Doe"
+              ></b-input>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -754,7 +1040,12 @@
               label-align-sm="right"
               label-for="input-title"
             >
-              <b-input id="input-title" type="text" v-model="contactForm.title" placeholder="Title"></b-input>
+              <b-input
+                id="input-title"
+                type="text"
+                v-model="contactForm.title"
+                placeholder="Title"
+              ></b-input>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -762,7 +1053,12 @@
               label-align-sm="right"
               label-for="input-phone"
             >
-              <b-input id="input-phone" v-model="contactForm.phone" type="number" placeholder="12345678"></b-input>
+              <b-input
+                id="input-phone"
+                v-model="contactForm.phone"
+                type="number"
+                placeholder="12345678"
+              ></b-input>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -770,7 +1066,12 @@
               label-align-sm="right"
               label-for="input-email"
             >
-              <b-input id="input-email" v-model="contactForm.email" type="email" placeholder="email@email.com"></b-input>
+              <b-input
+                id="input-email"
+                v-model="contactForm.email"
+                type="email"
+                placeholder="email@email.com"
+              ></b-input>
             </b-form-group>
           </b-form-group>
           <b-button-group>
@@ -786,10 +1087,15 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import fileDownload from "js-file-download";
+import download from "downloadjs"
+
 
 export default {
   data() {
     return {
+      fileRecords: [],
+      uploadHeaders: {},
+      uploadUrl: `${process.env.VUE_APP_URL}attachments/customers/${this.$route.query.customerID}`,
       dropdownData: {
         paymentTerms: [],
         customerGroups: [],
@@ -894,6 +1200,24 @@ export default {
             label: "",
           },
         ],
+        attachments: [
+          {
+            key: "fileName",
+            label: "Name"
+          },
+          {
+            key: "fileSize",
+            label: "Size (WIP)"
+          },
+          {
+            key: "visibleToCustomer",
+            label: "Hidden"
+          },
+          {
+            key: "attachmentId",
+            label: "Options"
+          }
+        ]
       },
       items: {
         tickets: [],
@@ -903,6 +1227,7 @@ export default {
         assets: [],
         invoices: [],
         passwords: [],
+        attachments: [],
       },
       pagination: {
         assets: {
@@ -938,6 +1263,11 @@ export default {
           currentPage: 1,
           totalItems: 0,
         },
+        attachments: {
+          perPage: 13,
+          currentPage: 1,
+          totalItems: 0,
+        },
       },
       customerInfo: {
         atera: {},
@@ -962,22 +1292,20 @@ export default {
       this.items.assets = response.data.assets.items;
       this.pagination.assets.totalItems = response.data.assets.totalItemCount;
     });
-    this.fetchData(
-      `tickets/customers/${this.$route.query.customerID}`, { params:
-        {
-          page: this.pagination.tickets.currentPage,
-          results: this.pagination.tickets.perPage
-        }
-      }
-    ).then((response) => {
+    this.fetchData(`tickets/customers/${this.$route.query.customerID}`, {
+      params: {
+        page: this.pagination.tickets.currentPage,
+        results: this.pagination.tickets.perPage,
+      },
+    }).then((response) => {
       this.items.tickets = response.data;
     });
     this.fetchData(`customer/contracts/${this.id}`).then((response) => {
       this.items.contracts = response.data.contracts;
     });
-    this.fetchData(`customers/${this.id}/rates`).then(response => {
-      this.items.contractRates = response.data
-    })
+    this.fetchData(`customers/${this.id}/rates`).then((response) => {
+      this.items.contractRates = response.data;
+    });
     this.fetchData(
       `customer/passwords/${this.$getAccountID()}/${this.id}/${
         this.pagination.passwords.currentPage
@@ -1022,9 +1350,10 @@ export default {
           text: vatZone.name,
         });
       }
-    });
+    })
 
     this.loadInvoices();
+    this.loadAttachments()
 
     // axios.get(`${process.env.VUE_APP_URL}invoices/${this.id}/1/10`, { //This is temporary and will be replaced, however it isn't a priority at this time
     //   params: {
@@ -1051,9 +1380,9 @@ export default {
             this.paymentTerms = customerData.paymentTerms;
 
             this.populateForm();
-
             const contactData = responses[1].data;
-            this.items.contacts = contactData.contacts;
+            console.log(responses[1].data);
+            this.items.contacts = contactData;
           })
         )
         .catch((error) => {
@@ -1140,7 +1469,7 @@ export default {
               this.$refs.passTable.refresh();
             }
           }
-        });
+        })
     },
     populateForm() {
       this.form = {
@@ -1159,8 +1488,9 @@ export default {
           .customerGroupNumber,
         selectedCurrency: this.customerInfo.economic.currency,
         selectedVatZone: this.customerInfo.economic.vatZone.vatZoneNumber,
-        eInvoicingDisabledByDefault: this.customerInfo.economic.eInvoicingDisabledByDefault
-      };
+        eInvoicingDisabledByDefault: this.customerInfo.economic
+          .eInvoicingDisabledByDefault,
+      }
     },
     submitCustomerEdit() {
       console.log("Submitting");
@@ -1170,29 +1500,57 @@ export default {
           console.log(response);
           this.$refs["customerEditModal"].hide();
           this.getCustomerInfo();
-        });
+        })
     },
     submitContact() {
-      console.log('Creating contact')
+      console.log("Creating contact");
       var requestBody = this.contactForm;
       requestBody.businessNumber = this.id;
 
-      axios.post(`${process.env.VUE_APP_URL}contacts`, requestBody)
-      .then(response => {
-        console.log(response)
-        this.$refs["createContactModal"].hide();
-        this.getCustomerInfo();
-      })
+      axios
+        .post(`${process.env.VUE_APP_URL}contacts`, requestBody)
+        .then((response) => {
+          console.log(response);
+          this.$refs["createContactModal"].hide();
+          this.getCustomerInfo();
+        });
     },
-    submitContractRates() {
+    async submitContractRates() {
       axios.put(`${process.env.VUE_APP_URL}customers/${this.id}/rates`, this.items.contractRates)
-      .then(response => {
-        console.log(response)
+      .then((response) => {
+        console.log(response);
+      });
+    },
+    async downloadAttachment(id, name, type) {
+      let attachment = await axios.get(`${process.env.VUE_APP_URL}attachments/${id}`)
+
+      console.log(attachment.data)
+      download(`data:${type};base64,${attachment.data}`, name, type)
+    },
+    async loadAttachments() {
+      let page = this.pagination.attachments.currentPage
+      let resultsPerPage = this.pagination.attachments.perPage
+
+      let attachments = await axios.get(`${process.env.VUE_APP_URL}attachments/customers/${this.id}`,
+      {
+        params: {
+          page: page,
+          results: resultsPerPage,
+        },
       })
+      this.items.attachments = attachments.data.attachments
+      this.pagination.attachments.totalItems = attachments.data.entryCount
+
+    },
+    uploadAttachments() {
+        this.$refs.attachmentFileAgent.upload(this.uploadUrl, this.uploadHeaders, this.fileRecords).then(() => {
+          this.loadAttachments()
+        })
+        this.fileRecords = []
+    },
+    beforeDeleteFileRecord(fileRecord) {
+      this.$refs.attachmentFileAgent.deleteFileRecord(fileRecord)
     }
-    // toggleAll(checked) {
-    //   this.pagination.invoices.filterOptions.selected = checked ? this.pagination.invoices.filterOptions.optionsValues.slice() : []
-    // }
   },
   filters: {
     //These need to be made global filters at some point.
@@ -1205,11 +1563,14 @@ export default {
   },
   computed: {
     assetsCurrentPage() {
-      return this.pagination.assets.currentPage;
+      return this.pagination.assets.currentPage
     },
     ticketsCurrentPage() {
-      return this.pagination.tickets.currentPage;
+      return this.pagination.tickets.currentPage
     },
+    attachmentsCurrentPage() {
+      return this.pagination.attachments.currentPage
+    }
   },
   watch: {
     assetsCurrentPage() {
@@ -1218,8 +1579,11 @@ export default {
       ).then((response) => {
         this.items.assets = response.data.assets.items;
         this.pagination.assets.totalItems = response.data.assets.totalItemCount;
-      });
+      })
     },
+    async attachmentsCurrentPage() {
+      this.loadAttachments()
+    }
   },
-};
+}
 </script>
