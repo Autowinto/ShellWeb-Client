@@ -637,8 +637,13 @@
                         <template v-slot:cell(attachmentId)="data">
                           <b-button
                             variant="primary"
-                            class="fas fa-download"
+                            class="fas fa-download mr-2"
                             @click="downloadAttachment(data.item.attachmentId, data.item.fileName, data.item.fileType)"
+                          ></b-button>
+                          <b-button
+                            variant="danger"
+                            class="fas fa-trash-alt"
+                            @click="deleteAttachment(data.item.attachmentId)"
                           ></b-button>
                         </template>
                     </b-table>
@@ -1526,6 +1531,12 @@ export default {
 
       console.log(attachment.data)
       download(`data:${type};base64,${attachment.data}`, name, type)
+    },
+    deleteAttachment(id) {
+      axios.delete(`${process.env.VUE_APP_URL}attachments/${id}`)
+      .then(() => {
+        this.loadAttachments()
+      })
     },
     async loadAttachments() {
       let page = this.pagination.attachments.currentPage
