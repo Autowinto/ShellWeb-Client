@@ -158,7 +158,7 @@
               <b-row>
                 <b-col>
                   <b-input
-                    placeholder="Name"
+                    placeholder="Phone Name"
                     v-model="phone.name"
                     id="input-text"
                     type="text"
@@ -167,7 +167,7 @@
                 </b-col>
                 <b-col>
                   <b-input
-                    placeholder="Company Name"
+                    placeholder="Phone Number"
                     v-model="phone.phone"
                     id="input-number"
                     type="number"
