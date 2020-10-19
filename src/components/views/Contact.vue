@@ -144,6 +144,15 @@
             label-class="font-weight-bold pt-0 p-0 text-dark"
             class="mb-0"
           >
+          <b-card v-if="!form.phones.length">
+            <b-row>
+              <b-col class="text-right">
+                <b-btn class="btn-success fas fa-plus" @click="addPhone"></b-btn>
+
+              </b-col>
+            </b-row>
+          </b-card>
+
           <div v-for="(phone, index) in form.phones" :key="phone.id">
             <b-card v-if="!phone.delete">
               <b-row>
