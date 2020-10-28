@@ -619,10 +619,12 @@
                         ref="attachmentFileAgent"
                         @beforedelete="beforeDeleteFileRecord($event)"
                       ></VueFileAgent>
-                      <b-button variant="success"
+                      <b-button
+                        variant="success"
                         :disabled="!fileRecords.length"
                         @click="uploadAttachments"
-                      >Upload {{fileRecords.length}}</b-button>
+                        >Upload {{ fileRecords.length }}</b-button
+                      >
                     </b-card>
                     <PaginatedTable
                       :columnFields="this.fields.attachments"
@@ -689,9 +691,11 @@
                               >Overdue</b-badge
                             >
                             <b-badge
-                              v-else-if="getInvoiceStatus(
-                                data.item.dueDate,
-                                data.item.remainder) == 'unpaid'
+                              v-else-if="
+                                getInvoiceStatus(
+                                  data.item.dueDate,
+                                  data.item.remainder
+                                ) == 'unpaid'
                               "
                               variant="warning"
                               >Unpaid</b-badge
@@ -1072,9 +1076,8 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import fileDownload from "js-file-download";
-import download from "downloadjs"
-import PaginatedTable from '../PaginatedTable'
-
+import download from "downloadjs";
+import PaginatedTable from "../PaginatedTable";
 
 export default {
   data() {
@@ -1191,17 +1194,17 @@ export default {
           {
             key: "fileName",
             label: "Name",
-            editable: true
+            editable: true,
           },
           {
             key: "fileSize",
-            label: "Size (WIP)"
+            label: "Size (WIP)",
           },
           {
             key: "visibleToCustomer",
-            label: "Visible"
-          }
-        ]
+            label: "Visible",
+          },
+        ],
       },
       items: {
         tickets: [],
@@ -1267,86 +1270,85 @@ export default {
     // //Set all invoice filter options to be selected once mounted.
     // this.toggleAll(true)
 
-    this.$getAccountID()
+    this.$getAccountID();
 
-    this.getCustomerInfo()
+    this.getCustomerInfo();
     this.fetchData(
       `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
     ).then((response) => {
-      this.items.assets = response.data.assets.items
-      this.pagination.assets.totalItems = response.data.assets.totalItemCount
-    })
-    this.fetchData(`tickets/customers/${this.$route.query.customerID}`, {
+      this.items.assets = response.data.assets.items;
+      this.pagination.assets.totalItems = response.data.assets.totalItemCount;
+    });
+    this.fetchData(`customers/${this.$route.query.customerID}/tickets`, {
       params: {
         page: this.pagination.tickets.currentPage,
         results: this.pagination.tickets.perPage,
       },
     }).then((response) => {
-      this.items.tickets = response.data
-    })
+      this.items.tickets = response.data;
+    });
     this.fetchData(`customer/contracts/${this.id}`).then((response) => {
-      this.items.contracts = response.data.contracts
-    })
+      this.items.contracts = response.data.contracts;
+    });
     this.fetchData(`customers/${this.id}/rates`).then((response) => {
-      this.items.contractRates = response.data
-    })
+      this.items.contractRates = response.data;
+    });
     this.fetchData(
       `customer/passwords/${this.$getAccountID()}/${this.id}/${
         this.pagination.passwords.currentPage
       }/${this.pagination.passwords.perPage}`
     ).then((response) => {
-      this.items.passwords = response.data.passwords
-      this.pagination.passwords.totalItems = response.data.passwords.length
-    })
-    axios.get(`${process.env.VUE_APP_URL}customerGroups`).then((response) => {
-      for (var item in response.data.customerGroups) {
-        console.log(item);
-        const group = response.data.customerGroups[item]
-        this.dropdownData.customerGroups.push({
-          value: group.customerGroupNumber,
-          text: group.name,
-        })
-      }
-    })
-    axios.get(`${process.env.VUE_APP_URL}currencies`).then((response) => {
-      for (var item in response.data.currencies) {
-        const currency = response.data.currencies[item]
-        this.dropdownData.currencies.push({
-          value: currency.code,
-          text: currency.name,
-        })
-      }
-    })
-    axios.get(`${process.env.VUE_APP_URL}paymentTerms`).then((response) => {
-      for (var item in response.data.paymentTerms) {
-        const term = response.data.paymentTerms[item]
-        this.dropdownData.paymentTerms.push({
-          value: term.paymentTermsNumber,
-          text: term.name,
-        })
-      }
-    })
-    axios.get(`${process.env.VUE_APP_URL}vatZones`).then((response) => {
-      for (var item in response.data.vatZones) {
-        const vatZone = response.data.vatZones[item]
-        this.dropdownData.vatZones.push({
-          value: vatZone.vatZoneNumber,
-          text: vatZone.name,
-        })
-      }
-    })
+      this.items.passwords = response.data.passwords;
+      this.pagination.passwords.totalItems = response.data.passwords.length;
+    });
+    axios
+      .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
+      .then((response) => {
+        for (var item in response.data) {
+          console.log(item);
+          const group = response.data[item];
+          this.dropdownData.customerGroups.push({
+            value: group.customerGroupNumber,
+            text: group.name,
+          });
+        }
+      });
+    axios
+      .get(`${process.env.VUE_APP_URL}invoices/currencies`)
+      .then((response) => {
+        for (var item in response.data) {
+          const currency = response.data[item];
+          this.dropdownData.currencies.push({
+            value: currency.code,
+            text: currency.name,
+          });
+        }
+      });
+    axios
+      .get(`${process.env.VUE_APP_URL}invoices/paymentTerms`)
+      .then((response) => {
+        for (var item in response.data) {
+          const term = response.data[item];
+          this.dropdownData.paymentTerms.push({
+            value: term.paymentTermsNumber,
+            text: term.name,
+          });
+        }
+      });
+    axios
+      .get(`${process.env.VUE_APP_URL}invoices/vatZones`)
+      .then((response) => {
+        for (var item in response.data) {
+          const vatZone = response.data[item];
+          this.dropdownData.vatZones.push({
+            value: vatZone.vatZoneNumber,
+            text: vatZone.name,
+          });
+        }
+      });
 
-    this.loadInvoices()
-    this.loadAttachments()
-
-    // axios.get(`${process.env.VUE_APP_URL}invoices/${this.id}/1/10`, { //This is temporary and will be replaced, however it isn't a priority at this time
-    //   params: {
-    //     types: this.pagination.invoices.filterOptions.selected
-    //   }
-    // })
-    // .then(response => {
-    //   console.log(response)
-    // })
+    this.loadInvoices();
+    this.loadAttachments();
   },
   methods: {
     getCustomerInfo() {
@@ -1357,55 +1359,61 @@ export default {
         ])
         .then(
           axios.spread((...responses) => {
-            const customerData = responses[0].data
-            this.customerInfo = customerData.customer
-            this.customerGroup = customerData.customerGroup
-            this.ateraid = customerData.apiInfo
-            this.paymentTerms = customerData.paymentTerms
+            const customerData = responses[0].data;
+            this.customerInfo = customerData.customer;
+            this.customerGroup = customerData.customerGroup;
+            this.ateraid = customerData.apiInfo;
+            this.paymentTerms = customerData.paymentTerms;
 
-            this.populateForm()
-            const contactData = responses[1].data
-            console.log(responses[1].data)
-            this.items.contacts = contactData
+            this.populateForm();
+            const contactData = responses[1].data;
+            console.log(responses[1].data);
+            this.items.contacts = contactData;
           })
         )
         .catch((error) => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     },
     fetchData(endpoint, params) {
       if (params) {
-        return axios.get(process.env.VUE_APP_URL + endpoint, params)
+        return axios.get(process.env.VUE_APP_URL + endpoint, params);
       } else {
-        return axios.get(process.env.VUE_APP_URL + endpoint)
+        return axios.get(process.env.VUE_APP_URL + endpoint);
       }
     },
     loadContracts: function () {},
     dayjs: function () {
-      return dayjs()
+      return dayjs();
     },
     loadInvoices() {
-      const selected = this.pagination.invoices.filterOptions.selected
+      const selected = this.pagination.invoices.filterOptions.selected;
       axios
-        .get(`${process.env.VUE_APP_URL}invoices/${this.id}/${selected}/1/10`)
-        .then((response) => {
-          console.log(response.data.collection)
-          this.items.invoices = response.data.collection
-          this.pagination.invoices.totalItems = response.data.collection.length
-        })
-    },
-    downloadInvoice(link) {
-      axios
-        .post(
-          `${process.env.VUE_APP_URL}invoices/pdf`,
+        .get(
+          `${process.env.VUE_APP_URL}customers/${this.id}/invoices/${selected}`,
           {
-            link: link,
-          },
-          {
-            responseType: "blob",
+            params: {
+              page: 1,
+              results: 20,
+            },
           }
         )
         .then((response) => {
+          console.log(response.data.collection);
+          this.items.invoices = response.data.collection;
+          this.pagination.invoices.totalItems = response.data.collection.length;
+        });
+    },
+    downloadInvoice(link) {
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/pdf`, {
+          params: {
+            url: link,
+          },
+          responseType: "arraybuffer",
+        })
+        .then((response) => {
+          console.log(response);
           fileDownload(response.data, "invoice.pdf");
         });
     },
@@ -1452,7 +1460,7 @@ export default {
               this.$refs.passTable.refresh();
             }
           }
-        })
+        });
     },
     populateForm() {
       this.form = {
@@ -1473,7 +1481,7 @@ export default {
         selectedVatZone: this.customerInfo.economic.vatZone.vatZoneNumber,
         eInvoicingDisabledByDefault: this.customerInfo.economic
           .eInvoicingDisabledByDefault,
-      }
+      };
     },
     submitCustomerEdit() {
       console.log("Submitting");
@@ -1483,7 +1491,7 @@ export default {
           console.log(response);
           this.$refs["customerEditModal"].hide();
           this.getCustomerInfo();
-        })
+        });
     },
     submitContact() {
       console.log("Creating contact");
@@ -1499,47 +1507,55 @@ export default {
         });
     },
     async submitContractRates() {
-      axios.put(`${process.env.VUE_APP_URL}customers/${this.id}/rates`, this.items.contractRates)
-      .then((response) => {
-        console.log(response);
-      });
+      axios
+        .put(
+          `${process.env.VUE_APP_URL}customers/${this.id}/rates`,
+          this.items.contractRates
+        )
+        .then((response) => {
+          console.log(response);
+        });
     },
     async downloadAttachment(id, name, type) {
-      let attachment = await axios.get(`${process.env.VUE_APP_URL}attachments/${id}`)
+      let attachment = await axios.get(
+        `${process.env.VUE_APP_URL}attachments/${id}`
+      );
 
-      console.log(attachment.data)
-      download(`data:${type};base64,${attachment.data}`, name, type)
+      console.log(attachment.data);
+      download(`data:${type};base64,${attachment.data}`, name, type);
     },
     deleteAttachment(id) {
-      axios.delete(`${process.env.VUE_APP_URL}attachments/${id}`)
-      .then(() => {
-        this.loadAttachments()
-      })
+      axios.delete(`${process.env.VUE_APP_URL}attachments/${id}`).then(() => {
+        this.loadAttachments();
+      });
     },
     async loadAttachments() {
-      let page = this.pagination.attachments.currentPage
-      let resultsPerPage = this.pagination.attachments.perPage
+      let page = this.pagination.attachments.currentPage;
+      let resultsPerPage = this.pagination.attachments.perPage;
 
-      let attachments = await axios.get(`${process.env.VUE_APP_URL}attachments/customers/${this.id}`,
-      {
-        params: {
-          page: page,
-          results: resultsPerPage,
-        },
-      })
-      this.items.attachments = attachments.data.attachments
-      this.pagination.attachments.totalItems = attachments.data.entryCount
-
+      let attachments = await axios.get(
+        `${process.env.VUE_APP_URL}attachments/customers/${this.id}`,
+        {
+          params: {
+            page: page,
+            results: resultsPerPage,
+          },
+        }
+      );
+      this.items.attachments = attachments.data.attachments;
+      this.pagination.attachments.totalItems = attachments.data.entryCount;
     },
     uploadAttachments() {
-        this.$refs.attachmentFileAgent.upload(this.uploadUrl, this.uploadHeaders, this.fileRecords).then(() => {
-          this.loadAttachments()
-        })
-        this.fileRecords = []
+      this.$refs.attachmentFileAgent
+        .upload(this.uploadUrl, this.uploadHeaders, this.fileRecords)
+        .then(() => {
+          this.loadAttachments();
+        });
+      this.fileRecords = [];
     },
     beforeDeleteFileRecord(fileRecord) {
-      this.$refs.attachmentFileAgent.deleteFileRecord(fileRecord)
-    }
+      this.$refs.attachmentFileAgent.deleteFileRecord(fileRecord);
+    },
   },
   filters: {
     //These need to be made global filters at some point.
@@ -1552,14 +1568,14 @@ export default {
   },
   computed: {
     assetsCurrentPage() {
-      return this.pagination.assets.currentPage
+      return this.pagination.assets.currentPage;
     },
     ticketsCurrentPage() {
-      return this.pagination.tickets.currentPage
+      return this.pagination.tickets.currentPage;
     },
     attachmentsCurrentPage() {
-      return this.pagination.attachments.currentPage
-    }
+      return this.pagination.attachments.currentPage;
+    },
   },
   watch: {
     assetsCurrentPage() {
@@ -1568,14 +1584,14 @@ export default {
       ).then((response) => {
         this.items.assets = response.data.assets.items;
         this.pagination.assets.totalItems = response.data.assets.totalItemCount;
-      })
+      });
     },
     async attachmentsCurrentPage() {
-      this.loadAttachments()
-    }
+      this.loadAttachments();
+    },
   },
   components: {
     PaginatedTable,
-  }
-}
+  },
+};
 </script>

@@ -266,7 +266,7 @@ export default {
       return axios.get(process.env.VUE_APP_URL + endpoint);
     },
     dayjs: function() {
-      return dayjs();
+      return dayjs()
     }
   },
   filters: {

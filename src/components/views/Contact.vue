@@ -148,7 +148,6 @@
             <b-row>
               <b-col class="text-right">
                 <b-btn class="btn-success fas fa-plus" @click="addPhone"></b-btn>
-
               </b-col>
             </b-row>
           </b-card>

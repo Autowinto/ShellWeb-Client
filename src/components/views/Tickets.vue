@@ -8,10 +8,17 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-6 text-nowrap">
-            <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+            <div
+              id="dataTable_length"
+              class="dataTables_length"
+              aria-controls="dataTable"
+            >
               <label>
                 Show&nbsp;
-                <b-form-select v-model="perPage" :options='paginationOptions'></b-form-select>
+                <b-form-select
+                  v-model="results"
+                  :options="paginationOptions"
+                ></b-form-select>
               </label>
             </div>
           </div>
@@ -38,25 +45,30 @@
             :per-page="0"
             :current-page="currentPage"
           >
-            <template v-slot:cell(TicketTitle)="data">
+            <template v-slot:cell(ticketId)="data">
               <b-link
-                :to="{ path: '/ticket', query: {ticketID: data.item.TicketID}}"
-              >{{ data.item.TicketTitle }}</b-link>
+                :to="{
+                  path: '/ticket',
+                  query: { ticketID: data.item.ticketId },
+                }"
+                >{{ data.item.ticketId }}</b-link
+              >
             </template>
           </b-table>
           <b-pagination
             size="md"
             v-model="currentPage"
             :total-rows="totalItems"
-            :per-page="perPage"
+            :per-page="results"
           ></b-pagination>
         </div>
         <div class="row">
           <button
             onclick="window.location.href = 'customerform.html';"
-            
             class="btn btn-primary ml-2 btn-sm"
-          >Add Customer</button>
+          >
+            Add Customer
+          </button>
         </div>
       </div>
     </div>
@@ -71,61 +83,61 @@ export default {
     return {
       fields: [
         {
-          key: "TicketID",
-          label: "Ticket ID"
+          key: "ticketId",
+          label: "Ticket ID",
         },
         {
-          key: "TicketTitle",
-          label: "Name"
-        }
+          key: "subject",
+          label: "Name",
+        },
       ],
       items: [],
       currentPage: 1,
-      perPage: 10,
+      results: 10,
       totalItems: 0,
       paginationOptions: [
-        { value: 10, text: '10' },
-        { value: 25, text: '25' },
-        { value: 50, text: '50' }
-      ]
-    }
+        { value: 10, text: "10" },
+        { value: 25, text: "25" },
+        { value: 50, text: "50" },
+      ],
+    };
   },
-  created() {
-  },
+  created() {},
   mounted() {
     this.fetchData();
   },
   methods: {
     fetchData() {
       axios
-        .get(`${process.env.VUE_APP_URL}tickets`, { params: {
-          page: this.currentPage,
-          results: this.perPage,
-        }})
-        .then(response => {
-          const data = response.data;
-          console.log(data)
-          this.items = data.tickets.items;
-          this.currentPage = parseInt(data.tickets.page);
-          this.totalItems = data.tickets.totalItemCount;
-          this.perPage = data.tickets.itemsInPage;
+        .get(`${process.env.VUE_APP_URL}tickets`, {
+          params: {
+            page: this.currentPage,
+            results: this.results,
+          },
         })
-        .catch(err => {
+        .then((response) => {
+          const data = response.data;
+          console.log(data);
+          this.items = data.collection;
+
+          this.totalItems = data.pagination.totalItems;
+        })
+        .catch((err) => {
           console.error(err);
         });
-    }
+    },
   },
   watch: {
     currentPage: {
-      handler: function() {
+      handler: function () {
         this.fetchData(); //Do error handling here in the future
-      }
+      },
     },
-    perPage: {
-      handler: function() {
+    results: {
+      handler: function () {
         this.fetchData();
-      }
-    }
-  }
+      },
+    },
+  },
 };
 </script>

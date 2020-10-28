@@ -8,16 +8,25 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-6 text-nowrap">
-            <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+            <div
+              id="dataTable_length"
+              class="dataTables_length"
+              aria-controls="dataTable"
+            >
               <label>
                 Show&nbsp;
-                <b-form-select v-model="perPage" :options="paginationOptions"></b-form-select>
+                <b-form-select
+                  v-model="perPage"
+                  :options="paginationOptions"
+                ></b-form-select>
               </label>
             </div>
           </div>
           <div class="col-md-6">
             <div class="text-md-right dataTables_filter" id="dataTable_filter">
-              <b-button v-b-modal.customerForm size="sm" variant="success">Create Customer</b-button>
+              <b-button v-b-modal.customerForm size="sm" variant="success"
+                >Create Customer</b-button
+              >
             </div>
           </div>
         </div>
@@ -33,8 +42,14 @@
           >
             <template v-slot:cell(name)="data">
               <b-link
-                :to="{ path: '/customer', query: {customerID: data.item.corporateIdentificationNumber}}"
-              >{{ data.item.name }}</b-link>
+                :to="{
+                  path: '/customer',
+                  query: {
+                    customerID: data.item.corporateIdentificationNumber,
+                  },
+                }"
+                >{{ data.item.name }}</b-link
+              >
             </template>
           </b-table>
           <b-pagination
@@ -58,7 +73,9 @@
       <b-card bg-variant="light" body-class="p-0">
         <b-collapse class="p-0 m-0" v-model="showError">
           <b-card class="p-0 m-0" bg-variant="danger">
-            <h3 style="color: white;">A customer with that business number already exists.</h3>
+            <h3 style="color: white">
+              A customer with that business number already exists.
+            </h3>
           </b-card>
         </b-collapse>
         <b-form @submit="submitCustomer" onSubmit="return false;" class="p-3">
@@ -76,7 +93,13 @@
               label-for="input-name"
               description="Required"
             >
-              <b-input placeholder="Company Name" v-model="form.name" id="input-name" type="text" required></b-input>
+              <b-input
+                placeholder="Company Name"
+                v-model="form.name"
+                id="input-name"
+                type="text"
+                required
+              ></b-input>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -85,7 +108,14 @@
               label-for="input-cvr"
               description="Required"
             >
-              <b-input id="input-cvr" max="999999999" type="number"  v-model="form.businessNumber" placeholder="12345678" required></b-input>
+              <b-input
+                id="input-cvr"
+                max="999999999"
+                type="number"
+                v-model="form.businessNumber"
+                placeholder="12345678"
+                required
+              ></b-input>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -93,7 +123,12 @@
               label-align-sm="right"
               label-for="input-domain"
             >
-              <b-input id="input-domain" type="text" v-model="form.domain" placeholder="domain.dk"></b-input>
+              <b-input
+                id="input-domain"
+                type="text"
+                v-model="form.domain"
+                placeholder="domain.dk"
+              ></b-input>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -101,7 +136,12 @@
               label-align-sm="right"
               label-for="input-phone"
             >
-              <b-input id="input-phone" v-model="form.phone" type="number" placeholder="12345678"></b-input>
+              <b-input
+                id="input-phone"
+                v-model="form.phone"
+                type="number"
+                placeholder="12345678"
+              ></b-input>
             </b-form-group>
           </b-form-group>
           <b-card no-body class="mb-3"></b-card>
@@ -119,7 +159,12 @@
               label-for="input-group"
               description="Required"
             >
-              <b-form-select id="input-group" v-model="form.selectedGroup" :options="dropdownData.customerGroups" required></b-form-select>
+              <b-form-select
+                id="input-group"
+                v-model="form.selectedGroup"
+                :options="dropdownData.customerGroups"
+                required
+              ></b-form-select>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -128,7 +173,12 @@
               label-for="input-currency"
               description="Required"
             >
-              <b-form-select id="input-currency" required v-model="form.selectedCurrency" :options="dropdownData.currencies"></b-form-select>
+              <b-form-select
+                id="input-currency"
+                required
+                v-model="form.selectedCurrency"
+                :options="dropdownData.currencies"
+              ></b-form-select>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -137,7 +187,12 @@
               label-for="input-terms"
               description="Required"
             >
-              <b-form-select id="input-terms" required v-model="form.selectedPaymentTerms" :options="dropdownData.paymentTerms"></b-form-select>
+              <b-form-select
+                id="input-terms"
+                required
+                v-model="form.selectedPaymentTerms"
+                :options="dropdownData.paymentTerms"
+              ></b-form-select>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -146,7 +201,12 @@
               label-for="input-vat"
               description="Required"
             >
-              <b-form-select id="input-vat" required v-model="form.selectedVatZone" :options="dropdownData.vatZones"></b-form-select>
+              <b-form-select
+                id="input-vat"
+                required
+                v-model="form.selectedVatZone"
+                :options="dropdownData.vatZones"
+              ></b-form-select>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -154,7 +214,12 @@
               label-align-sm="right"
               label-for="input-invoice"
             >
-              <b-form-checkbox id="input-invoice" required v-model="form.eInvoicingDisabledByDefault" :options="dropdownData.eInvoicingDisabledByDefault"></b-form-checkbox>
+              <b-form-checkbox
+                id="input-invoice"
+                required
+                v-model="form.eInvoicingDisabledByDefault"
+                :options="dropdownData.eInvoicingDisabledByDefault"
+              ></b-form-checkbox>
             </b-form-group>
           </b-form-group>
           <b-card class="mb-3" no-body></b-card>
@@ -171,7 +236,12 @@
               label-align-sm="right"
               label-for="input-address"
             >
-              <b-input id="input-address" v-model="form.address" placeholder="Address" type="text"></b-input>
+              <b-input
+                id="input-address"
+                v-model="form.address"
+                placeholder="Address"
+                type="text"
+              ></b-input>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -179,7 +249,12 @@
               label-align-sm="right"
               label-for="input-zip"
             >
-              <b-input id="input-zip" v-model="form.zip" placeholder="0000" type="number"></b-input>
+              <b-input
+                id="input-zip"
+                v-model="form.zip"
+                placeholder="0000"
+                type="number"
+              ></b-input>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -187,7 +262,12 @@
               label-align-sm="right"
               label-for="input-city"
             >
-              <b-input id="input-city" v-model="form.city" placeholder="City" type="text"></b-input>
+              <b-input
+                id="input-city"
+                v-model="form.city"
+                placeholder="City"
+                type="text"
+              ></b-input>
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
@@ -195,7 +275,12 @@
               label-align-sm="right"
               label-for="input-country"
             >
-              <b-input id="input-country" v-model="form.country" placeholder="Country" type="text"></b-input>
+              <b-input
+                id="input-country"
+                v-model="form.country"
+                placeholder="Country"
+                type="text"
+              ></b-input>
             </b-form-group>
           </b-form-group>
           <b-button-group>
@@ -220,7 +305,6 @@ export default {
         customerGroups: [],
         currencies: [],
         vatZones: [],
-
       },
       form: {
         name: null,
@@ -235,7 +319,7 @@ export default {
         selectedGroup: null,
         selectedCurrency: null,
         selectedVatZone: null,
-        eInvoicingDisabledByDefault: null
+        eInvoicingDisabledByDefault: null,
       },
       fields: [
         {
@@ -261,61 +345,65 @@ export default {
   created() {
     this.fetchData();
 
-
     //Collect these calls in one axios.all call
-    axios.get(`${process.env.VUE_APP_URL}customerGroups`)
-      .then(response => {
-        for (var item in response.data.customerGroups) {
-          console.log(item)
-          const group = response.data.customerGroups[item];
-          this.dropdownData.customerGroups.push(
-            {
-              value: group.customerGroupNumber, text: group.name
-            })
+    axios
+      .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
+      .then((response) => {
+        console.log(response.data);
+        for (var item in response.data) {
+          console.log(item);
+          const group = response.data[item];
+          this.dropdownData.customerGroups.push({
+            value: group.customerGroupNumber,
+            text: group.name,
+          });
         }
-      })
-    axios.get(`${process.env.VUE_APP_URL}currencies`)
-      .then(response => {
-        for (var item in response.data.currencies) {
-          const currency = response.data.currencies[item];
-          this.dropdownData.currencies.push(
-            {
-              value: currency.code, text: currency.name
-            })
+      });
+    axios
+      .get(`${process.env.VUE_APP_URL}invoices/currencies`)
+      .then((response) => {
+        for (var item in response.data) {
+          const currency = response.data[item];
+          this.dropdownData.currencies.push({
+            value: currency.code,
+            text: currency.name,
+          });
         }
-      })
-    axios.get(`${process.env.VUE_APP_URL}paymentTerms`)
-      .then(response => {
-        for (var item in response.data.paymentTerms) {
-          const term = response.data.paymentTerms[item];
-          this.dropdownData.paymentTerms.push(
-            {
-              value: term.paymentTermsNumber, text: term.name
-            })
+      });
+    axios
+      .get(`${process.env.VUE_APP_URL}invoices/paymentTerms`)
+      .then((response) => {
+        for (var item in response.data) {
+          const term = response.data[item];
+          this.dropdownData.paymentTerms.push({
+            value: term.paymentTermsNumber,
+            text: term.name,
+          });
         }
-      })
-    axios.get(`${process.env.VUE_APP_URL}vatZones`)
-      .then(response => {
-        for (var item in response.data.vatZones) {
-          const vatZone = response.data.vatZones[item];
-          this.dropdownData.vatZones.push(
-            {
-              value: vatZone.vatZoneNumber, text: vatZone.name
-            })
+      });
+    axios
+      .get(`${process.env.VUE_APP_URL}invoices/vatZones`)
+      .then((response) => {
+        for (var item in response.data) {
+          const vatZone = response.data[item];
+          this.dropdownData.vatZones.push({
+            value: vatZone.vatZoneNumber,
+            text: vatZone.name,
+          });
         }
-      })
+      });
   },
   methods: {
     fetchData() {
       axios
-        .get(`${process.env.VUE_APP_URL}customers`,
-          { 
-            params: { 
-              page: this.currentPage, 
-              results: this.perPage 
-            }})
+        .get(`${process.env.VUE_APP_URL}customers`, {
+          params: {
+            page: this.currentPage,
+            results: this.perPage,
+          },
+        })
         .then((response) => {
-          console.log(response)
+          console.log(response);
           const data = response.data;
           this.items = data.collection;
           this.currentPage = parseInt(data.pagination.skipPages) + 1;
@@ -328,26 +416,28 @@ export default {
     },
     submitCustomer() {
       console.log("Submitting logic here");
-      axios.post(`${process.env.VUE_APP_URL}customer`, this.form)
-      .then(response => {
-        console.log(response)
+      axios
+        .post(`${process.env.VUE_APP_URL}customer`, this.form)
+        .then((response) => {
+          console.log(response);
           //Refresh table of customers
-          this.$refs['customerFormModal'].hide()
+          this.$refs["customerFormModal"].hide();
           this.fetchData();
-      })
-      .catch(error => {
-        console.log(error)
-        if (error.response.status === 409) { //Code 409 is the code for duplicate resource
-          console.log('test')
-          this.showError = true
-          this.scrollToModalTop()
-        }
-      })
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.response.status === 409) {
+            //Code 409 is the code for duplicate resource
+            console.log("test");
+            this.showError = true;
+            this.scrollToModalTop();
+          }
+        });
     },
     scrollToModalTop() {
-      var modal = document.getElementById('customerForm')
-      modal.scrollTo({ top: 0, left: 0, behavior: 'smooth'});
-    }
+      var modal = document.getElementById("customerForm");
+      modal.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    },
   },
   watch: {
     currentPage: {
