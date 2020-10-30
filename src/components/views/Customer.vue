@@ -1073,11 +1073,11 @@
 </template>
 
 <script>
-import axios from "axios";
-import dayjs from "dayjs";
-import fileDownload from "js-file-download";
-import download from "downloadjs";
-import PaginatedTable from "../PaginatedTable";
+import axios from 'axios'
+import dayjs from 'dayjs'
+import fileDownload from 'js-file-download'
+import download from 'downloadjs'
+import PaginatedTable from '../PaginatedTable'
 
 export default {
   data() {
@@ -1097,112 +1097,112 @@ export default {
       fields: {
         assets: [
           {
-            key: "AgentID",
-            label: "Asset ID",
+            key: 'AgentID',
+            label: 'Asset ID',
           },
           {
-            key: "AgentName",
-            label: "Asset Name",
+            key: 'AgentName',
+            label: 'Asset Name',
           },
           {
-            key: "Online",
-            label: "Status",
+            key: 'Online',
+            label: 'Status',
           },
           {
-            key: "LastPatchManagementReceived",
-            label: "Last Patched",
+            key: 'LastPatchManagementReceived',
+            label: 'Last Patched',
           },
         ],
         tickets: [
           {
-            key: "ticketId",
-            label: "Ticket ID",
+            key: 'ticketId',
+            label: 'Ticket ID',
           },
           {
-            key: "subject",
-            label: "Subject",
+            key: 'subject',
+            label: 'Subject',
           },
           {
-            key: "created_date",
-            label: "Date of Creation",
+            key: 'created_date',
+            label: 'Date of Creation',
           },
           {
-            key: "modified_date",
-            label: "Last Updated",
+            key: 'modified_date',
+            label: 'Last Updated',
           },
           {
-            key: "status",
-            label: "Status",
+            key: 'status',
+            label: 'Status',
           },
           {
-            key: "reply_status",
-            label: "Reply Status",
+            key: 'reply_status',
+            label: 'Reply Status',
           },
         ],
         invoices: [
           {
-            key: "bookedInvoiceNumber", //Fix this so it fits all invoices and not just the booked ones
-            label: "Invoice Number",
+            key: 'bookedInvoiceNumber', //Fix this so it fits all invoices and not just the booked ones
+            label: 'Invoice Number',
           },
           {
-            key: "date",
-            label: "Date Created",
+            key: 'date',
+            label: 'Date Created',
           },
           {
-            key: "dueDate",
-            label: "Due On",
+            key: 'dueDate',
+            label: 'Due On',
           },
           {
-            key: "netAmount",
+            key: 'netAmount',
           },
           {
-            key: "remainder",
-            label: "Payment",
+            key: 'remainder',
+            label: 'Payment',
           },
           {
-            key: "pdf",
-            label: "",
+            key: 'pdf',
+            label: '',
           },
         ],
         passwords: [
           {
-            key: "name",
-            label: "Name",
+            key: 'name',
+            label: 'Name',
           },
           {
-            key: "domain",
+            key: 'domain',
           },
           {
-            key: "url",
-            label: "URL",
+            key: 'url',
+            label: 'URL',
           },
           {
-            key: "username",
+            key: 'username',
           },
           {
-            key: "password",
+            key: 'password',
           },
           {
-            key: "access_level",
+            key: 'access_level',
           },
           {
-            key: "togglePass",
-            label: "",
+            key: 'togglePass',
+            label: '',
           },
         ],
         attachments: [
           {
-            key: "fileName",
-            label: "Name",
+            key: 'fileName',
+            label: 'Name',
             editable: true,
           },
           {
-            key: "fileSize",
-            label: "Size (WIP)",
+            key: 'fileSize',
+            label: 'Size (WIP)',
           },
           {
-            key: "visibleToCustomer",
-            label: "Visible",
+            key: 'visibleToCustomer',
+            label: 'Visible',
           },
         ],
       },
@@ -1228,15 +1228,15 @@ export default {
           totalItems: 0,
           filterOptions: {
             options: [
-              { text: "Booked", value: "booked" },
-              { text: "Drafts", value: "drafts" },
+              { text: 'Booked', value: 'booked' },
+              { text: 'Drafts', value: 'drafts' },
               // { text: 'Unpaid', value: 'unpaid'},
               // { text: 'Paid', value: 'paid'},
               // { text: 'Overdue', value: 'overdue'},
               // { text: 'Not Due', value: 'not-due'},
             ],
             allSelected: true,
-            selected: "booked",
+            selected: 'booked',
             indeterminate: false,
           },
         },
@@ -1264,91 +1264,90 @@ export default {
       customerGroup: 0,
       ateraid: 0,
       id: this.$route.query.customerID,
-    };
+    }
   },
   created() {
     // //Set all invoice filter options to be selected once mounted.
     // this.toggleAll(true)
 
-    this.$getAccountID();
+    this.$getAccountId()
 
-    this.getCustomerInfo();
+    this.getCustomerInfo()
     this.fetchData(
       `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
     ).then((response) => {
-      this.items.assets = response.data.assets.items;
-      this.pagination.assets.totalItems = response.data.assets.totalItemCount;
-    });
+      this.items.assets = response.data.assets.items
+      this.pagination.assets.totalItems = response.data.assets.totalItemCount
+    })
     this.fetchData(`customers/${this.$route.query.customerID}/tickets`, {
       params: {
         page: this.pagination.tickets.currentPage,
         results: this.pagination.tickets.perPage,
       },
     }).then((response) => {
-      this.items.tickets = response.data;
-    });
+      this.items.tickets = response.data
+    })
     this.fetchData(`customer/contracts/${this.id}`).then((response) => {
-      this.items.contracts = response.data.contracts;
-    });
+      this.items.contracts = response.data.contracts
+    })
     this.fetchData(`customers/${this.id}/rates`).then((response) => {
-      this.items.contractRates = response.data;
-    });
+      this.items.contractRates = response.data
+    })
     this.fetchData(
-      `customer/passwords/${this.$getAccountID()}/${this.id}/${
+      `customer/passwords/${this.$getAccountId()}/${this.id}/${
         this.pagination.passwords.currentPage
       }/${this.pagination.passwords.perPage}`
     ).then((response) => {
-      this.items.passwords = response.data.passwords;
-      this.pagination.passwords.totalItems = response.data.passwords.length;
-    });
+      this.items.passwords = response.data.passwords
+      this.pagination.passwords.totalItems = response.data.passwords.length
+    })
     axios
       .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
       .then((response) => {
         for (var item in response.data) {
-          console.log(item);
-          const group = response.data[item];
+          const group = response.data[item]
           this.dropdownData.customerGroups.push({
             value: group.customerGroupNumber,
             text: group.name,
-          });
+          })
         }
-      });
+      })
     axios
       .get(`${process.env.VUE_APP_URL}invoices/currencies`)
       .then((response) => {
         for (var item in response.data) {
-          const currency = response.data[item];
+          const currency = response.data[item]
           this.dropdownData.currencies.push({
             value: currency.code,
             text: currency.name,
-          });
+          })
         }
-      });
+      })
     axios
       .get(`${process.env.VUE_APP_URL}invoices/paymentTerms`)
       .then((response) => {
         for (var item in response.data) {
-          const term = response.data[item];
+          const term = response.data[item]
           this.dropdownData.paymentTerms.push({
             value: term.paymentTermsNumber,
             text: term.name,
-          });
+          })
         }
-      });
+      })
     axios
       .get(`${process.env.VUE_APP_URL}invoices/vatZones`)
       .then((response) => {
         for (var item in response.data) {
-          const vatZone = response.data[item];
+          const vatZone = response.data[item]
           this.dropdownData.vatZones.push({
             value: vatZone.vatZoneNumber,
             text: vatZone.name,
-          });
+          })
         }
-      });
+      })
 
-    this.loadInvoices();
-    this.loadAttachments();
+    this.loadInvoices()
+    this.loadAttachments()
   },
   methods: {
     getCustomerInfo() {
@@ -1359,35 +1358,34 @@ export default {
         ])
         .then(
           axios.spread((...responses) => {
-            const customerData = responses[0].data;
-            this.customerInfo = customerData.customer;
-            this.customerGroup = customerData.customerGroup;
-            this.ateraid = customerData.apiInfo;
-            this.paymentTerms = customerData.paymentTerms;
+            const customerData = responses[0].data
+            this.customerInfo = customerData.customer
+            this.customerGroup = customerData.customerGroup
+            this.ateraid = customerData.apiInfo
+            this.paymentTerms = customerData.paymentTerms
 
-            this.populateForm();
-            const contactData = responses[1].data;
-            console.log(responses[1].data);
-            this.items.contacts = contactData;
+            this.populateForm()
+            const contactData = responses[1].data
+            this.items.contacts = contactData
           })
         )
         .catch((error) => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     },
     fetchData(endpoint, params) {
       if (params) {
-        return axios.get(process.env.VUE_APP_URL + endpoint, params);
+        return axios.get(process.env.VUE_APP_URL + endpoint, params)
       } else {
-        return axios.get(process.env.VUE_APP_URL + endpoint);
+        return axios.get(process.env.VUE_APP_URL + endpoint)
       }
     },
     loadContracts: function () {},
     dayjs: function () {
-      return dayjs();
+      return dayjs()
     },
     loadInvoices() {
-      const selected = this.pagination.invoices.filterOptions.selected;
+      const selected = this.pagination.invoices.filterOptions.selected
       axios
         .get(
           `${process.env.VUE_APP_URL}customers/${this.id}/invoices/${selected}`,
@@ -1399,10 +1397,9 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response.data.collection);
-          this.items.invoices = response.data.collection;
-          this.pagination.invoices.totalItems = response.data.collection.length;
-        });
+          this.items.invoices = response.data.collection
+          this.pagination.invoices.totalItems = response.data.collection.length
+        })
     },
     downloadInvoice(link) {
       axios
@@ -1410,57 +1407,55 @@ export default {
           params: {
             url: link,
           },
-          responseType: "arraybuffer",
+          responseType: 'arraybuffer',
         })
         .then((response) => {
-          console.log(response);
-          fileDownload(response.data, "invoice.pdf");
-        });
+          fileDownload(response.data, 'invoice.pdf')
+        })
     },
     getInvoiceStatus(date, remainder) {
-      const today = new Date();
-      const dueDate = dayjs(date);
+      const today = new Date()
+      const dueDate = dayjs(date)
 
       if (remainder === 0) {
-        return "paid"; //If the remaining payment required is 0, return the status as paid.
+        return 'paid' //If the remaining payment required is 0, return the status as paid.
       } else {
         if (dueDate.isAfter(today)) {
-          return "unpaid"; //If the invoice is due after the current time, return the status as unpaid.
+          return 'unpaid' //If the invoice is due after the current time, return the status as unpaid.
         } else {
-          return "overdue"; //If the invoice is overdue, return the status as overdue.
+          return 'overdue' //If the invoice is overdue, return the status as overdue.
         }
       }
     },
     invoiceOverdue(date) {
-      const today = new Date();
-      const dueDate = dayjs(date);
+      const today = new Date()
+      const dueDate = dayjs(date)
 
       if (dueDate.isBefore(today)) {
-        return "overdue";
+        return 'overdue'
       } else {
-        return "notDue";
+        return 'notDue'
       }
     },
     invoicePaid(remainder) {
       if (remainder === 0) {
-        return "paid";
+        return 'paid'
       } else {
-        return "unpaid";
+        return 'unpaid'
       }
     },
     getPassword(passwordId) {
       axios
         .get(`${process.env.VUE_APP_URL}password/${passwordId}`)
         .then((response) => {
-          console.log(response);
-          const passwords = this.items.passwords;
+          const passwords = this.items.passwords
           for (var item in passwords) {
             if (passwords[item].password_id === passwordId) {
-              passwords[item].password = response.data;
-              this.$refs.passTable.refresh();
+              passwords[item].password = response.data
+              this.$refs.pass.refresh()
             }
           }
-        });
+        })
     },
     populateForm() {
       this.form = {
@@ -1481,30 +1476,24 @@ export default {
         selectedVatZone: this.customerInfo.economic.vatZone.vatZoneNumber,
         eInvoicingDisabledByDefault: this.customerInfo.economic
           .eInvoicingDisabledByDefault,
-      };
+      }
     },
     submitCustomerEdit() {
-      console.log("Submitting");
       axios
         .put(`${process.env.VUE_APP_URL}customer/${this.id}`, this.form)
-        .then((response) => {
-          console.log(response);
-          this.$refs["customerEditModal"].hide();
-          this.getCustomerInfo();
-        });
+        .then(() => {
+          this.$refs['customerEditModal'].hide()
+          this.getCustomerInfo()
+        })
     },
     submitContact() {
-      console.log("Creating contact");
-      var requestBody = this.contactForm;
-      requestBody.businessNumber = this.id;
+      var requestBody = this.contactForm
+      requestBody.businessNumber = this.id
 
-      axios
-        .post(`${process.env.VUE_APP_URL}contacts`, requestBody)
-        .then((response) => {
-          console.log(response);
-          this.$refs["createContactModal"].hide();
-          this.getCustomerInfo();
-        });
+      axios.post(`${process.env.VUE_APP_URL}contacts`, requestBody).then(() => {
+        this.$refs['createContactModal'].hide()
+        this.getCustomerInfo()
+      })
     },
     async submitContractRates() {
       axios
@@ -1512,26 +1501,23 @@ export default {
           `${process.env.VUE_APP_URL}customers/${this.id}/rates`,
           this.items.contractRates
         )
-        .then((response) => {
-          console.log(response);
-        });
+        .then(() => {})
     },
     async downloadAttachment(id, name, type) {
       let attachment = await axios.get(
         `${process.env.VUE_APP_URL}attachments/${id}`
-      );
+      )
 
-      console.log(attachment.data);
-      download(`data:${type};base64,${attachment.data}`, name, type);
+      download(`data:${type};base64,${attachment.data}`, name, type)
     },
     deleteAttachment(id) {
       axios.delete(`${process.env.VUE_APP_URL}attachments/${id}`).then(() => {
-        this.loadAttachments();
-      });
+        this.loadAttachments()
+      })
     },
     async loadAttachments() {
-      let page = this.pagination.attachments.currentPage;
-      let resultsPerPage = this.pagination.attachments.perPage;
+      let page = this.pagination.attachments.currentPage
+      let resultsPerPage = this.pagination.attachments.perPage
 
       let attachments = await axios.get(
         `${process.env.VUE_APP_URL}attachments/customers/${this.id}`,
@@ -1541,40 +1527,40 @@ export default {
             results: resultsPerPage,
           },
         }
-      );
-      this.items.attachments = attachments.data.attachments;
-      this.pagination.attachments.totalItems = attachments.data.entryCount;
+      )
+      this.items.attachments = attachments.data.attachments
+      this.pagination.attachments.totalItems = attachments.data.entryCount
     },
     uploadAttachments() {
       this.$refs.attachmentFileAgent
         .upload(this.uploadUrl, this.uploadHeaders, this.fileRecords)
         .then(() => {
-          this.loadAttachments();
-        });
-      this.fileRecords = [];
+          this.loadAttachments()
+        })
+      this.fileRecords = []
     },
     beforeDeleteFileRecord(fileRecord) {
-      this.$refs.attachmentFileAgent.deleteFileRecord(fileRecord);
+      this.$refs.attachmentFileAgent.deleteFileRecord(fileRecord)
     },
   },
   filters: {
     //These need to be made global filters at some point.
     dayjsDateOnly: function (date) {
-      return dayjs(date).format("MMM D, YYYY");
+      return dayjs(date).format('MMM D, YYYY')
     },
     dayjsDateTime: function (date) {
-      return dayjs(date).format("MMM D, YYYY, h:mm:ss a");
+      return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
     },
   },
   computed: {
     assetsCurrentPage() {
-      return this.pagination.assets.currentPage;
+      return this.pagination.assets.currentPage
     },
     ticketsCurrentPage() {
-      return this.pagination.tickets.currentPage;
+      return this.pagination.tickets.currentPage
     },
     attachmentsCurrentPage() {
-      return this.pagination.attachments.currentPage;
+      return this.pagination.attachments.currentPage
     },
   },
   watch: {
@@ -1582,16 +1568,16 @@ export default {
       this.fetchData(
         `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
       ).then((response) => {
-        this.items.assets = response.data.assets.items;
-        this.pagination.assets.totalItems = response.data.assets.totalItemCount;
-      });
+        this.items.assets = response.data.assets.items
+        this.pagination.assets.totalItems = response.data.assets.totalItemCount
+      })
     },
     async attachmentsCurrentPage() {
-      this.loadAttachments();
+      this.loadAttachments()
     },
   },
   components: {
     PaginatedTable,
   },
-};
+}
 </script>

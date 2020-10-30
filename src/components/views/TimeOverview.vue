@@ -1,226 +1,95 @@
 <template>
   <div id="wrapper">
     <div class="container-fluid">
-      <div class="row">
+      <h3 class="text-dark mb-3">
+        Time Overview for {{ this.$store.state.account.username }}
+      </h3>
+      <div class="row mb-3">
         <b-col>
-          <h3 class="text-dark mb-3">Time Overview for</h3>
-          <time-display :title="'Hours Registered (Week)'"> </time-display>-
+          <time-display
+            :title="'Total Hours (Actual)'"
+            :time="this.timeSums.total.seconds"
+          >
+          </time-display>
         </b-col>
         <b-col>
-          <time-display :title="'Hours Registered (Week)'"> </time-display>-
+          <time-display
+            :title="'Billable Hours (Actual)'"
+            :time="this.timeSums.billable.seconds"
+          >
+          </time-display>
         </b-col>
         <b-col>
-          <time-display :title="'Hours Registered (Month)'"> </time-display>-
+          <time-display
+            :title="'Total Hours (Rounded)'"
+            :time="this.timeSums.total.rounded"
+          >
+          </time-display>
         </b-col>
         <b-col>
-          <time-display :title="'Billable Hours Registered (Week)'">
-          </time-display
-          >-
+          <time-display
+            :title="'Billable Hours (Rounded)'"
+            :time="this.timeSums.billable.rounded"
+          ></time-display>
         </b-col>
       </div>
-      <!-- Start: Chart -->
-      <div class="row">
-        <div class="col">
-          <div class="card shadow mb-4">
-            <div
-              class="card-header d-flex justify-content-between align-items-center"
-            >
-              <h6 class="text-primary font-weight-bold m-0">
-                Registered Hours Overview
-              </h6>
-              <div class="dropdown no-arrow">
-                <button
-                  class="btn btn-link btn-sm dropdown-toggle"
-                  data-toggle="dropdown"
-                  aria-expanded="false"
-                  type="button"
-                >
-                  <i class="fas fa-ellipsis-v text-gray-400"></i>
-                </button>
-                <div
-                  class="dropdown-menu shadow dropdown-menu-right animated--fade-in"
-                  role="menu"
-                >
-                  <p class="text-center dropdown-header">Time Basis:</p>
-                  <a class="dropdown-item" role="presentation" href="#"
-                    >&nbsp;Daily</a
-                  >
-                  <a class="dropdown-item" role="presentation" href="#"
-                    >&nbsp;Weekly</a
-                  >
-                  <a class="dropdown-item" role="presentation" href="#"
-                    >&nbsp;Monthly</a
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="chart-area">
-                <canvas id="bar-chart-horizontal"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- End: Chart -->
-      <div class="row">
-        <div class="col">
-          <div class="card shadow mb-4">
-            <div
-              class="card-header d-flex justify-content-between align-items-center"
-            >
-              <h6 class="text-primary font-weight-bold m-0">
-                Registered Hours Overview
-              </h6>
-              <div class="dropdown no-arrow">
-                <button
-                  class="btn btn-link btn-sm dropdown-toggle"
-                  data-toggle="dropdown"
-                  aria-expanded="false"
-                  type="button"
-                >
-                  <i class="fas fa-ellipsis-v text-gray-400"></i>
-                </button>
-                <div
-                  class="dropdown-menu shadow dropdown-menu-right animated--fade-in"
-                  role="menu"
-                >
-                  <p class="text-center dropdown-header">Time Basis:</p>
-                  <a class="dropdown-item" role="presentation" href="#"
-                    >&nbsp;Daily</a
-                  >
-                  <a class="dropdown-item" role="presentation" href="#"
-                    >&nbsp;Weekly</a
-                  >
-                  <a class="dropdown-item" role="presentation" href="#"
-                    >&nbsp;Monthly</a
-                  >
-                </div>
-              </div>
-            </div>
-            <div class="card-body">
-              <div
-                class="table-responsive table mt-2"
-                id="dataTable"
-                role="grid"
-                aria-describedby="dataTable_info"
-              >
-                <table class="table dataTable my-0" id="dataTable">
-                  <thead>
-                    <tr>
-                      <th>Ticket ID</th>
-                      <th>Billable Hours</th>
-                      <th>Non-Billable Hours</th>
-                      <th>Customer</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <a href="ticketpage">#101</a>
-                      </td>
-                      <td>04:45:42</td>
-                      <td>02:20:12</td>
-                      <td>
-                        <a href="customerpage">Openlane</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <a href="ticketpage">#101</a>
-                      </td>
-                      <td>04:45:42</td>
-                      <td>02:20:12</td>
-                      <td>
-                        <a href="customerpage">Openlane</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <a href="ticketpage">#101</a>
-                      </td>
-                      <td>04:45:42</td>
-                      <td>02:20:12</td>
-                      <td>
-                        <a href="customerpage">Openlane</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <a href="ticketpage">#101</a>
-                      </td>
-                      <td>04:45:42</td>
-                      <td>02:20:12</td>
-                      <td>
-                        <a href="customerpage">Openlane</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <a href="ticketpage">#101</a>
-                      </td>
-                      <td>04:45:42</td>
-                      <td>02:20:12</td>
-                      <td>
-                        <a href="customerpage">Openlane</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <a href="ticketpage">#101</a>
-                      </td>
-                      <td>04:45:42</td>
-                      <td>02:20:12</td>
-                      <td>
-                        <a href="customerpage">Openlane</a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <a href="ticketpage">#101</a>
-                      </td>
-                      <td>04:45:42</td>
-                      <td>02:20:12</td>
-                      <td>
-                        <a href="customerpage">Openlane</a>
-                      </td>
-                    </tr>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td>
-                        <strong>Ticket ID</strong>
-                      </td>
-                      <td>
-                        <strong>Billable Hours</strong>
-                      </td>
-                      <td>
-                        <strong>Non-Billable Hours</strong>
-                      </td>
-                      <td>
-                        <strong>Customer</strong>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <b-row>
+        <b-col>
+          <work-hour-table> </work-hour-table>
+        </b-col>
+      </b-row>
     </div>
   </div>
 </template>
 
 <script>
-import TimeDisplay from '../TimeDisplay.vue'
+import TimeDisplay from '../TimeDisplay'
+import WorkHourTable from '../WorkHourTable'
+import dayjs from 'dayjs'
+import axios from 'axios'
 
 export default {
   data() {
-    return {}
+    return {
+      workHourRecords: [],
+      timeSums: {
+        billable: {
+          seconds: 0,
+          rounded: 0,
+        },
+        total: {
+          seconds: 0,
+          rounded: 0,
+        },
+      },
+    }
+  },
+  created() {
+    this.fetchTimeWeekly()
+    this.fetchTimeMonthly()
+  },
+  methods: {
+    async fetchTimeWeekly() {},
+    async fetchTimeMonthly() {
+      let startDate = dayjs().startOf('month').format('YYYY-MM-DD')
+      let endDate = dayjs().endOf('month').format('YYYY-MM-DD')
+      this.timeSums = await this.fetchTimeSum(startDate, endDate)
+    },
+    async fetchTimeSum(startDate, endDate) {
+      let time = await axios.get(
+        `${
+          process.env.VUE_APP_URL
+        }employees/${this.$getAccountId()}/totalHours`,
+        {
+          params: { startDate, endDate },
+        }
+      )
+      return time.data
+    },
   },
   components: {
     TimeDisplay,
+    WorkHourTable,
   },
 }
 </script>

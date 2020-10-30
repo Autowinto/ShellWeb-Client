@@ -294,7 +294,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
 
 export default {
   data() {
@@ -323,12 +323,12 @@ export default {
       },
       fields: [
         {
-          key: "corporateIdentificationNumber",
-          label: "Customer ID",
+          key: 'corporateIdentificationNumber',
+          label: 'Customer ID',
         },
         {
-          key: "name",
-          label: "Name",
+          key: 'name',
+          label: 'Name',
         },
       ],
       items: [],
@@ -336,62 +336,60 @@ export default {
       perPage: 10,
       totalItems: 0,
       paginationOptions: [
-        { value: 10, text: "10" },
-        { value: 25, text: "25" },
-        { value: 50, text: "50" },
+        { value: 10, text: '10' },
+        { value: 25, text: '25' },
+        { value: 50, text: '50' },
       ],
-    };
+    }
   },
   created() {
-    this.fetchData();
+    this.fetchData()
 
     //Collect these calls in one axios.all call
     axios
       .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
       .then((response) => {
-        console.log(response.data);
         for (var item in response.data) {
-          console.log(item);
-          const group = response.data[item];
+          const group = response.data[item]
           this.dropdownData.customerGroups.push({
             value: group.customerGroupNumber,
             text: group.name,
-          });
+          })
         }
-      });
+      })
     axios
       .get(`${process.env.VUE_APP_URL}invoices/currencies`)
       .then((response) => {
         for (var item in response.data) {
-          const currency = response.data[item];
+          const currency = response.data[item]
           this.dropdownData.currencies.push({
             value: currency.code,
             text: currency.name,
-          });
+          })
         }
-      });
+      })
     axios
       .get(`${process.env.VUE_APP_URL}invoices/paymentTerms`)
       .then((response) => {
         for (var item in response.data) {
-          const term = response.data[item];
+          const term = response.data[item]
           this.dropdownData.paymentTerms.push({
             value: term.paymentTermsNumber,
             text: term.name,
-          });
+          })
         }
-      });
+      })
     axios
       .get(`${process.env.VUE_APP_URL}invoices/vatZones`)
       .then((response) => {
         for (var item in response.data) {
-          const vatZone = response.data[item];
+          const vatZone = response.data[item]
           this.dropdownData.vatZones.push({
             value: vatZone.vatZoneNumber,
             text: vatZone.name,
-          });
+          })
         }
-      });
+      })
   },
   methods: {
     fetchData() {
@@ -403,55 +401,51 @@ export default {
           },
         })
         .then((response) => {
-          console.log(response);
-          const data = response.data;
-          this.items = data.collection;
-          this.currentPage = parseInt(data.pagination.skipPages) + 1;
-          this.totalItems = data.pagination.results;
-          this.perPage = data.pagination.pageSize;
+          const data = response.data
+          this.items = data.collection
+          this.currentPage = parseInt(data.pagination.skipPages) + 1
+          this.totalItems = data.pagination.results
+          this.perPage = data.pagination.pageSize
         })
         .catch((err) => {
-          console.error(err);
-        });
+          console.error(err)
+        })
     },
     submitCustomer() {
-      console.log("Submitting logic here");
       axios
         .post(`${process.env.VUE_APP_URL}customer`, this.form)
-        .then((response) => {
-          console.log(response);
+        .then(() => {
           //Refresh table of customers
-          this.$refs["customerFormModal"].hide();
-          this.fetchData();
+          this.$refs['customerFormModal'].hide()
+          this.fetchData()
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error)
           if (error.response.status === 409) {
             //Code 409 is the code for duplicate resource
-            console.log("test");
-            this.showError = true;
-            this.scrollToModalTop();
+            this.showError = true
+            this.scrollToModalTop()
           }
-        });
+        })
     },
     scrollToModalTop() {
-      var modal = document.getElementById("customerForm");
-      modal.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      var modal = document.getElementById('customerForm')
+      modal.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     },
   },
   watch: {
     currentPage: {
       handler: function () {
-        this.fetchData(); //Do error handling here in the future
+        this.fetchData() //Do error handling here in the future
       },
     },
     perPage: {
       handler: function () {
-        this.fetchData();
+        this.fetchData()
       },
     },
   },
-};
+}
 </script>
 
 <style lang="css">
