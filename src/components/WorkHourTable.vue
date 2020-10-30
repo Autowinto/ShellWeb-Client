@@ -58,7 +58,12 @@
           {{ formatDate(data.item.endTime) }}
         </template>
       </b-table>
-      <b-pagination> </b-pagination>
+      <b-pagination
+        v-model="currentPage"
+        :per-page="5"
+        :total-rows="totalItems"
+      >
+      </b-pagination>
     </div>
   </div>
 </template>
@@ -71,6 +76,9 @@ export default {
   data() {
     return {
       workHourRecords: [],
+      currentPage: 1,
+      perPage: 10,
+      totalItems: 0,
       fields: [
         {
           key: 'id',
@@ -111,11 +119,18 @@ export default {
       let response = await axios.get(
         `${
           process.env.VUE_APP_URL
-        }employees/${this.$getAccountId()}/workHourRecords`
+        }employees/${this.$getAccountId()}/workHourRecords`,
+        {
+          params: {
+            page: this.currentPage,
+            results: this.perPage,
+          },
+        }
       )
 
       let workHourData = response.data
-      console.log(workHourData)
+
+      this.totalItems = workHourData.pagination.totalItems
 
       this.workHourRecords = workHourData.collection
     },
@@ -129,6 +144,13 @@ export default {
     },
     formatDate(date) {
       return dayjs(date).format('DD-MM-YYYY HH:mm:ss')
+    },
+  },
+  watch: {
+    currentPage: {
+      handler: function () {
+        this.fetchWorkHourRecords() //Do error handling here in the future
+      },
     },
   },
 }
