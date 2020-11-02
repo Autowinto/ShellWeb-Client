@@ -9,7 +9,8 @@
             <span>{{ this.$props.title }}</span>
           </div>
           <div class="text-dark font-weight-bold h5 mb-0">
-            <span>{{ this.$props.time }}</span>
+            <span v-if="this.$props.time">{{ this.$props.time }}</span>
+            <span v-else>0</span>
           </div>
         </div>
         <div class="col-auto">

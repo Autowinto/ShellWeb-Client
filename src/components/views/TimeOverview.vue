@@ -7,8 +7,14 @@
             Time Overview for {{ this.$store.state.account.username }}
           </h3>
         </b-col>
+        <!-- <b-col cols="3" v-if="selected !== 'custom'">
+          <span>{{ this.dateRange.startDate }}</span>
+        </b-col>
+        <b-col cols="3" v-if="selected !== 'custom'"> </b-col> -->
         <b-col cols="3" v-if="selected === 'custom'">
+          <label for="startPicker">Start</label>
           <b-form-datepicker
+            id="startPicker"
             v-model="dateRange.startDate"
             size="sm"
             calendar-width="100%"
@@ -16,7 +22,9 @@
           </b-form-datepicker>
         </b-col>
         <b-col cols="3" v-if="selected === 'custom'">
+          <label for="endPicker">End</label>
           <b-form-datepicker
+            id="endPicker"
             v-model="dateRange.endDate"
             size="sm"
             calendar-width="100%"
@@ -128,6 +136,9 @@ export default {
       }
     },
     async fetchTimeSum(startDate, endDate) {
+      this.startDate = startDate
+      this.endDate = endDate
+
       if (startDate && endDate) {
         let time = await axios.get(
           `${
