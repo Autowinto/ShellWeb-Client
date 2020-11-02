@@ -16,6 +16,15 @@
         outlined
         hover
       >
+        <template #cell(ticketId)="data">
+          <b-link
+            :to="{
+              path: '/ticket',
+              query: { ticketID: data.item.ticketId },
+            }"
+            >{{ data.item.ticketId }}</b-link
+          >
+        </template>
         <template
           v-for="field in editableFields"
           v-slot:[`cell(${field.key})`]="data"
