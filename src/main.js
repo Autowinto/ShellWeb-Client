@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import 'bootstrap'
+
 import('../src/assets/bootstrap/css/bootstrap.min.css')
 import('../src/assets/fonts/fontawesome-all.min.css')
 import BootstrapVue from 'bootstrap-vue'

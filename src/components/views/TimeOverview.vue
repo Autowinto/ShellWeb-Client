@@ -1,9 +1,22 @@
 <template>
   <div id="wrapper">
     <div class="container-fluid">
-      <h3 class="text-dark mb-3">
-        Time Overview for {{ this.$store.state.account.username }}
-      </h3>
+      <b-row>
+        <b-col>
+          <h3 class="text-dark mb-3">
+            Time Overview for {{ this.$store.state.account.username }}
+          </h3>
+        </b-col>
+        <b-col class="text-right">
+          <b-form-select
+            style="width: 20%"
+            v-model="selected"
+            :options="options"
+            @input="handleTimeframeChange"
+          >
+          </b-form-select>
+        </b-col>
+      </b-row>
       <div class="row mb-3">
         <b-col>
           <time-display
@@ -62,14 +75,22 @@ export default {
           rounded: 0,
         },
       },
+      selected: 'weekly',
+      options: [
+        { value: 'weekly', text: 'Weekly' },
+        { value: 'monthly', text: 'Monthly' },
+      ],
     }
   },
   created() {
     this.fetchTimeWeekly()
-    this.fetchTimeMonthly()
   },
   methods: {
-    async fetchTimeWeekly() {},
+    async fetchTimeWeekly() {
+      let startDate = dayjs().startOf('week').format('YYYY-MM-DD')
+      let endDate = dayjs().endOf('week').format('YYYY-MM-DD')
+      this.timeSums = await this.fetchTimeSum(startDate, endDate)
+    },
     async fetchTimeMonthly() {
       let startDate = dayjs().startOf('month').format('YYYY-MM-DD')
       let endDate = dayjs().endOf('month').format('YYYY-MM-DD')
@@ -84,7 +105,16 @@ export default {
           params: { startDate, endDate },
         }
       )
+      console.log(time.data)
       return time.data
+    },
+    handleTimeframeChange(value) {
+      console.log(value)
+      if (value == 'weekly') {
+        this.fetchTimeWeekly()
+      } else if (value == 'monthly') {
+        this.fetchTimeMonthly()
+      }
     },
   },
   components: {

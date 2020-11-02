@@ -9,7 +9,7 @@
             <span>{{ this.$props.title }}</span>
           </div>
           <div class="text-dark font-weight-bold h5 mb-0">
-            <span>{{ format(this.$props.time) }}</span>
+            <span>{{ this.$props.time }}</span>
           </div>
         </div>
         <div class="col-auto">
@@ -21,18 +21,7 @@
 </template>
 
 <script>
-import dayjs from 'dayjs'
-
 export default {
   props: ['title', 'time'],
-  data() {
-    return {}
-  },
-  methods: {
-    format(seconds) {
-      let duration = dayjs.duration(seconds, 'seconds')
-      return dayjs.utc(duration.asMilliseconds()).format('HH:mm:ss')
-    },
-  },
 }
 </script>
