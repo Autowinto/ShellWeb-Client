@@ -8246,6 +8246,11 @@ vue@^2.6.11:
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha512-VfPwgcGABbGAue9+sfrD4PuwFar7gPb1yl1UK1MwXoQPAw0BKSqWfoYCT/ThFrdEVWoI51dBuyCoiNU9bZDZxQ==
 
+vuelendar@^1.0.15:
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/vuelendar/-/vuelendar-1.0.15.tgz#9b11dbfe590b8362e6e04e0f195e3c06e8c9edab"
+  integrity sha512-hYswaEeGBLwyyI3KacprST1ki1cjwJUpL9xDYvh2yC7xsHtEosUuZVbJOxlM3tUBiExfUVja4TQprBr0NADwAw==
+
 vuex@^3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/vuex/-/vuex-3.5.1.tgz#f1b8dcea649bc25254cf4f4358081dbf5da18b3d"

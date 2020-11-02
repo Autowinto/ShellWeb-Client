@@ -1,32 +1,32 @@
 <template>
-    <NavBar v-if="!$route.meta.hideNavBar">
-        <router-view v-if="this.$store.state.isAuthenticated" :key="this.$store.state.isAuthenticated"></router-view>
-    </NavBar>
-    <router-view v-else></router-view>
+  <NavBar v-if="!$route.meta.hideNavBar">
+    <router-view
+      v-if="this.$store.state.isAuthenticated"
+      :key="this.$store.state.isAuthenticated"
+    ></router-view>
+  </NavBar>
+  <router-view v-else></router-view>
 </template>
 
 <script>
-import NavBar from "./components/NavBar.vue";
+import NavBar from './components/NavBar.vue'
 
 export default {
   created() {
-
     this.$checkAuthenticationStatus()
       .then(() => {
         console.log('Successfully checked authentication')
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error)
-        this.$signIn();
+        this.$signIn()
       })
   },
-  name: "App",
+  name: 'App',
   components: {
-    NavBar
+    NavBar,
   },
-  watch: {
-    
-  }
+  watch: {},
 }
 </script>
 
@@ -40,6 +40,6 @@ export default {
   margin-top: 60px;
 }
 .modal-backdrop {
-     background-color: rgba(0,0,0,.5) !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
 }
 </style>

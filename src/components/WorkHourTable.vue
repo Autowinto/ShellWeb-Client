@@ -16,6 +16,15 @@
         outlined
         hover
       >
+        <template #cell(customerName)="data">
+          <b-link
+            :to="{
+              path: '/customer',
+              query: { customerID: data.item.customerId },
+            }"
+            >{{ data.item.customerName }}
+          </b-link>
+        </template>
         <template #cell(ticketId)="data">
           <b-link
             :to="{
@@ -120,8 +129,8 @@ export default {
       totalItems: 0,
       fields: [
         {
-          key: 'id',
-          label: 'ID',
+          key: 'customerName',
+          label: 'Customer',
         },
         {
           key: 'ticketId',
