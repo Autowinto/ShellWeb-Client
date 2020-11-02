@@ -38,32 +38,36 @@
           v-for="field in editableFields"
           v-slot:[`cell(${field.key})`]="data"
         >
-          <div v-if="!data.item.editing" :key="field.key">
-            <h5 class="m-0 p-0" v-if="data.item[field.type] == 'bool'">
-              <b-badge
-                variant="success"
-                v-if="isBillable(data.item[field.key])"
-              >
-                Billable
-              </b-badge>
-              <b-badge variant="danger" v-else> Non-billable </b-badge>
-              {{ data.item[field.key] }}
-            </h5>
-          </div>
-          <div v-else :key="field.key">
-            <b-checkbox v-if="data.item[field.type] == 'bool'"></b-checkbox>
+          <div :key="field.key">
             <b-input v-model="data.item[field.key]"></b-input>
           </div>
         </template>
         <template #cell(billable)="data">
-          <h5 class="m-0 p-0" v-if="!data.item.editing">
-            <b-badge variant="success" v-if="isBillable(data.item.billable)">
-              Billable
+          <h5
+            class="m-0 p-0"
+            v-if="!data.item.editing"
+            :key="data.item.billable"
+          >
+            <b-badge variant="success" v-if="data.item.billable === 'true'">
+              {{ data.item.rate }} DKK
             </b-badge>
-            <b-badge variant="danger" v-else> Non-billable </b-badge>
+            <b-badge variant="danger" v-else-if="data.item.billable !== 'true'">
+              {{ data.item.rate }} DKK
+            </b-badge>
           </h5>
           <span v-else>
-            <b-form-checkbox v-model="data.item.billable"> </b-form-checkbox>
+            <b-row>
+              <b-col cols="1">
+                <b-form-checkbox
+                  value="true"
+                  unchecked-value="false"
+                  v-model="data.item.billable"
+                ></b-form-checkbox>
+              </b-col>
+              <b-col>
+                <b-input v-model="data.item.rate"></b-input>
+              </b-col>
+            </b-row>
           </span>
         </template>
         <template #cell(time)="data">
@@ -92,7 +96,7 @@
             <b-btn
               variant="primary"
               class="fas fa-edit mr-1"
-              @click="doEdit(data.item)"
+              @click="doEdit(data)"
             ></b-btn>
             <b-btn
               variant="danger"
@@ -101,8 +105,14 @@
             ></b-btn>
           </div>
           <div v-else>
-            <b-btn variant="success" @click="sendEdit(data.item)">Save</b-btn>
+            <b-btn variant="success" @click="sendEdit(data)">Save</b-btn>
+            <b-btn variant="danger" @click="cancelEdit(data)">Cancel</b-btn>
           </div>
+        </template>
+        <template #row-details="row">
+          <b-card class="m-0 p-0">
+            <b-textarea v-model="row.item.description"> </b-textarea>
+          </b-card>
         </template>
       </b-table>
       <b-pagination
@@ -191,22 +201,27 @@ export default {
       this.totalItems = workHourData.pagination.totalItems
 
       this.workHourRecords = workHourData.collection
-    },
-    isBillable(status) {
-      if (status == 'true') return true
-      return false
+
+      this.$set(this.workHourRecords, '', workHourData.collection)
     },
     formatDate(date) {
       return dayjs(date).format('DD-MM-YYYY HH:mm:ss')
     },
-    doEdit(item) {
-      this.$set(item, 'editing', true)
+    doEdit(data) {
+      data.toggleDetails()
+      this.$set(data.item, 'editing', true)
     },
-    sendEdit(item) {
+    cancelEdit(data) {
+      this.$set(data.item, 'editing', false)
+      this.$set(data, '_showDetails', false)
+      console.log(data)
+    },
+    sendEdit(data) {
       axios
-        .put(`${process.env.VUE_APP_URL}workHours/${item.id}`, item)
+        .put(`${process.env.VUE_APP_URL}workHours/${data.item.id}`, data.item)
         .then(() => {
-          this.$set(item, 'editing', false)
+          this.$set(data.item, 'editing', false)
+          data.toggleDetails()
         })
     },
     doDelete(item) {
