@@ -214,7 +214,7 @@ export default {
     cancelEdit(data) {
       this.$set(data.item, 'editing', false)
       this.$set(data, '_showDetails', false)
-      console.log(data)
+      data.toggleDetails()
     },
     sendEdit(data) {
       axios
