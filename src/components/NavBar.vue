@@ -9,7 +9,11 @@
           href="#"
         >
           <b-navbar-brand to="/">
-            <img src="../assets/img/logo/logo-white.png" alt="LOGO HERE" width="220" />
+            <img
+              src="../assets/img/logo/logo-white.png"
+              alt="LOGO HERE"
+              width="220"
+            />
           </b-navbar-brand>
         </a>
         <hr class="sidebar-divider my-0" />
@@ -37,13 +41,23 @@
           </b-nav-item>
         </b-nav>
         <div class="text-center d-none d-md-inline">
-          <button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button>
+          <button
+            class="btn rounded-circle border-0"
+            id="sidebarToggle"
+            type="button"
+          ></button>
         </div>
       </div>
     </b-navbar>
-    <div class="d-flex flex-column" id="content-wrapper" style="overflow: hidden;">
+    <div
+      class="d-flex flex-column"
+      id="content-wrapper"
+      style="overflow: hidden"
+    >
       <div id="content">
-        <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+        <nav
+          class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top"
+        >
           <div class="container-fluid">
             <button
               class="btn btn-link d-md-none rounded-circle mr-3"
@@ -242,16 +256,32 @@
                   aria-labelledby="alertsDropdown"
                 ></div>
               </li>-->
-              <li v-if="this.$store.state.isAuthenticated" class="nav-item dropdown no-arrow mx-1" role="presentation">
+              <li
+                v-if="this.$store.state.isAuthenticated"
+                class="nav-item dropdown no-arrow mx-1"
+                role="presentation"
+              >
                 <div>
                   <a class="nav-link" v-b-modal.smsModal href="#">
                     <i class="fas fa-sms fa-fw fa-lg"></i>
                   </a>
                 </div>
               </li>
-              <b-modal id="smsModal" ref="smsModal" centered hide-footer body-class="p-0" size="lg" title="Compose Message From ITC">
+              <b-modal
+                id="smsModal"
+                ref="smsModal"
+                centered
+                hide-footer
+                body-class="p-0"
+                size="lg"
+                title="Compose Message From ITC"
+              >
                 <b-card bg-variant="light" body-class="p-0">
-                  <b-form class="p-3" @submit="submitTextMessage" onsubmit="return false;">
+                  <b-form
+                    class="p-3"
+                    @submit="submitTextMessage"
+                    onsubmit="return false;"
+                  >
                     <b-form-group
                       label-cols-sm="3"
                       label="Phone:"
@@ -276,13 +306,17 @@
                       <textarea
                         v-model="textMessageForm.message"
                         rows="6"
-                        style="width:100%;"
+                        style="width: 100%"
                       >
-                      
                       </textarea>
                     </b-form-group>
                     <b-button-group>
-                      <b-button id="smsSubmitBtn" type="submit" variant="success">Send</b-button>
+                      <b-button
+                        id="smsSubmitBtn"
+                        type="submit"
+                        variant="success"
+                        >Send</b-button
+                      >
                     </b-button-group>
                   </b-form>
                 </b-card>
@@ -296,13 +330,14 @@
                     aria-expanded="false"
                     href="#"
                   >
-                    <span
-                      class="mr-2 text-gray-600 small font-weight-bold"
-                    >{{this.user.displayName}}</span>
+                    <span class="mr-2 text-gray-600 small font-weight-bold">{{
+                      this.user.displayName
+                    }}</span>
                     <span
                       class="small text-gray-500"
-                      style="position:absolute; bottom: 10px"
-                    >{{this.user.role}}</span>
+                      style="position: absolute; bottom: 10px"
+                      >{{ this.user.role }}</span
+                    >
                     <!-- <img
                       class="border rounded-circle img-profile"
                       src="../assets/img/avatars/avatar1.jpeg?h=0ecc82101fb9a10ca459432faa8c0656"
@@ -323,7 +358,10 @@
                     </a>
                     <div class="dropdown-divider"></div>-->
                     <a class="dropdown-item" role="button" v-on:click="signOut">
-                      <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout
+                      <i
+                        class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"
+                      ></i
+                      >&nbsp;Logout
                     </a>
                   </div>
                 </div>
@@ -348,69 +386,73 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
+import * as auth from '../auth/authHelper'
+import store from '../auth/store'
+
 export default {
   data() {
     return {
       user: {
-        displayName: "Not Logged In", //displayName is just "Not Logged In" per default, so that displays when the user isn't logged in properly
-        role: "",
+        displayName: 'Not Logged In', //displayName is just "Not Logged In" per default, so that displays when the user isn't logged in properly
+        role: '',
       },
       textMessageForm: {
         message: null,
-        receiver: null
-      }
-    };
+        receiver: null,
+      },
+    }
   },
   created() {
     if (this.$store.state.account) {
       /*Since App.vue is initialized before NavBar.vue, it can't react to any changes.
       Therefore, upon creation, we check if auth has already happened by looking for an account in the state storage and then calling the MSGraph logic in that case */
-      this.handleMSGraph(this.$store.state.account);
+      this.handleMSGraph(store.state.account)
     }
   },
   methods: {
     signOut() {
-      this.$signOut();
+      this.$signOut()
     },
     fetchRole(accountId) {
       axios
         .get(`${process.env.VUE_APP_URL}employee/role/${accountId}`)
         .then((response) => {
-          console.log(response);
-          this.user.role = response.data.roleName;
-        });
+          console.log(response)
+          this.user.role = response.data.roleName
+        })
     },
     handleMSGraph(value) {
       if (value !== null) {
-        this.fetchRole(value.homeAccountId);
-        this.$getAccountGraph(value).then((response) => {
-          this.user.displayName = response.data.displayName;
-        });
+        this.fetchRole(value.homeAccountId)
+        auth.getAccountGraph(value).then((response) => {
+          this.user.displayName = response.data.displayName
+        })
       }
     },
     submitTextMessage() {
       console.log('Submitting text message')
-      axios.post(`${process.env.VUE_APP_URL}sms`, {
-        message: this.textMessageForm.message,
-        receiver: this.textMessageForm.receiver
-      })
-      .then(() => {
-        this.$refs["smsModal"].hide();
-        this.textMessageForm.message = null
-        this.textMessageForm.receiver = null
-      })
-    }
+      axios
+        .post(`${process.env.VUE_APP_URL}sms`, {
+          message: this.textMessageForm.message,
+          receiver: this.textMessageForm.receiver,
+        })
+        .then(() => {
+          this.$refs['smsModal'].hide()
+          this.textMessageForm.message = null
+          this.textMessageForm.receiver = null
+        })
+    },
   },
   computed: {
     authStatus() {
-      return this.$store.state.account;
+      return store.state.account
     },
   },
   watch: {
     authStatus(accountValue) {
-      this.handleMSGraph(accountValue);
+      this.handleMSGraph(accountValue)
     },
   },
-};
+}
 </script>

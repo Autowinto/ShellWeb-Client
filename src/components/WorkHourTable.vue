@@ -128,6 +128,7 @@
 <script>
 import axios from 'axios'
 import dayjs from 'dayjs'
+import * as auth from '../auth/authHelper'
 
 export default {
   data() {
@@ -187,7 +188,7 @@ export default {
       let response = await axios.get(
         `${
           process.env.VUE_APP_URL
-        }employees/${this.$getAccountId()}/workHourRecords`,
+        }employees/${auth.getAccountId()}/workHourRecords`,
         {
           params: {
             page: this.currentPage,

@@ -3,7 +3,9 @@
     <div class="d-flex flex-column" id="content-wrapper">
       <div id="content">
         <div class="container-fluid">
-          <h3 class="text-dark mb-4">Contact ID: {{contactInfo.contactId}}</h3>
+          <h3 class="text-dark mb-4">
+            Contact ID: {{ contactInfo.contactId }}
+          </h3>
           <div class="row">
             <div class="col-3">
               <div class="card shadow mb-4">
@@ -144,42 +146,51 @@
             label-class="font-weight-bold pt-0 p-0 text-dark"
             class="mb-0"
           >
-          <b-card v-if="!form.phones.length">
-            <b-row>
-              <b-col class="text-right">
-                <b-btn class="btn-success fas fa-plus" @click="addPhone"></b-btn>
-              </b-col>
-            </b-row>
-          </b-card>
-
-          <div v-for="(phone, index) in form.phones" :key="phone.id">
-            <b-card v-if="!phone.delete">
+            <b-card v-if="form.phones && !form.phones.length">
               <b-row>
-                <b-col>
-                  <b-input
-                    placeholder="Phone Name"
-                    v-model="phone.name"
-                    id="input-text"
-                    type="text"
-                    required
-                  ></b-input>
-                </b-col>
-                <b-col>
-                  <b-input
-                    placeholder="Phone Number"
-                    v-model="phone.phone"
-                    id="input-number"
-                    type="number"
-                    required
-                  ></b-input>
-                </b-col>
                 <b-col class="text-right">
-                  <b-button class="fas fa-plus btn-success mr-2" @click="addPhone()"></b-button>
-                  <b-button class="fas fa-trash btn-danger" @click="removePhone(index)"></b-button>
+                  <b-btn
+                    class="btn-success fas fa-plus"
+                    @click="addPhone"
+                  ></b-btn>
                 </b-col>
               </b-row>
             </b-card>
-          </div>
+
+            <div v-for="(phone, index) in form.phones" :key="phone.id">
+              <b-card v-if="!phone.delete">
+                <b-row>
+                  <b-col>
+                    <b-input
+                      placeholder="Phone Name"
+                      v-model="phone.name"
+                      id="input-text"
+                      type="text"
+                      required
+                    ></b-input>
+                  </b-col>
+                  <b-col>
+                    <b-input
+                      placeholder="Phone Number"
+                      v-model="phone.phone"
+                      id="input-number"
+                      type="number"
+                      required
+                    ></b-input>
+                  </b-col>
+                  <b-col class="text-right">
+                    <b-button
+                      class="fas fa-plus btn-success mr-2"
+                      @click="addPhone()"
+                    ></b-button>
+                    <b-button
+                      class="fas fa-trash btn-danger"
+                      @click="removePhone(index)"
+                    ></b-button>
+                  </b-col>
+                </b-row>
+              </b-card>
+            </div>
           </b-form-group>
           <b-button-group>
             <b-button type="submit" variant="success">Save</b-button>
@@ -203,57 +214,61 @@ export default {
       form: {},
       fields: [
         {
-          key: "ticket_id",
-          label: "Ticket ID",
+          key: 'ticket_id',
+          label: 'Ticket ID',
         },
         {
-          key: "subject",
-          label: "Subject",
+          key: 'subject',
+          label: 'Subject',
         },
         {
-          key: "created_date",
-          label: "Date of Creation",
+          key: 'created_date',
+          label: 'Date of Creation',
         },
         {
-          key: "modified_date",
-          label: "Last Updated",
+          key: 'modified_date',
+          label: 'Last Updated',
         },
         {
-          key: "status",
-          label: "Status",
+          key: 'status',
+          label: 'Status',
         },
         {
-          key: "reply_status",
-          label: "Reply Status",
+          key: 'reply_status',
+          label: 'Reply Status',
         },
       ],
-    };
+    }
   },
   created() {
     this.getContactInfo()
-    axios.get(`${process.env.VUE_APP_URL}contact/tickets/${this.$route.query.contactid}/1/10`).then(
-      (response) => {
+    axios
+      .get(
+        `${process.env.VUE_APP_URL}contact/tickets/${this.$route.query.contactid}/1/10`
+      )
+      .then((response) => {
         this.tickets = response.data.tickets
-      }
-    )
+      })
   },
   methods: {
-    dayjs() {
-      return dayjs()
-    },
     getContactInfo() {
-      axios.get(`${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`)
-      .then(
-        (response) => {
+      axios
+        .get(
+          `${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`
+        )
+        .then((response) => {
           this.contactInfo = response.data
           this.populateForm()
-        }
-      )
+        })
     },
     submitContactEdit() {
-      axios.put(`${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`, this.form)
+      axios
+        .put(
+          `${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`,
+          this.form
+        )
         .then(() => {
-          this.$refs["contactEditModal"].hide()
+          this.$refs['contactEditModal'].hide()
           this.getContactInfo()
         })
     },
@@ -269,14 +284,14 @@ export default {
       console.log(index)
       this.$set(this.form.phones[index], 'delete', true)
       // this.$delete(this.form.phones, index)
-    }
+    },
   },
   filters: {
     dayjsDateOnly: function (date) {
-      return dayjs(date).format("MMM D, YYYY")
+      return dayjs(date).format('MMM D, YYYY')
     },
     dayjsDateTime: function (date) {
-      return dayjs(date).format("MMM D, YYYY, h:mm:ss a")
+      return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
     },
   },
 }

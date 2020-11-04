@@ -9,24 +9,25 @@
 </template>
 
 <script>
-import NavBar from './components/NavBar.vue'
+import NavBar from './components/NavBar'
+import * as auth from './auth/authHelper'
 
 export default {
   created() {
-    this.$checkAuthenticationStatus()
+    auth
+      .checkAuthenticationStatus()
       .then(() => {
         console.log('Successfully checked authentication')
       })
       .catch((error) => {
         console.log(error)
-        this.$signIn()
+        auth.signIn()
       })
   },
   name: 'App',
   components: {
     NavBar,
   },
-  watch: {},
 }
 </script>
 

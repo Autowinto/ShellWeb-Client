@@ -1075,6 +1075,7 @@
 <script>
 import axios from 'axios'
 import dayjs from 'dayjs'
+import * as auth from '../../auth/authHelper'
 import fileDownload from 'js-file-download'
 import download from 'downloadjs'
 import PaginatedTable from '../PaginatedTable'
@@ -1270,8 +1271,6 @@ export default {
     // //Set all invoice filter options to be selected once mounted.
     // this.toggleAll(true)
 
-    this.$getAccountId()
-
     this.getCustomerInfo()
     this.fetchData(
       `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
@@ -1294,7 +1293,7 @@ export default {
       this.items.contractRates = response.data
     })
     this.fetchData(
-      `customer/passwords/${this.$getAccountId()}/${this.id}/${
+      `customer/passwords/${auth.getAccountId()}/${this.id}/${
         this.pagination.passwords.currentPage
       }/${this.pagination.passwords.perPage}`
     ).then((response) => {
