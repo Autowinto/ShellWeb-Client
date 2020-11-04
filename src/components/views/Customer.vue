@@ -1451,7 +1451,7 @@ export default {
           for (var item in passwords) {
             if (passwords[item].password_id === passwordId) {
               passwords[item].password = response.data
-              this.$refs.pass.refresh()
+              this.$refs.passTable.refresh()
             }
           }
         })
