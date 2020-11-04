@@ -86,6 +86,7 @@ import TimeDisplay from '../TimeDisplay'
 import WorkHourTable from '../WorkHourTable'
 import dayjs from 'dayjs'
 import axios from 'axios'
+import * as auth from '../../auth/authHelper'
 
 export default {
   data() {
@@ -143,7 +144,7 @@ export default {
         let time = await axios.get(
           `${
             process.env.VUE_APP_URL
-          }employees/${this.$getAccountId()}/totalHours`,
+          }employees/${auth.getAccountId()}/totalHours`,
           {
             params: { startDate, endDate },
           }

@@ -34,7 +34,7 @@ const app = new msal.PublicClientApplication(msalConfig.authConfig)
 
 function loginBackend(account) {
   axios
-    .post(process.env.VUE_APP_URL + 'login', {
+    .post(`${process.env.VUE_APP_URL}login`, {
       accountID: account.homeAccountId,
       email: account.username,
     })
