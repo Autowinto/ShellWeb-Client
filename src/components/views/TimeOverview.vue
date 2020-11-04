@@ -114,7 +114,7 @@ export default {
     }
   },
   created() {
-    // this.fetchTimeWeekly()
+    this.fetchTimeWeekly()
   },
   methods: {
     async fetchTimeWeekly() {
