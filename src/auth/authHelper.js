@@ -149,9 +149,11 @@ export function getAccountGraph(accountValue) {
       })
   })
 }
+
 export function getToken() {
   return app.acquireTokenSilent(loginRequest)
 }
+
 export function signOut() {
   store.commit('setAuthenticationStatus', false)
   app.logout({

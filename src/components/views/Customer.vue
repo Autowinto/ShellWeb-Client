@@ -1063,6 +1063,71 @@
               ></b-input>
             </b-form-group>
           </b-form-group>
+          <b-card no-body class="mb-3"></b-card>
+          <b-form-group
+            label-cols-lg="3"
+            label="Notification Settings:"
+            label-size="lg"
+            label-class="font-weight-bold pt-0 p-0 text-dark"
+            class="mb-0"
+          >
+            <b-form-group
+              label-cols-sm="3"
+              label="Invoices:"
+              label-align-sm="right"
+              label-for="input-boolinvoices"
+              description="Required"
+            >
+              <b-checkbox
+                id="input-boolinvoices"
+                required
+                value="invoices"
+                v-model="contactForm.notify"
+              ></b-checkbox>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Orders:"
+              label-align-sm="right"
+              label-for="input-invoiceId"
+              description="Required"
+            >
+              <b-checkbox
+                id="input-boolorders"
+                required
+                value="orders"
+                v-model="contactForm.notify"
+              ></b-checkbox>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Quotations:"
+              label-align-sm="right"
+              label-for="input-invoiceId"
+              description="Required"
+            >
+              <b-checkbox
+                id="input-boolquotations"
+                required
+                value="quotations"
+                v-model="contactForm.notify"
+              ></b-checkbox>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Reminders:"
+              label-align-sm="right"
+              label-for="input-invoiceId"
+              description="Required"
+            >
+              <b-checkbox
+                id="input-boolreminders"
+                required
+                value="reminders"
+                v-model="contactForm.notify"
+              ></b-checkbox>
+            </b-form-group>
+          </b-form-group>
           <b-button-group>
             <b-button type="submit" variant="success">Create</b-button>
           </b-button-group>
@@ -1094,7 +1159,9 @@ export default {
         vatZones: [],
       },
       form: {},
-      contactForm: {},
+      contactForm: {
+        notify: [],
+      },
       fields: {
         assets: [
           {
