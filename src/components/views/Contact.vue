@@ -65,7 +65,7 @@
                   >
                     Edit Contact
                   </button>
-                  <button class="btn btn-danger w-100">Delete Contact</button>
+                  <!-- <button class="btn btn-danger w-100">Delete Contact</button> -->
                 </div>
               </div>
             </div>
