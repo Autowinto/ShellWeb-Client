@@ -67,6 +67,14 @@ function getGraphToken(accountValue) {
     })
 }
 
+export function setRole(role) {
+  store.commit('setRole', role)
+}
+
+export function setDisplayName(name) {
+  store.commit('setDisplayName', name)
+}
+
 export function signIn() {
   console.log('Signing in')
   app.loginPopup(loginRequest).then(async () => {

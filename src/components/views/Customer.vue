@@ -573,34 +573,7 @@
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Passwords">
-                  <b-card-text>
-                    <div>
-                      <b-table
-                        show-empty
-                        outlined
-                        hover
-                        ref="passTable"
-                        :items="items.passwords"
-                        :fields="fields.passwords"
-                        :per-page="0"
-                        :current-page="pagination.passwords.currentPage"
-                      >
-                        <template v-slot:cell(password)="data">
-                          <span v-if="data.item.password">{{
-                            data.item.password
-                          }}</span>
-                          <span v-else>********</span>
-                        </template>
-                        <template v-slot:cell(togglePass)="data">
-                          <b-button
-                            class="fas fa-eye"
-                            variant="primary"
-                            @click="getPassword(data.item.password_id)"
-                          ></b-button>
-                        </template>
-                      </b-table>
-                    </div>
-                  </b-card-text>
+                  <PasswordsTab></PasswordsTab>
                 </b-tab>
                 <b-tab title="Attachments">
                   <b-card-text>
@@ -1140,10 +1113,10 @@
 <script>
 import axios from 'axios'
 import dayjs from 'dayjs'
-import * as auth from '../../auth/authHelper'
 import fileDownload from 'js-file-download'
 import download from 'downloadjs'
 import PaginatedTable from '../PaginatedTable'
+import PasswordsTab from '../Customer/PasswordsTab'
 
 export default {
   data() {
@@ -1232,32 +1205,6 @@ export default {
             label: '',
           },
         ],
-        passwords: [
-          {
-            key: 'name',
-            label: 'Name',
-          },
-          {
-            key: 'domain',
-          },
-          {
-            key: 'url',
-            label: 'URL',
-          },
-          {
-            key: 'username',
-          },
-          {
-            key: 'password',
-          },
-          {
-            key: 'access_level',
-          },
-          {
-            key: 'togglePass',
-            label: '',
-          },
-        ],
         attachments: [
           {
             key: 'fileName',
@@ -1281,7 +1228,6 @@ export default {
         contractRates: {},
         assets: [],
         invoices: [],
-        passwords: [],
         attachments: [],
       },
       pagination: {
@@ -1313,11 +1259,7 @@ export default {
           currentPage: 1,
           totalItems: 0,
         },
-        passwords: {
-          perPage: 10,
-          currentPage: 1,
-          totalItems: 0,
-        },
+        passwords: {},
         attachments: {
           perPage: 13,
           currentPage: 1,
@@ -1358,14 +1300,6 @@ export default {
     })
     this.fetchData(`customers/${this.id}/rates`).then((response) => {
       this.items.contractRates = response.data
-    })
-    this.fetchData(
-      `customer/passwords/${auth.getAccountId()}/${this.id}/${
-        this.pagination.passwords.currentPage
-      }/${this.pagination.passwords.perPage}`
-    ).then((response) => {
-      this.items.passwords = response.data.passwords
-      this.pagination.passwords.totalItems = response.data.passwords.length
     })
     axios
       .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
@@ -1510,19 +1444,7 @@ export default {
         return 'unpaid'
       }
     },
-    getPassword(passwordId) {
-      axios
-        .get(`${process.env.VUE_APP_URL}password/${passwordId}`)
-        .then((response) => {
-          const passwords = this.items.passwords
-          for (var item in passwords) {
-            if (passwords[item].password_id === passwordId) {
-              passwords[item].password = response.data
-              this.$refs.passTable.refresh()
-            }
-          }
-        })
-    },
+
     populateForm() {
       this.form = {
         name: this.customerInfo.economic.name,
@@ -1644,6 +1566,7 @@ export default {
   },
   components: {
     PaginatedTable,
+    PasswordsTab,
   },
 }
 </script>
