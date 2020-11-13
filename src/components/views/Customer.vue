@@ -392,24 +392,13 @@
                         </div>
                         <div role="group" class="mx-auto py-0">
                           <label
-                            >Junior Consultant ({{
+                            >Consultant ({{
                               customerInfo.economic.currency
                             }}):</label
                           >
                           <b-form-input
                             type="number"
-                            v-model="items.contractRates.juniorRate"
-                          ></b-form-input>
-                        </div>
-                        <div role="group" class="mx-auto py-0">
-                          <label
-                            >Senior Consultant ({{
-                              customerInfo.economic.currency
-                            }}):</label
-                          >
-                          <b-form-input
-                            type="number"
-                            v-model="items.contractRates.seniorRate"
+                            v-model="items.contractRates.consultantRate"
                           ></b-form-input>
                         </div>
                         <b-button
@@ -1117,6 +1106,7 @@ import fileDownload from 'js-file-download'
 import download from 'downloadjs'
 import PaginatedTable from '../PaginatedTable'
 import PasswordsTab from '../Customer/PasswordsTab'
+import { getToken } from '../../auth/authHelper'
 
 export default {
   data() {
@@ -1519,11 +1509,19 @@ export default {
       this.items.attachments = attachments.data.attachments
       this.pagination.attachments.totalItems = attachments.data.entryCount
     },
-    uploadAttachments() {
+    async uploadAttachments() {
+      let token = await getToken()
+      this.uploadHeaders = {
+        authorization: `bearer ${token.idToken}`,
+      }
+
       this.$refs.attachmentFileAgent
         .upload(this.uploadUrl, this.uploadHeaders, this.fileRecords)
         .then(() => {
           this.loadAttachments()
+        })
+        .catch((error) => {
+          console.log(error)
         })
       this.fileRecords = []
     },
