@@ -19,18 +19,61 @@
           :per-page="0"
           :current-page="currentPage"
         >
-          <template v-slot:cell(password)="data">
-            <span v-if="data.item.password">{{ data.item.password }}</span>
-            <span v-else>********</span>
+          <template
+            v-for="field in editableFields"
+            v-slot:[`cell(${field.key})`]="scope"
+          >
+            <span v-if="!scope.item.editing" :key="field.key">{{
+              scope.item[field.key]
+            }}</span>
+            <b-input
+              v-else
+              :key="field.key"
+              v-model="scope.item[field.key]"
+            ></b-input>
+          </template>
+          <template #cell(password)="data">
+            <div v-if="!data.item.editing">
+              <span v-if="data.item.password">{{ data.item.password }}</span>
+              <span v-else>********</span>
+            </div>
+            <div v-else>
+              <b-input v-model="data.item.password"> </b-input>
+            </div>
+          </template>
+          <template #cell(accessLevel)="data">
+            <div v-if="!data.item.editing">
+              {{ getOptionText(data.item.accessLevel) }}
+            </div>
+            <div v-else>
+              <b-select
+                v-model="data.item.accessLevel"
+                :options="securityOptions"
+              ></b-select>
+            </div>
           </template>
           <template v-slot:cell(togglePass)="data">
-            <b-button
-              v-if="role >= data.item.accessLevel"
-              class="fas fa-eye"
-              variant="primary"
-              @click="getPassword(data.item.passwordId)"
-            ></b-button>
-            <b-button v-else class="fas fa-eye" disabled> </b-button>
+            <div v-if="!data.item.editing">
+              <b-col v-if="role >= data.item.accessLevel">
+                <b-button
+                  class="fas fa-edit mr-2"
+                  variant="primary"
+                  @click="doEdit(data)"
+                ></b-button>
+                <b-button
+                  class="fas fa-eye"
+                  variant="primary"
+                  @click="getPassword(data.item.passwordId)"
+                ></b-button>
+              </b-col>
+              <b-col v-else>
+                <b-button class="fas fa-eye" disabled> </b-button>
+              </b-col>
+            </div>
+            <div v-else>
+              <b-btn @click="sendEdit(data)" variant="success">Save</b-btn>
+              <b-btn @click="cancelEdit(data)" variant="danger">Cancel</b-btn>
+            </div>
           </template>
         </b-table>
         <b-pagination
@@ -168,22 +211,28 @@ export default {
         {
           key: 'name',
           label: 'Name',
+          editable: true,
         },
         {
           key: 'domain',
+          editable: true,
         },
         {
           key: 'url',
           label: 'URL',
+          editable: true,
         },
         {
           key: 'username',
+          editable: true,
         },
         {
           key: 'password',
+          editable: true,
         },
         {
           key: 'accessLevel',
+          editable: true,
         },
         {
           key: 'togglePass',
@@ -210,7 +259,6 @@ export default {
           },
         }
       )
-      console.log(passwordRequest)
       let passwordData = passwordRequest.data
       this.items = passwordData.passwords
       this.totalItems = passwordData.count
@@ -255,9 +303,38 @@ export default {
           this.fetchPasswords()
         })
     },
+    doEdit(data) {
+      this.getPassword(data.item.passwordId)
+      this.$set(data.item, 'editing', true)
+    },
+    cancelEdit(data) {
+      this.fetchPasswords()
+      this.$set(data.item, 'editing', false)
+      this.$set(data, '_showDetails', false)
+    },
+    sendEdit(data) {
+      axios
+        .put(
+          `${process.env.VUE_APP_URL}passwords/${data.item.passwordId}`,
+          data.item
+        )
+        .then(() => {
+          this.$set(data.item, 'editing', false)
+        })
+    },
+    getOptionText(id) {
+      let option = this.securityOptions.find((option) => option.value == id)
+      if (option) return option.text
+      else return 'Unknown'
+    },
   },
 
   computed: {
+    editableFields() {
+      return this.fields.filter((field) => {
+        return field.editable === true
+      })
+    },
     role() {
       return store.state.role.role
     },

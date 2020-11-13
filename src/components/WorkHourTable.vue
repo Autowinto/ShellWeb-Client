@@ -213,6 +213,7 @@ export default {
       this.$set(data.item, 'editing', true)
     },
     cancelEdit(data) {
+      this.fetchPasswords()
       this.$set(data.item, 'editing', false)
       this.$set(data, '_showDetails', false)
       data.toggleDetails()
