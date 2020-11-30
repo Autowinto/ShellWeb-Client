@@ -6,7 +6,7 @@
         outlined
         hover
         ref="attachmentsTable"
-        :items="items"
+        :items="attachments"
         :fields="columnFields"
         :current-page="currentPage"
       >
@@ -77,6 +77,10 @@ export default {
       type: String,
       required: true,
     },
+    items: {
+      type: Array,
+      requiored: true,
+    },
     itemUrl: {
       type: String,
     },
@@ -92,9 +96,9 @@ export default {
   },
   data() {
     return {
+      attachments: this.items,
       currentPage: 1,
       totalItems: 0,
-      items: [],
     }
   },
   created() {
@@ -123,9 +127,8 @@ export default {
           results: this.results,
         },
       })
-      this.items = response.data.data
+      this.attachments = response.data.data
       this.totalItems = response.data.entryCount
-      console.log(this.items)
     },
     doEdit(item) {
       this.$set(item, 'editing', true)

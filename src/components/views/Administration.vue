@@ -6,6 +6,11 @@
           <h3 class="text-dark mb-4">Administration</h3>
           <b-card no-body class="shadow">
             <b-tabs card>
+              <b-tab title="Subscriptions">
+                <subscriptions-tab
+                  :products="items.products"
+                ></subscriptions-tab>
+              </b-tab>
               <b-tab title="Products">
                 <div>
                   <b-table
@@ -19,8 +24,14 @@
                   >
                     <template v-slot:cell(name)="data">
                       <b-link
-                        :to="{ path: '/customer', query: {customerID: data.item.corporateIdentificationNumber}}"
-                      >{{ data.item.name }}</b-link>
+                        :to="{
+                          path: '/customer',
+                          query: {
+                            customerID: data.item.corporateIdentificationNumber,
+                          },
+                        }"
+                        >{{ data.item.name }}</b-link
+                      >
                     </template>
                   </b-table>
                   <b-pagination
@@ -42,10 +53,16 @@
                     :per-page="0"
                     :current-page="pagination.productGroups.currentPage"
                   >
-                    <template v-slot:cell(name)="data">
+                    <template #cell(name)="data">
                       <b-link
-                        :to="{ path: '/customer', query: {customerID: data.item.corporateIdentificationNumber}}"
-                      >{{ data.item.name }}</b-link>
+                        :to="{
+                          path: '/customer',
+                          query: {
+                            customerID: data.item.corporateIdentificationNumber,
+                          },
+                        }"
+                        >{{ data.item.name }}</b-link
+                      >
                     </template>
                   </b-table>
                   <b-pagination
@@ -69,11 +86,15 @@
                   >
                     <template v-slot:cell(TicketTitle)="data">
                       <b-link
-                        :to="{ path: '/ticket', query: {ticketID: data.item.TicketID}}"
-                      >{{ data.item.TicketTitle }}</b-link>
+                        :to="{
+                          path: '/ticket',
+                          query: { ticketID: data.item.TicketID },
+                        }"
+                        >{{ data.item.TicketTitle }}</b-link
+                      >
                     </template>
                     <template v-slot:cell(totalTime)="data">
-                      {{data.item | timeEntryTotal}}
+                      {{ data.item | timeEntryTotal }}
                     </template>
                   </b-table>
                   <b-pagination
@@ -93,17 +114,19 @@
 </template>
 
 <script>
-import axios from "axios";
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
+import axios from 'axios'
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
 
 //It's necessary to use the utc plugin to account for yearly changes from CET to CEST.
-import utc from 'dayjs/plugin/utc';
+import utc from 'dayjs/plugin/utc'
+import SubscriptionsTab from '../Administration/SubscriptionsTab.vue'
 
-dayjs.extend(duration);
-dayjs.extend(utc);
+dayjs.extend(duration)
+dayjs.extend(utc)
 
 export default {
+  components: { SubscriptionsTab },
   data() {
     return {
       items: {
@@ -114,78 +137,78 @@ export default {
       fields: {
         products: [
           {
-            key: "productNumber",
-            label: "Product Number"
+            key: 'productNumber',
+            label: 'Product Number',
           },
           {
-            key: "name",
-            label: "Product Name"
+            key: 'name',
+            label: 'Product Name',
           },
           {
-            key: "productGroup.name",
-            label: "Product Group"
+            key: 'productGroup.name',
+            label: 'Product Group',
           },
           {
-            key: "salesPrice",
-            label: "Cost"
+            key: 'salesPrice',
+            label: 'Cost',
           },
           {
-            key: "",
-            label: "Options"
-          }
+            key: '',
+            label: 'Options',
+          },
         ],
         productGroups: [
           {
-            key: "productGroupNumber",
-            label: "Product Group Number"
+            key: 'productGroupNumber',
+            label: 'Product Group Number',
           },
           {
-            key: "name",
-            label: "Product Name"
+            key: 'name',
+            label: 'Product Name',
           },
           {
-            key: "productGroup.name",
-            label: "Product Group"
+            key: 'productGroup.name',
+            label: 'Product Group',
           },
           {
-            key: "salesPrice",
-            label: "Cost"
+            key: 'salesPrice',
+            label: 'Cost',
           },
           {
-            key: "",
-            label: "Options"
-          }
+            key: '',
+            label: 'Options',
+          },
         ],
         tickets: [
           {
-            key: "TicketID",
-            label: "Ticket ID"
+            key: 'TicketID',
+            label: 'Ticket ID',
           },
           {
-            key: "TicketTitle",
-            label: "Ticket Name"
+            key: 'TicketTitle',
+            label: 'Ticket Name',
           },
-          "totalTime"
+          'totalTime',
         ],
       },
       pagination: {
         products: {
           currentPage: 1,
           perPage: 10,
-          totalItems: 0
+          totalItems: 0,
         },
         productGroups: {
           currentPage: 1,
           perPage: 10,
-          totalItems: 0
+          totalItems: 0,
         },
         tickets: {
           currentPage: 1,
           perPage: 10,
-          totalItems: 0
+          totalItems: 0,
         },
-      }
-    };
+      },
+    }
   },
   created() {
     this.loadProducts()
@@ -194,74 +217,73 @@ export default {
   },
   methods: {
     fetchData(endpoint) {
-      return axios.get(process.env.VUE_APP_URL + endpoint);
+      return axios.get(process.env.VUE_APP_URL + endpoint)
     },
     loadProducts() {
       this.fetchData(
         `products/${this.pagination.products.currentPage}/${this.pagination.products.perPage}`
-      ).then(result => {
+      ).then((result) => {
         this.pagination.products.totalItems =
-          result.data.products.pagination.results;
-        this.items.products = result.data.products.collection;
-      });
+          result.data.products.pagination.results
+        this.items.products = result.data.products.collection
+      })
     },
     loadProductGroups() {
       this.fetchData(
         `productGroups/${this.pagination.productGroups.currentPage}/${this.pagination.productGroups.perPage}`
-      ).then(result => {
+      ).then((result) => {
         this.pagination.productGroups.totalItems =
-          result.data.productGroups.pagination.results;
-        this.items.productGroups = result.data.productGroups.collection;
-      });
+          result.data.productGroups.pagination.results
+        this.items.productGroups = result.data.productGroups.collection
+      })
     },
     loadTickets() {
-      this.fetchData(
-        `tickets`, {params: {
+      this.fetchData(`tickets`, {
+        params: {
           page: this.pagination.tickets.page,
-          results: this.pagination.tickets.perPage
-        }}
-      ).then(result => {
-        this.pagination.tickets.totalItems =
-          result.data.tickets.totalItemCount;
-        this.items.tickets = result.data.tickets.items;
-      });
+          results: this.pagination.tickets.perPage,
+        },
+      }).then((result) => {
+        this.pagination.tickets.totalItems = result.data.tickets.totalItemCount
+        this.items.tickets = result.data.tickets.items
+      })
     },
   },
   computed: {
-    productsCurrentPage: function() {
-      return this.pagination.products.currentPage;
+    productsCurrentPage: function () {
+      return this.pagination.products.currentPage
     },
-    productGroupsCurrentPage: function() {
-      return this.pagination.productGroups.currentPage;
+    productGroupsCurrentPage: function () {
+      return this.pagination.productGroups.currentPage
     },
-    ticketsCurrentPage: function() {
-      return this.pagination.tickets.currentPage;
+    ticketsCurrentPage: function () {
+      return this.pagination.tickets.currentPage
     },
   },
   watch: {
     productsCurrentPage() {
-      console.log(this.pagination.products.currentPage);
-      this.loadProducts();
+      console.log(this.pagination.products.currentPage)
+      this.loadProducts()
     },
     productGroupsCurrentPage() {
-      console.log(this.pagination.productGroups.currentPage);
-      this.loadProductGroups();
+      console.log(this.pagination.productGroups.currentPage)
+      this.loadProductGroups()
     },
     ticketsCurrentPage() {
-      console.log(this.pagination.tickets.currentPage);
-      this.loadTickets();
+      console.log(this.pagination.tickets.currentPage)
+      this.loadTickets()
     },
   },
   filters: {
-    timeEntryTotal: function(value) {
+    timeEntryTotal: function (value) {
       //Taking the total minutes and total seconds from each ticket.
-      var time = dayjs.duration({seconds: value.TotalDurationSeconds})
-      
+      var time = dayjs.duration({ seconds: value.TotalDurationSeconds })
+
       //Returning the formatted time object as milliseconds formatted at HH:mm:ss in the table.
-      return dayjs.utc(time.asMilliseconds()).format('HH:mm:ss');
-    }
-  }
-};
+      return dayjs.utc(time.asMilliseconds()).format('HH:mm:ss')
+    },
+  },
+}
 
 //TODO: Add selection for how many products to show
 //TODO: Add a dropdown for the time entries where the user can get more detailed information about time spent on the ticket.

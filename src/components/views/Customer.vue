@@ -593,6 +593,7 @@
                       :url="`${apiUrl}attachments/customers/${this.id}`"
                       :itemUrl="`${apiUrl}attachments`"
                       :primaryKey="'attachmentId'"
+                      :items="items.attachments"
                       :results="12"
                       :editable="true"
                       :deletable="true"
@@ -617,7 +618,7 @@
                       <b-form-checkbox-group
                         v-model="pagination.invoices.filterOptions.selected"
                         :options="pagination.invoices.filterOptions.options"
-                      > 
+                      >
 
                         </b-form-checkbox-group>-->
                         <b-select
@@ -932,7 +933,6 @@
           </b-form-group>
           <b-button-group>
             <b-button type="submit" variant="success">Save</b-button>
-            <!-- <b-button type="reset" variant="danger">Reset</b-button> -->
           </b-button-group>
         </b-form>
       </b-card>
@@ -1291,8 +1291,7 @@ export default {
     this.fetchData(`customers/${this.id}/rates`).then((response) => {
       this.items.contractRates = response.data
     })
-    axios
-      .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
+    axios.get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
       .then((response) => {
         for (var item in response.data) {
           const group = response.data[item]
@@ -1302,7 +1301,7 @@ export default {
           })
         }
       })
-    axios
+      axios
       .get(`${process.env.VUE_APP_URL}invoices/currencies`)
       .then((response) => {
         for (var item in response.data) {
@@ -1335,7 +1334,6 @@ export default {
           })
         }
       })
-
     this.loadInvoices()
     this.loadAttachments()
   },
@@ -1506,6 +1504,7 @@ export default {
           },
         }
       )
+      this.$set(this.items.attachments, '', attachments.data.attachments)
       this.items.attachments = attachments.data.attachments
       this.pagination.attachments.totalItems = attachments.data.entryCount
     },
@@ -1519,9 +1518,6 @@ export default {
         .upload(this.uploadUrl, this.uploadHeaders, this.fileRecords)
         .then(() => {
           this.loadAttachments()
-        })
-        .catch((error) => {
-          console.log(error)
         })
       this.fileRecords = []
     },

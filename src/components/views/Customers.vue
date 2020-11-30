@@ -6,13 +6,9 @@
         <p class="text-primary m-0 font-weight-bold">Customers Info</p>
       </div>
       <div class="card-body">
-        <div class="row">
-          <div class="col-md-6 text-nowrap">
-            <div
-              id="dataTable_length"
-              class="dataTables_length"
-              aria-controls="dataTable"
-            >
+        <b-card bg-variant="light" class="mb-3">
+          <div class="row">
+            <div class="col-md-6 text-nowrap">
               <label>
                 Show&nbsp;
                 <b-form-select
@@ -21,15 +17,18 @@
                 ></b-form-select>
               </label>
             </div>
-          </div>
-          <div class="col-md-6">
-            <div class="text-md-right dataTables_filter" id="dataTable_filter">
-              <b-button v-b-modal.customerForm size="sm" variant="success"
-                >Create Customer</b-button
+            <div class="col-md-6">
+              <div
+                class="text-md-right dataTables_filter"
+                id="dataTable_filter"
               >
+                <b-button v-b-modal.customerForm variant="success"
+                  >Create Customer</b-button
+                >
+              </div>
             </div>
           </div>
-        </div>
+        </b-card>
         <div>
           <b-table
             show-empty
