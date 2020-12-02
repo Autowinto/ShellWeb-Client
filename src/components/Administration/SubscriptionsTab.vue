@@ -15,13 +15,33 @@
     </b-col>
     <b-collapse id="groupsAccordion" accordion="accordion">
       <b-table :items="groups" :fields="groupFields" outlined hover show-empty>
+        <template #cell(name)="data">
+          <div v-if="data.item.editing">
+            <b-input v-model="data.item.name" type="text"></b-input>
+          </div>
+          <div v-else>
+            {{ data.item.name }}
+          </div>
+        </template>
         <template #cell(id)="data">
-          <b-btn variant="primary" class="fas fa-edit mr-2"></b-btn>
-          <b-btn
-            variant="danger"
-            class="fas fa-trash"
-            @click="deleteGroup(data.item)"
-          ></b-btn>
+          <div v-if="!data.item.editing">
+            <b-btn
+              variant="primary"
+              class="fas fa-edit mr-2"
+              @click="doEdit(data)"
+            ></b-btn>
+            <b-btn
+              variant="danger"
+              class="fas fa-trash"
+              @click="deleteGroup(data.item)"
+            ></b-btn>
+          </div>
+          <div v-else-if="data.item.editing">
+            <b-btn variant="success" class="mr-1" @click="sendEdit(data)"
+              >Save</b-btn
+            >
+            <b-btn variant="danger" @click="cancelEdit(data)">Cancel</b-btn>
+          </div>
         </template>
       </b-table>
     </b-collapse>
@@ -344,6 +364,19 @@ export default {
           this.populateOptions()
           this.$refs['createGroupModal'].hide()
         })
+    },
+    sendEdit(data) {
+      axios.put(
+        `${process.env.VUE_APP_URL}subscriptionGroups/${data.item.id}`,
+        data.item
+      )
+    },
+    doEdit(data) {
+      data.toggleDetails()
+      this.$set(data.item, 'editing', true)
+    },
+    cancelEdit(data) {
+      this.$set(data.item, 'editing', false)
     },
   },
 }
