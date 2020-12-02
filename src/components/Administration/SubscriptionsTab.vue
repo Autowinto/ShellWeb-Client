@@ -25,7 +25,14 @@
         </template>
       </b-table>
     </b-collapse>
-    <b-table :items="subscriptions" show-empty outlined hover> </b-table>
+    <b-table
+      :items="subscriptions"
+      :fields="subscriptionFields"
+      show-empty
+      outlined
+      hover
+    >
+    </b-table>
     <b-pagination></b-pagination>
     <b-modal
       id="createSubscriptionModal"
@@ -37,7 +44,7 @@
       size="lg"
     >
       <b-card bg-variant="light">
-        <b-form @submit="submitSubscription">
+        <b-form @submit="submitSubscription" onsubmit="return false;">
           <b-form-group
             label-cols-sm="3"
             label="Product:"
@@ -91,6 +98,7 @@
               required
               v-model="subscriptionCreationForm.price"
               type="number"
+              step="0.01"
             >
             </b-input>
           </b-form-group>
@@ -103,7 +111,7 @@
             <b-select
               required
               :options="frequencyOptions"
-              v-model="subscriptionCreationForm.frequency"
+              v-model="subscriptionCreationForm.paymentFrequency"
             ></b-select>
           </b-form-group>
           <b-form-group
@@ -145,13 +153,16 @@
             ></b-datepicker>
           </b-form-group>
           <b-form-group
-            v-model="subscriptionCreationForm.requiredTickets"
             label-cols-sm="3"
             label="Required tickets:"
             label-align-sm="right"
             description="Required"
           >
-            <b-input required type="number"></b-input>
+            <b-input
+              required
+              type="number"
+              v-model="subscriptionCreationForm.requiredTickets"
+            ></b-input>
           </b-form-group>
           <b-btn type="submit" variant="success">Create</b-btn>
           <b-btn> </b-btn>
@@ -210,7 +221,40 @@ export default {
           class: 'w-25',
         },
       ],
-      subscriptionFields: [{}],
+      subscriptionFields: [
+        {
+          key: 'product',
+        },
+        {
+          key: 'name',
+        },
+        {
+          key: 'typeName',
+        },
+        {
+          key: 'deactivated',
+        },
+        {
+          key: 'price',
+        },
+        {
+          key: 'groupName',
+          label: 'Group',
+        },
+        {
+          key: 'startDate',
+          label: 'Period',
+        },
+        {
+          key: 'requiredTickets',
+        },
+        {
+          key: 'paymentFrequencyName',
+        },
+        {
+          key: 'name',
+        },
+      ],
       productOptions: [],
       typeOptions: [],
       frequencyOptions: [],
@@ -275,7 +319,10 @@ export default {
           this.loadGroups()
         })
     },
-    async loadSubscriptions() {},
+    async loadSubscriptions() {
+      let response = await axios.get(`${process.env.VUE_APP_URL}subscriptions`)
+      this.subscriptions = response.data
+    },
     submitSubscription() {
       axios
         .post(
