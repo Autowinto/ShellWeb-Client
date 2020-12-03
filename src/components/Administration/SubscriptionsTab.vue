@@ -44,6 +44,7 @@
           </div>
         </template>
       </b-table>
+      <!-- <paginated-table></paginated-table> -->
     </b-collapse>
     <b-table
       :items="subscriptions"
@@ -52,6 +53,134 @@
       outlined
       hover
     >
+      <template #cell(product)="data">
+        <div v-if="!data.item.editing">
+          {{ data.item.product }}
+        </div>
+        <div v-if="data.item.editing">
+          <b-select
+            v-model="data.item.product"
+            :options="productOptions"
+          ></b-select>
+        </div>
+      </template>
+      <template #cell(name)="data">
+        <div v-if="!data.item.editing">
+          {{ data.item.name }}
+        </div>
+        <div v-else-if="data.item.editing">
+          <b-input v-model="data.item.name"></b-input>
+        </div>
+      </template>
+      <template #cell(typeName)="data">
+        <div v-if="!data.item.editing">
+          {{ data.item.typeName }}
+        </div>
+        <div v-if="data.item.editing">
+          <b-select
+            v-model="data.item.typeId"
+            :options="typeOptions"
+          ></b-select>
+        </div>
+      </template>
+      <template #cell(price)="data">
+        <div v-if="!data.item.editing">{{ data.item.price }}DKK</div>
+        <div v-else-if="data.item.editing">
+          <b-input
+            type="number"
+            step="0.01"
+            v-model="data.item.price"
+          ></b-input>
+        </div>
+      </template>
+      <template #cell(groupName)="data">
+        <div v-if="!data.item.editing">
+          {{ data.item.groupName }}
+        </div>
+        <div v-if="data.item.editing">
+          <b-select
+            v-model="data.item.groupId"
+            :options="groupOptions"
+          ></b-select>
+        </div>
+      </template>
+      <template #cell(startDate)="data">
+        <div v-if="!data.item.editing">
+          {{ formatDate(data.item.startDate) }}
+        </div>
+        <div v-else-if="data.item.editing">
+          <b-datepicker
+            size="sm"
+            calendar-width="350px"
+            v-model="data.item.startDate"
+          ></b-datepicker>
+        </div>
+      </template>
+      <template #cell(endDate)="data">
+        <div v-if="!data.item.editing">
+          {{ formatDate(data.item.endDate) }}
+        </div>
+        <div v-else-if="data.item.editing">
+          <b-datepicker
+            size="sm"
+            calendar-width="350px"
+            v-model="data.item.endDate"
+          ></b-datepicker>
+        </div>
+      </template>
+      <template #cell(requiredTickets)="data">
+        <div v-if="!data.item.editing">
+          {{ data.item.requiredTickets }}
+        </div>
+        <div v-else-if="data.item.editing">
+          <b-input
+            v-model="data.item.requiredTickets"
+            type="number"
+            max="99"
+            min="0"
+          ></b-input>
+        </div>
+      </template>
+      <template #cell(paymentFrequencyName)="data">
+        <div v-if="!data.item.editing">
+          {{ data.item.paymentFrequencyName }}
+        </div>
+        <div v-if="data.item.editing">
+          <b-select
+            v-model="data.item.paymentFrequencyId"
+            :options="frequencyOptions"
+          ></b-select>
+        </div>
+      </template>
+      <template #cell(deactivated)="data">
+        <div v-if="!data.item.editing">
+          <div v-if="data.item.active == '1'">
+            <b-badge size="sm" variant="success">Active</b-badge>
+          </div>
+          <div v-else>
+            <b-badge size="sm" variant="danger">>Inactive</b-badge>
+          </div>
+        </div>
+        <div v-else>
+          <b-checkbox v-model="data.item.active" value="1" unchecked-value="0">
+          </b-checkbox>
+        </div>
+      </template>
+      <template #cell(id)="data">
+        <div v-if="!data.item.editing">
+          <b-btn
+            variant="primary"
+            class="fas fa-edit mr-2"
+            @click="doEdit(data)"
+          ></b-btn>
+        </div>
+        <div v-else-if="data.item.editing">
+          <b-btn variant="success" class="mr-1" @click="sendSubEdit(data)"
+            >Save</b-btn
+          >
+          <b-btn variant="danger" @click="cancelEdit(data)">Cancel</b-btn>
+        </div>
+      </template>
     </b-table>
     <b-pagination></b-pagination>
     <b-modal
@@ -181,7 +310,7 @@
             <b-input
               required
               type="number"
-              v-model="subscriptionCreationForm.requiredTickets"
+              v-model="subscriptionCreationForm.requiredTicketsd"
             ></b-input>
           </b-form-group>
           <b-btn type="submit" variant="success">Create</b-btn>
@@ -223,8 +352,13 @@
 
 <script>
 import axios from 'axios'
+// import PaginatedTable from '../PaginatedTable'
+import dayjs from 'dayjs'
 
 export default {
+  components: {
+    // PaginatedTable,
+  },
   data() {
     return {
       subscriptions: [],
@@ -252,9 +386,6 @@ export default {
           key: 'typeName',
         },
         {
-          key: 'deactivated',
-        },
-        {
           key: 'price',
         },
         {
@@ -263,7 +394,9 @@ export default {
         },
         {
           key: 'startDate',
-          label: 'Period',
+        },
+        {
+          key: 'endDate',
         },
         {
           key: 'requiredTickets',
@@ -272,7 +405,11 @@ export default {
           key: 'paymentFrequencyName',
         },
         {
-          key: 'name',
+          key: 'deactivated',
+        },
+        {
+          key: 'id',
+          label: 'Actions',
         },
       ],
       productOptions: [],
@@ -287,6 +424,10 @@ export default {
     this.populateOptions()
   },
   methods: {
+    formatDate(date) {
+      if (!dayjs(date).isValid()) return ''
+      return dayjs(date).format('MMM D, YYYY')
+    },
     async populateOptions() {
       let products = await axios.get(
         `${process.env.VUE_APP_URL}products/1/1000`
@@ -339,6 +480,13 @@ export default {
           this.loadGroups()
         })
     },
+    deleteSubscription(item) {
+      axios
+        .delete(`${process.env.VUE_APP_URL}subscriptions/${item.id}`)
+        .then(() => {
+          this.loadSubscriptions()
+        })
+    },
     async loadSubscriptions() {
       let response = await axios.get(`${process.env.VUE_APP_URL}subscriptions`)
       this.subscriptions = response.data
@@ -370,6 +518,16 @@ export default {
         `${process.env.VUE_APP_URL}subscriptionGroups/${data.item.id}`,
         data.item
       )
+    },
+    sendSubEdit(data) {
+      axios
+        .put(
+          `${process.env.VUE_APP_URL}subscriptions/${data.item.id}`,
+          data.item
+        )
+        .then(() => {
+          this.cancelEdit(data)
+        })
     },
     doEdit(data) {
       data.toggleDetails()
