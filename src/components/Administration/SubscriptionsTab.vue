@@ -158,7 +158,7 @@
             <b-badge size="sm" variant="success">Active</b-badge>
           </div>
           <div v-else>
-            <b-badge size="sm" variant="danger">>Inactive</b-badge>
+            <b-badge size="sm" variant="danger">Inactive</b-badge>
           </div>
         </div>
         <div v-else>
@@ -235,6 +235,7 @@
             <b-select
               :options="typeOptions"
               v-model="subscriptionCreationForm.type"
+              required
             ></b-select>
           </b-form-group>
           <b-form-group
@@ -310,11 +311,10 @@
             <b-input
               required
               type="number"
-              v-model="subscriptionCreationForm.requiredTicketsd"
+              v-model="subscriptionCreationForm.requiredTickets"
             ></b-input>
           </b-form-group>
           <b-btn type="submit" variant="success">Create</b-btn>
-          <b-btn> </b-btn>
         </b-form>
       </b-card>
     </b-modal>
@@ -499,6 +499,7 @@ export default {
         )
         .then(() => {
           this.loadSubscriptions()
+          this.$refs['createSubscriptionModal'].hide()
         })
     },
     submitGroup() {
