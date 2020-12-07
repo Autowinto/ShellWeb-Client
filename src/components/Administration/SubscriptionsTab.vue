@@ -72,14 +72,15 @@
           <b-input v-model="data.item.name"></b-input>
         </div>
       </template>
-      <template #cell(typeName)="data">
+      <template #cell(billingEngineId)="data">
         <div v-if="!data.item.editing">
-          {{ data.item.typeName }}
+          {{ data.item.billingEngineName }}
         </div>
         <div v-if="data.item.editing">
           <b-select
-            v-model="data.item.typeId"
-            :options="typeOptions"
+            required
+            v-model="data.item.billingEngineId"
+            :options="billingEngineOptions"
           ></b-select>
         </div>
       </template>
@@ -130,15 +131,11 @@
       </template>
       <template #cell(requiredTickets)="data">
         <div v-if="!data.item.editing">
-          {{ data.item.requiredTickets }}
+          {{ data.item.ticketFrequency }}
         </div>
         <div v-else-if="data.item.editing">
-          <b-input
-            v-model="data.item.requiredTickets"
-            type="number"
-            max="99"
-            min="0"
-          ></b-input>
+          <b-select v-model="ticketFrequency" :options="ticketFrequencyOptions">
+          </b-select>
         </div>
       </template>
       <template #cell(paymentFrequencyName)="data">
@@ -228,13 +225,13 @@
           </b-form-group>
           <b-form-group
             label-cols-sm="3"
-            label="Type:"
+            label="Billing Engine:"
             label-align-sm="right"
             description="Required"
           >
             <b-select
-              :options="typeOptions"
-              v-model="subscriptionCreationForm.type"
+              :options="billingEngineOptions"
+              v-model="subscriptionCreationForm.billingEngine"
               required
             ></b-select>
           </b-form-group>
@@ -254,7 +251,7 @@
           </b-form-group>
           <b-form-group
             label-cols-sm="3"
-            label="Payment frequency:"
+            label="Payment Frequency:"
             label-align-sm="right"
             description="Required"
           >
@@ -262,6 +259,18 @@
               required
               :options="frequencyOptions"
               v-model="subscriptionCreationForm.paymentFrequency"
+            ></b-select>
+          </b-form-group>
+          <b-form-group
+            label-cols-sm="3"
+            label="Ticket Frequency:"
+            label-align-sm="right"
+            description="Required"
+          >
+            <b-select
+              required
+              :options="ticketFrequencyOptions"
+              v-model="subscriptionCreationForm.ticketFrequency"
             ></b-select>
           </b-form-group>
           <b-form-group
@@ -278,7 +287,7 @@
           </b-form-group>
           <b-form-group
             label-cols-sm="3"
-            label="Start date:"
+            label="Start Date:"
             label-align-sm="right"
             description="Required"
           >
@@ -292,7 +301,7 @@
           </b-form-group>
           <b-form-group
             label-cols-sm="3"
-            label="End date:"
+            label="End Date:"
             label-align-sm="right"
           >
             <b-datepicker
@@ -301,18 +310,6 @@
               size="sm"
               calendar-width="100%"
             ></b-datepicker>
-          </b-form-group>
-          <b-form-group
-            label-cols-sm="3"
-            label="Required tickets:"
-            label-align-sm="right"
-            description="Required"
-          >
-            <b-input
-              required
-              type="number"
-              v-model="subscriptionCreationForm.requiredTickets"
-            ></b-input>
           </b-form-group>
           <b-btn type="submit" variant="success">Create</b-btn>
         </b-form>
@@ -383,7 +380,8 @@ export default {
           key: 'name',
         },
         {
-          key: 'typeName',
+          key: 'billingEngineId',
+          label: 'Billing',
         },
         {
           key: 'price',
@@ -399,10 +397,11 @@ export default {
           key: 'endDate',
         },
         {
-          key: 'requiredTickets',
+          key: 'ticketFrequency',
         },
         {
           key: 'paymentFrequencyName',
+          label: 'Payment Frequency',
         },
         {
           key: 'deactivated',
@@ -413,9 +412,19 @@ export default {
         },
       ],
       productOptions: [],
-      typeOptions: [],
+      billingEngineOptions: [],
       frequencyOptions: [],
       groupOptions: [],
+      ticketFrequencyOptions: [
+        { value: 'none', text: 'None' },
+        { value: 'weekly', text: 'Weekly' },
+        { value: 'biweekly', text: 'Biweekly' },
+        { value: 'monthly', text: 'Monthly' },
+        { value: 'bimonthly', text: 'Bimonthly' },
+        { value: 'trimonthly', text: 'Trimonthly' },
+        { value: 'semiannually', text: 'Semiannually' },
+        { value: 'annually', text: 'Annually' },
+      ],
     }
   },
   created() {
@@ -433,13 +442,13 @@ export default {
         `${process.env.VUE_APP_URL}products/1/1000`
       )
 
-      let types = await axios.get(
-        `${process.env.VUE_APP_URL}subscriptions/types`
-      )
+      let engines = await axios.get(`
+        ${process.env.VUE_APP_URL}subscriptions/billingEngines
+      `)
+
       let frequencies = await axios.get(
         `${process.env.VUE_APP_URL}subscriptions/paymentFrequencies`
       )
-      console.log(frequencies)
 
       for (let product of products.data.products.collection) {
         this.productOptions.push({
@@ -447,12 +456,14 @@ export default {
           text: product.name,
         })
       }
-      for (let type of types.data) {
-        this.typeOptions.push({
-          value: type.id,
-          text: type.name,
+
+      for (let engine of engines.data) {
+        this.billingEngineOptions.push({
+          value: engine.id,
+          text: engine.name,
         })
       }
+
       for (let frequency of frequencies.data) {
         this.frequencyOptions.push({
           value: frequency.id,
