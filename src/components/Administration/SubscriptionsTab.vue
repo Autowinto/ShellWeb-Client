@@ -129,16 +129,19 @@
           ></b-datepicker>
         </div>
       </template>
-      <template #cell(requiredTickets)="data">
+      <template #cell(ticketFrequencyId)="data">
         <div v-if="!data.item.editing">
-          {{ data.item.ticketFrequency }}
+          {{ data.item.ticketFrequencyName }}
         </div>
         <div v-else-if="data.item.editing">
-          <b-select v-model="ticketFrequency" :options="ticketFrequencyOptions">
+          <b-select
+            v-model="data.item.ticketFrequencyId"
+            :options="frequencyOptions"
+          >
           </b-select>
         </div>
       </template>
-      <template #cell(paymentFrequencyName)="data">
+      <template #cell(paymentFrequencyId)="data">
         <div v-if="!data.item.editing">
           {{ data.item.paymentFrequencyName }}
         </div>
@@ -258,7 +261,7 @@
             <b-select
               required
               :options="frequencyOptions"
-              v-model="subscriptionCreationForm.paymentFrequency"
+              v-model="subscriptionCreationForm.paymentFrequencyId"
             ></b-select>
           </b-form-group>
           <b-form-group
@@ -269,8 +272,8 @@
           >
             <b-select
               required
-              :options="ticketFrequencyOptions"
-              v-model="subscriptionCreationForm.ticketFrequency"
+              :options="frequencyOptions"
+              v-model="subscriptionCreationForm.ticketFrequencyId"
             ></b-select>
           </b-form-group>
           <b-form-group
@@ -397,10 +400,11 @@ export default {
           key: 'endDate',
         },
         {
-          key: 'ticketFrequency',
+          key: 'ticketFrequencyId',
+          label: 'Ticket Frequency',
         },
         {
-          key: 'paymentFrequencyName',
+          key: 'paymentFrequencyId',
           label: 'Payment Frequency',
         },
         {
@@ -415,16 +419,6 @@ export default {
       billingEngineOptions: [],
       frequencyOptions: [],
       groupOptions: [],
-      ticketFrequencyOptions: [
-        { value: 'none', text: 'None' },
-        { value: 'weekly', text: 'Weekly' },
-        { value: 'biweekly', text: 'Biweekly' },
-        { value: 'monthly', text: 'Monthly' },
-        { value: 'bimonthly', text: 'Bimonthly' },
-        { value: 'trimonthly', text: 'Trimonthly' },
-        { value: 'semiannually', text: 'Semiannually' },
-        { value: 'annually', text: 'Annually' },
-      ],
     }
   },
   created() {
@@ -538,6 +532,7 @@ export default {
           data.item
         )
         .then(() => {
+          this.loadSubscriptions()
           this.cancelEdit(data)
         })
     },
