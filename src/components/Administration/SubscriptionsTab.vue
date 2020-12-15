@@ -182,7 +182,12 @@
         </div>
       </template>
     </b-table>
-    <b-pagination></b-pagination>
+    <b-pagination
+      size="md"
+      v-model="currentPage"
+      :total-rows="totalItems"
+      :per-page="10"
+    ></b-pagination>
     <b-modal
       id="createSubscriptionModal"
       centered
@@ -420,6 +425,8 @@ export default {
       billingEngineOptions: [],
       frequencyOptions: [],
       groupOptions: [],
+      totalItems: 0,
+      currentPage: 1,
     }
   },
   created() {
@@ -494,8 +501,18 @@ export default {
         })
     },
     async loadSubscriptions() {
-      let response = await axios.get(`${process.env.VUE_APP_URL}subscriptions`)
-      this.subscriptions = response.data
+      let response = await axios.get(
+        `${process.env.VUE_APP_URL}subscriptions`,
+        {
+          params: {
+            page: this.currentPage,
+            results: 10,
+          },
+        }
+      )
+      console.log(response.data.collection)
+      this.subscriptions = response.data.collection
+      this.totalItems = response.data.totalItems
     },
     submitSubscription() {
       axios
@@ -547,6 +564,11 @@ export default {
     },
     cancelEdit(data) {
       this.$set(data.item, 'editing', false)
+    },
+  },
+  watch: {
+    currentPage() {
+      this.loadSubscriptions()
     },
   },
 }
