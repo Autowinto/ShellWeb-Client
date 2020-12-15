@@ -562,7 +562,7 @@
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Passwords">
-                  <PasswordsTab></PasswordsTab>
+                  <passwords-tab></passwords-tab>
                 </b-tab>
                 <b-tab title="Attachments">
                   <b-card-text>
@@ -588,7 +588,7 @@
                         >Upload {{ fileRecords.length }}</b-button
                       >
                     </b-card>
-                    <PaginatedTable
+                    <paginated-table
                       :columnFields="this.fields.attachments"
                       :url="`${apiUrl}attachments/customers/${this.id}`"
                       :itemUrl="`${apiUrl}attachments`"
@@ -599,7 +599,7 @@
                       :deletable="true"
                       :downloadable="true"
                     >
-                    </PaginatedTable>
+                    </paginated-table>
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Invoices">
@@ -693,7 +693,7 @@
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Subscriptions">
-                  <b-card-text>Tab contents 2</b-card-text>
+                  <subscriptions-tab></subscriptions-tab>
                 </b-tab>
                 <b-tab title="DNS">
                   <b-card-text>Tab contents 2</b-card-text>
@@ -1105,8 +1105,9 @@ import dayjs from 'dayjs'
 import fileDownload from 'js-file-download'
 import download from 'downloadjs'
 import PaginatedTable from '../PaginatedTable'
-import PasswordsTab from '../Customer/PasswordsTab'
 import { getToken } from '../../auth/authHelper'
+import SubscriptionsTab from '../Customer/SubscriptionsTab.vue'
+import PasswordsTab from '../Customer/PasswordsTab.vue'
 
 export default {
   data() {
@@ -1561,6 +1562,7 @@ export default {
   components: {
     PaginatedTable,
     PasswordsTab,
+    SubscriptionsTab
   },
 }
 </script>

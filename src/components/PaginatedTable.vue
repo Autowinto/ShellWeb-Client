@@ -79,7 +79,6 @@ export default {
     },
     items: {
       type: Array,
-      requiored: true,
     },
     itemUrl: {
       type: String,

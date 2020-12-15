@@ -409,6 +409,7 @@ export default {
         },
         {
           key: 'deactivated',
+          label: 'Status',
         },
         {
           key: 'id',
@@ -520,10 +521,14 @@ export default {
         })
     },
     sendEdit(data) {
-      axios.put(
-        `${process.env.VUE_APP_URL}subscriptionGroups/${data.item.id}`,
-        data.item
-      )
+      axios
+        .put(
+          `${process.env.VUE_APP_URL}subscriptionGroups/${data.item.id}`,
+          data.item
+        )
+        .then(() => {
+          this.cancelEdit(data)
+        })
     },
     sendSubEdit(data) {
       axios
