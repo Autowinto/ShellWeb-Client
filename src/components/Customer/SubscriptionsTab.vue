@@ -82,7 +82,7 @@
           ></b-datepicker>
         </div>
       </template>
-      <template #cell(billingEngineName)="data">
+      <!-- <template #cell(billingEngineName)="data">
         <div v-if="!data.item.editing">
           {{ data.item.billingEngineName }}
         </div>
@@ -93,7 +93,7 @@
             :options="billingEngineOptions"
           ></b-select>
         </div>
-      </template>
+      </template> -->
       <template #cell(id)="data">
         <div v-if="!data.item.editing">
           <b-btn
@@ -345,15 +345,15 @@ export default {
         })
       }
 
-      let engineResponse = await axios.get(
-        `${process.env.VUE_APP_URL}subscriptions/billingEngines`
-      )
-      for (let engine of engineResponse.data) {
-        this.billingEngineOptions.push({
-          value: engine.id,
-          text: engine.name,
-        })
-      }
+      // let engineResponse = await axios.get(
+      //   `${process.env.VUE_APP_URL}subscriptions/billingEngines`
+      // )
+      // for (let engine of engineResponse.data) {
+      //   this.billingEngineOptions.push({
+      //     value: engine.id,
+      //     text: engine.name,
+      //   })
+      // }
     },
   },
   watch: {
