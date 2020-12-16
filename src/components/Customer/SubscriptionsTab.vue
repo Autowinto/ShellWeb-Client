@@ -129,25 +129,27 @@
         <b-form @submit="postSubscription" onsubmit="return false;">
           <b-form-group
             label-cols-sm="2"
+            label="Subscription:"
+            label-align-sm="right"
+            description="Required"
+          >
+            <b-select
+              @change="pullFormData"
+              :options="subscriptionOptions"
+              v-model="form.subscription"
+            >
+            </b-select>
+          </b-form-group>
+          <b-card no-body class="mb-3"></b-card>
+          <b-form-group
+            label-cols-sm="2"
             label="Name:"
             label-align-sm="right"
             description="Required"
           >
             <b-input type="text" required v-model="form.name"></b-input>
           </b-form-group>
-          <b-form-group
-            label-cols-sm="2"
-            label="Subscription:"
-            label-align-sm="right"
-            description="Required"
-          >
-            <b-select
-              @change="changeFormPrice"
-              :options="subscriptionOptions"
-              v-model="form.subscription"
-            >
-            </b-select>
-          </b-form-group>
+
           <b-form-group
             label-cols-sm="2"
             label="Unit price:"
@@ -310,10 +312,11 @@ export default {
       if (!dayjs(date).isValid()) return ''
       return dayjs(date).format('MMM D, YYYY')
     },
-    changeFormPrice(value) {
+    pullFormData(value) {
       let object = this.subscriptions.find((obj) => {
         return obj.id == value
       })
+      this.$set(this.form, 'name', object.name)
       this.$set(this.form, 'unitPrice', object.price)
       this.$set(this.form, 'startDate', object.startDate)
       this.$set(this.form, 'endDate', object.endDate)
