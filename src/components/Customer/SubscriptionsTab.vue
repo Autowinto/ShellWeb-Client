@@ -101,11 +101,6 @@
             class="fas fa-edit mr-2"
             @click="doEdit(data)"
           ></b-btn>
-          <b-btn
-            variant="danger"
-            class="fas fa-trash mr-2"
-            @click="doDelete(data)"
-          ></b-btn>
         </div>
         <div v-else-if="data.item.editing">
           <b-btn variant="success" class="mr-1" @click="sendSubEdit(data)"
@@ -310,15 +305,6 @@ export default {
     },
     cancelEdit(data) {
       this.$set(data.item, 'editing', false)
-    },
-    doDelete(data) {
-      axios
-        .delete(
-          `${process.env.VUE_APP_URL}subscriptions/instances/${data.item.id}`
-        )
-        .then(() => {
-          this.loadSubscriptionInstances()
-        })
     },
     formatDate(date) {
       if (!dayjs(date).isValid()) return ''
