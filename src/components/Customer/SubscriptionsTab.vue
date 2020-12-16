@@ -12,11 +12,115 @@
       :items="subscriptionInstances"
       :fields="fields"
     >
-      <template #cell(id)>
-        <b-btn class="fas fa-edit mr-2" variant="primary"> </b-btn>
-        <b-btn variant="danger" class="fas fa-trash"> </b-btn>
+      <template #cell(name)="data">
+        <div v-if="!data.item.editing">
+          {{ data.item.name }}
+        </div>
+        <div v-else-if="data.item.editing">
+          <b-input v-model="data.item.name"></b-input>
+        </div>
+      </template>
+      <template #cell(subscriptionName)="data">
+        <div v-if="!data.item.editing">
+          {{ data.item.subscriptionName }}
+        </div>
+        <div v-if="data.item.editing">
+          <b-select
+            required
+            v-model="data.item.subscriptionId"
+            :options="subscriptionOptions"
+          ></b-select>
+        </div>
+      </template>
+      <template #cell(units)="data">
+        <div v-if="!data.item.editing">{{ data.item.units }}</div>
+        <div v-if="data.item.editing">
+          <b-input v-model="data.item.units" type="number"></b-input>
+        </div>
+      </template>
+      <template #cell(unitPrice)="data">
+        <div v-if="!data.item.editing">{{ data.item.unitPrice }}</div>
+        <div v-if="data.item.editing">
+          <b-input
+            v-model="data.item.unitPrice"
+            type="number"
+            step="0.01"
+          ></b-input>
+        </div>
+      </template>
+      <template #cell(price)="data">
+        <div v-if="!data.item.editing">{{ data.item.price }}DKK</div>
+        <div v-else-if="data.item.editing">
+          <b-input
+            type="number"
+            step="0.01"
+            v-model="data.item.price"
+          ></b-input>
+        </div>
+      </template>
+      <template #cell(startDate)="data">
+        <div v-if="!data.item.editing">
+          {{ formatDate(data.item.startDate) }}
+        </div>
+        <div v-else-if="data.item.editing">
+          <b-datepicker
+            size="sm"
+            calendar-width="350px"
+            v-model="data.item.startDate"
+          ></b-datepicker>
+        </div>
+      </template>
+      <template #cell(endDate)="data">
+        <div v-if="!data.item.editing">
+          {{ formatDate(data.item.endDate) }}
+        </div>
+        <div v-else-if="data.item.editing">
+          <b-datepicker
+            size="sm"
+            calendar-width="350px"
+            v-model="data.item.endDate"
+          ></b-datepicker>
+        </div>
+      </template>
+      <template #cell(billingEngineName)="data">
+        <div v-if="!data.item.editing">
+          {{ data.item.billingEngineName }}
+        </div>
+        <div v-else-if="data.item.editing">
+          <b-select
+            required
+            v-model="data.item.billingEngineId"
+            :options="billingEngineOptions"
+          ></b-select>
+        </div>
+      </template>
+      <template #cell(id)="data">
+        <div v-if="!data.item.editing">
+          <b-btn
+            variant="primary"
+            class="fas fa-edit mr-2"
+            @click="doEdit(data)"
+          ></b-btn>
+          <b-btn
+            variant="danger"
+            class="fas fa-trash mr-2"
+            @click="doDelete(data)"
+          ></b-btn>
+        </div>
+        <div v-else-if="data.item.editing">
+          <b-btn variant="success" class="mr-1" @click="sendSubEdit(data)"
+            >Save</b-btn
+          >
+          <b-btn variant="danger" @click="cancelEdit(data)">Cancel</b-btn>
+        </div>
       </template>
     </b-table>
+    <b-pagination
+      size="md"
+      v-model="currentPage"
+      :total-rows="totalItems"
+      :per-page="results"
+    ></b-pagination>
     <b-modal
       id="customerSubscriptionModal"
       ref="customerSubscriptionModal"
@@ -27,7 +131,7 @@
       hide-footer
     >
       <b-card bg-variant="light">
-        <b-form @submit="postSubscription">
+        <b-form @submit="postSubscription" onsubmit="return false;">
           <b-form-group
             label-cols-sm="2"
             label="Name:"
@@ -43,7 +147,7 @@
             description="Required"
           >
             <b-select
-              @input="changeFormPrice"
+              @change="changeFormPrice"
               :options="subscriptionOptions"
               v-model="form.subscription"
             >
@@ -111,6 +215,7 @@
 
 <script>
 import axios from 'axios'
+import dayjs from 'dayjs'
 
 export default {
   data() {
@@ -119,8 +224,10 @@ export default {
       subscriptions: [],
       subscriptionInstances: [],
       currentPage: 1,
+      totalItems: 0,
       results: 10,
       subscriptionOptions: [],
+      billingEngineOptions: [],
       id: this.$route.query.customerID,
       fields: [
         {
@@ -131,8 +238,7 @@ export default {
           label: 'Subscription',
         },
         {
-          key: 'unitCount',
-          label: 'Units',
+          key: 'units',
         },
         {
           key: 'unitPrice',
@@ -145,7 +251,7 @@ export default {
         },
         {
           key: 'billingEngineName',
-          label: 'Billing Type',
+          label: 'Billing Engine',
         },
         {
           key: 'id',
@@ -157,6 +263,7 @@ export default {
   created() {
     this.loadSubscriptionInstances()
     this.populateOptions()
+    this.resetForm()
   },
   methods: {
     async loadSubscriptionInstances() {
@@ -169,14 +276,53 @@ export default {
           },
         }
       )
-      this.subscriptionInstances = response.data
+      this.subscriptionInstances = response.data.collection
+      this.totalItems = response.data.totalItems
+    },
+    resetForm() {
+      this.form = {
+        customerId: Number(this.$route.query.customerID),
+      }
     },
     postSubscription() {
       axios
         .post(`${process.env.VUE_APP_URL}subscriptions/instances`, this.form)
         .then(() => {
           this.loadSubscriptionInstances()
+          this.$refs['customerSubscriptionModal'].hide()
+          this.resetForm()
         })
+    },
+    sendSubEdit(data) {
+      axios
+        .put(
+          `${process.env.VUE_APP_URL}subscriptions/instances/${data.item.id}`,
+          data.item
+        )
+        .then(() => {
+          this.loadSubscriptionInstances()
+          this.cancelEdit(data)
+        })
+    },
+    doEdit(data) {
+      data.toggleDetails()
+      this.$set(data.item, 'editing', true)
+    },
+    cancelEdit(data) {
+      this.$set(data.item, 'editing', false)
+    },
+    doDelete(data) {
+      axios
+        .delete(
+          `${process.env.VUE_APP_URL}subscriptions/instances/${data.item.id}`
+        )
+        .then(() => {
+          this.loadSubscriptionInstances()
+        })
+    },
+    formatDate(date) {
+      if (!dayjs(date).isValid()) return ''
+      return dayjs(date).format('MMM D, YYYY')
     },
     changeFormPrice(value) {
       let object = this.subscriptions.find((obj) => {
@@ -187,20 +333,32 @@ export default {
       this.$set(this.form, 'endDate', object.endDate)
     },
     async populateOptions() {
-      let response = await axios.get(`${process.env.VUE_APP_URL}subscriptions`)
-      this.subscriptions = response.data
+      let subResponse = await axios.get(
+        `${process.env.VUE_APP_URL}subscriptions`
+      )
+      this.subscriptions = subResponse.data.collection
 
-      for (let subscription of response.data) {
+      for (let subscription of this.subscriptions) {
         this.subscriptionOptions.push({
           value: subscription.id,
           text: subscription.name,
+        })
+      }
+
+      let engineResponse = await axios.get(
+        `${process.env.VUE_APP_URL}subscriptions/billingEngines`
+      )
+      for (let engine of engineResponse.data) {
+        this.billingEngineOptions.push({
+          value: engine.id,
+          text: engine.name,
         })
       }
     },
   },
   watch: {
     currentPage() {
-      this.loadData()
+      this.loadSubscriptionInstances()
     },
   },
 }
