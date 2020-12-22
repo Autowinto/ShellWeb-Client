@@ -299,7 +299,7 @@ export default {
         .post(`${process.env.VUE_APP_URL}passwords`, this.creationForm)
         .then(() => {
           this.$refs['createPasswordModal'].hide()
-          this.creationForm = { securityLevel: 0 }
+          this.creationForm = { customer: this.customerId, securityLevel: 0 }
           this.fetchPasswords()
         })
     },
