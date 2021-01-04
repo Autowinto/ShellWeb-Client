@@ -66,7 +66,7 @@
             >
               <i class="fas fa-bars"></i>
             </button>
-            <form
+            <!-- <form
               class="form-inline d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
             >
               <div class="input-group">
@@ -81,7 +81,7 @@
                   </button>
                 </div>
               </div>
-            </form>
+            </form> -->
             <ul class="nav navbar-nav flex-nowrap ml-auto">
               <li class="nav-item dropdown d-sm-none no-arrow">
                 <a
