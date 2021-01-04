@@ -76,19 +76,22 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios'
 
 export default {
   data() {
     return {
       fields: [
         {
-          key: "ticketId",
-          label: "Ticket ID",
+          key: 'customerName',
         },
         {
-          key: "subject",
-          label: "Name",
+          key: 'ticketId',
+          label: 'Ticket ID',
+        },
+        {
+          key: 'subject',
+          label: 'Name',
         },
       ],
       items: [],
@@ -96,15 +99,15 @@ export default {
       results: 10,
       totalItems: 0,
       paginationOptions: [
-        { value: 10, text: "10" },
-        { value: 25, text: "25" },
-        { value: 50, text: "50" },
+        { value: 10, text: '10' },
+        { value: 25, text: '25' },
+        { value: 50, text: '50' },
       ],
-    };
+    }
   },
   created() {},
   mounted() {
-    this.fetchData();
+    this.fetchData()
   },
   methods: {
     fetchData() {
@@ -116,28 +119,28 @@ export default {
           },
         })
         .then((response) => {
-          const data = response.data;
-          console.log(data);
-          this.items = data.collection;
+          const data = response.data
+          console.log(data)
+          this.items = data.collection
 
-          this.totalItems = data.pagination.totalItems;
+          this.totalItems = data.pagination.totalItems
         })
         .catch((err) => {
-          console.error(err);
-        });
+          console.error(err)
+        })
     },
   },
   watch: {
     currentPage: {
       handler: function () {
-        this.fetchData(); //Do error handling here in the future
+        this.fetchData() //Do error handling here in the future
       },
     },
     results: {
       handler: function () {
-        this.fetchData();
+        this.fetchData()
       },
     },
   },
-};
+}
 </script>
