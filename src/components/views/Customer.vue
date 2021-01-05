@@ -1155,20 +1155,18 @@ export default {
             label: 'Subject',
           },
           {
-            key: 'created_date',
+            key: 'createdDate',
             label: 'Date of Creation',
           },
           {
-            key: 'modified_date',
+            key: 'modifiedDate',
             label: 'Last Updated',
           },
           {
             key: 'status',
-            label: 'Status',
           },
           {
-            key: 'reply_status',
-            label: 'Reply Status',
+            key: 'replyStatus',
           },
         ],
         invoices: [
@@ -1292,7 +1290,8 @@ export default {
     this.fetchData(`customers/${this.id}/rates`).then((response) => {
       this.items.contractRates = response.data
     })
-    axios.get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
+    axios
+      .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
       .then((response) => {
         for (var item in response.data) {
           const group = response.data[item]
@@ -1302,7 +1301,7 @@ export default {
           })
         }
       })
-      axios
+    axios
       .get(`${process.env.VUE_APP_URL}invoices/currencies`)
       .then((response) => {
         for (var item in response.data) {
@@ -1562,7 +1561,7 @@ export default {
   components: {
     PaginatedTable,
     PasswordsTab,
-    SubscriptionsTab
+    SubscriptionsTab,
   },
 }
 </script>

@@ -237,7 +237,7 @@ export default {
       ],
       fields: [
         {
-          key: 'ticket_id',
+          key: 'ticketId',
           label: 'Ticket ID',
         },
         {
@@ -245,20 +245,18 @@ export default {
           label: 'Subject',
         },
         {
-          key: 'created_date',
+          key: 'createdDate',
           label: 'Date of Creation',
         },
         {
-          key: 'modified_date',
+          key: 'modifiedDate',
           label: 'Last Updated',
         },
         {
           key: 'status',
-          label: 'Status',
         },
         {
-          key: 'reply_status',
-          label: 'Reply Status',
+          key: 'replyStatus',
         },
       ],
     }
