@@ -5,23 +5,33 @@
         show-empty
         outlined
         hover
-        ref="attachmentsTable"
-        :items="attachments"
-        :fields="columnFields"
+        ref="table"
+        no-local-sorting
+        @sort-changed="sort"
+        :items="items"
+        :fields="fields"
         :current-page="currentPage"
       >
-        <template
-          v-for="field in editableFields"
-          v-slot:[`cell(${field.key})`]="scope"
-        >
-          <span v-if="!scope.item.editing" :key="field.key">{{
-            scope.item[field.key]
-          }}</span>
-          <b-input
-            v-else
-            :key="field.key"
-            v-model="scope.item[field.key]"
-          ></b-input>
+        <template v-for="field in fields" v-slot:[`cell(${field.key})`]="scope">
+          <div :key="field.key" v-if="field.type == undefined">
+            <span v-if="!scope.item.editing">{{ scope.item[field.key] }}</span>
+            <b-input
+              v-else
+              :key="field.key"
+              v-model="scope.item[field.key]"
+            ></b-input>
+          </div>
+          <div :key="field.key" v-else-if="field.type == 'link'">
+            <b-link
+              :to="{
+                path: field.path,
+                query: {
+                  id: scope.item[field.idName],
+                },
+              }"
+              >{{ scope.item.name }}</b-link
+            >
+          </div>
         </template>
 
         <template v-slot:cell(actions)="scope">
@@ -77,27 +87,25 @@ export default {
       type: String,
       required: true,
     },
-    items: {
-      type: Array,
-    },
-    itemUrl: {
-      type: String,
-    },
-    columnFields: {
+    fields: {
       type: Array,
       required: false,
     },
     primaryKey: String,
     results: Number,
+    sortable: Boolean,
     editable: Boolean,
     downloadable: Boolean,
     deletable: Boolean,
   },
   data() {
     return {
-      attachments: this.items,
+      items: this.items,
       currentPage: 1,
       totalItems: 0,
+
+      sortColumn: null,
+      sortDirection: 'ASC',
     }
   },
   created() {
@@ -106,38 +114,62 @@ export default {
       this.$props.downloadable ||
       this.$props.deletable
     ) {
-      this.columnFields.push({ key: 'actions' })
+      this.fields.push({ key: 'actions' })
     }
 
     this.loadData()
   },
   computed: {
     editableFields() {
-      return this.columnFields.filter((field) => {
+      return this.fields.filter((field) => {
         return field.editable === true
       })
     },
   },
   methods: {
     async loadData() {
-      let response = await axios.get(this.$props.url, {
-        params: {
-          page: this.currentPage,
-          results: this.results,
-        },
-      })
-      this.attachments = response.data.data
-      this.totalItems = response.data.entryCount
+      try {
+        let response = await axios.get(this.$props.url, {
+          params: {
+            page: this.currentPage,
+            results: this.results,
+            sortColumn: this.sortColumn,
+            sortDirection: this.sortDirection,
+          },
+        })
+        let data = response.data
+
+        this.items = data.collection
+        this.totalItems = data.totalCount
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    sort(ctx) {
+      console.log(ctx)
+      this.sortColumn = ctx.sortBy
+
+      if (ctx.sortDesc) {
+        this.sortDirection = 'DESC'
+      } else {
+        this.sortDirection = 'ASC'
+      }
+
+      this.loadData()
     },
     doEdit(item) {
       this.$set(item, 'editing', true)
     },
-    sendEdit(item) {
-      axios
-        .put(`${this.itemUrl}/${item[this.$props.primaryKey]}`, item)
-        .then(() => {
-          this.$set(item, 'editing', false)
-        })
+    async sendEdit(item) {
+      try {
+        axios
+          .put(`${this.itemUrl}/${item[this.$props.primaryKey]}`, item)
+          .then(() => {
+            this.$set(item, 'editing', false)
+          })
+      } catch (error) {
+        console.log(error)
+      }
     },
     async doDownload(item) {
       let file = await axios.get(

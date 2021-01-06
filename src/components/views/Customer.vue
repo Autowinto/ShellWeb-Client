@@ -1115,7 +1115,7 @@ export default {
       fileRecords: [],
       uploadHeaders: {},
       apiUrl: `${process.env.VUE_APP_URL}`,
-      uploadUrl: `${process.env.VUE_APP_URL}attachments/customers/${this.$route.query.customerID}`,
+      uploadUrl: `${process.env.VUE_APP_URL}attachments/customers/${this.$route.query.id}`,
       dropdownData: {
         paymentTerms: [],
         customerGroups: [],
@@ -1262,7 +1262,7 @@ export default {
       paymentTerms: {},
       customerGroup: 0,
       ateraid: 0,
-      id: this.$route.query.customerID,
+      id: this.$route.query.id,
     }
   },
   created() {
@@ -1276,7 +1276,7 @@ export default {
       this.items.assets = response.data.assets.items
       this.pagination.assets.totalItems = response.data.assets.totalItemCount
     })
-    this.fetchData(`customers/${this.$route.query.customerID}/tickets`, {
+    this.fetchData(`customers/${this.$route.query.id}/tickets`, {
       params: {
         page: this.pagination.tickets.currentPage,
         results: this.pagination.tickets.perPage,

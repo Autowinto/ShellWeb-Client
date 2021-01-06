@@ -30,7 +30,9 @@
           </div>
         </b-card>
         <div>
-          <b-table
+          <paginated-table :url="customersUrl" :results="10" :fields="fields">
+          </paginated-table>
+          <!-- <b-table
             show-empty
             outlined
             hover
@@ -56,7 +58,7 @@
             v-model="currentPage"
             :total-rows="totalItems"
             :per-page="perPage"
-          ></b-pagination>
+          ></b-pagination> -->
         </div>
       </div>
     </div>
@@ -294,10 +296,15 @@
 
 <script>
 import axios from 'axios'
+import PaginatedTable from '../PaginatedTable'
 
 export default {
+  components: {
+    PaginatedTable,
+  },
   data() {
     return {
+      customersUrl: `${process.env.VUE_APP_URL}customers`,
       showError: false,
       dropdownData: {
         paymentTerms: [],
@@ -322,12 +329,17 @@ export default {
       },
       fields: [
         {
-          key: 'corporateIdentificationNumber',
+          key: 'customerId',
           label: 'Customer ID',
+          sortable: true,
         },
         {
           key: 'name',
           label: 'Name',
+          sortable: true,
+          type: 'link',
+          path: 'customer',
+          idName: 'customerId',
         },
       ],
       items: [],
@@ -342,7 +354,7 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    // this.fetchData()
 
     //Collect these calls in one axios.all call
     axios
@@ -402,9 +414,8 @@ export default {
         .then((response) => {
           const data = response.data
           this.items = data.collection
-          this.currentPage = parseInt(data.pagination.skipPages) + 1
+          // this.currentPage = parseInt(data.pagination.skipPages) + 1
           this.totalItems = data.pagination.results
-          this.perPage = data.pagination.pageSize
         })
         .catch((err) => {
           console.error(err)
