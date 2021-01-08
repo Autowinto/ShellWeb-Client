@@ -496,12 +496,7 @@
                 <b-tab title="Tickets">
                   <b-card-text>
                     <div>
-                      <paginated-table
-                        :url="ticketsUrl"
-                        :fields="fields.tickets"
-                        :results="10"
-                      ></paginated-table>
-                      <!-- <b-table
+                      <b-table
                         show-empty
                         outlined
                         hover
@@ -510,6 +505,7 @@
                         :per-page="0"
                         :current-page="pagination.tickets.currentPage"
                       >
+                        <!--Template for storing the link to the ticket in the table column.-->
                         <template v-slot:cell(subject)="data">
                           <b-link
                             :to="{
@@ -519,11 +515,13 @@
                             >{{ data.item.subject }}</b-link
                           >
                         </template>
+                        <!--Template for formatting the creation date-->
                         <template v-slot:cell(created_date)="data">
                           <p class="m-0 p-0">
                             {{ data.item.created_date | dayjsDateTime }}
                           </p>
                         </template>
+                        <!--Template for formatting the updated date-->
                         <template v-slot:cell(modified_date)="data">
                           <p class="m-0 p-0">
                             {{ data.item.modified_date | dayjsDateTime }}
@@ -559,12 +557,12 @@
                         v-model="pagination.tickets.currentPage"
                         :total-rows="pagination.tickets.totalItems"
                         :per-page="pagination.tickets.perPage"
-                      ></b-pagination> -->
+                      ></b-pagination>
                     </div>
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Passwords">
-                  <!-- <passwords-tab></passwords-tab> -->
+                  <passwords-tab></passwords-tab>
                 </b-tab>
                 <b-tab title="Attachments">
                   <b-card-text>
@@ -591,10 +589,11 @@
                       >
                     </b-card>
                     <paginated-table
-                      :fields="this.fields.attachments"
+                      :columnFields="this.fields.attachments"
                       :url="`${apiUrl}attachments/customers/${this.id}`"
-                      :uploadUrl="`${apiUrl}attachments`"
-                      :downloadUrl="`${apiUrl}attachments`"
+                      :itemUrl="`${apiUrl}attachments`"
+                      :primaryKey="'attachmentId'"
+                      :items="items.attachments"
                       :results="12"
                       :editable="true"
                       :deletable="true"
@@ -694,7 +693,7 @@
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Subscriptions">
-                  <!-- <subscriptions-tab></subscriptions-tab> -->
+                  <subscriptions-tab></subscriptions-tab>
                 </b-tab>
                 <b-tab title="DNS">
                   <b-card-text>Tab contents 2</b-card-text>
@@ -1107,17 +1106,15 @@ import fileDownload from 'js-file-download'
 import download from 'downloadjs'
 import PaginatedTable from '../PaginatedTable'
 import { getToken } from '../../auth/authHelper'
-// import SubscriptionsTab from '../Customer/SubscriptionsTab.vue'
-// import PasswordsTab from '../Customer/PasswordsTab.vue'
+import SubscriptionsTab from '../Customer/SubscriptionsTab.vue'
+import PasswordsTab from '../Customer/PasswordsTab.vue'
 
 export default {
   data() {
     return {
-      id: this.$route.query.id,
       fileRecords: [],
       uploadHeaders: {},
       apiUrl: `${process.env.VUE_APP_URL}`,
-      ticketsUrl: null,
       uploadUrl: `${process.env.VUE_APP_URL}attachments/customers/${this.$route.query.id}`,
       dropdownData: {
         paymentTerms: [],
@@ -1152,42 +1149,24 @@ export default {
           {
             key: 'ticketId',
             label: 'Ticket ID',
-            sortable: true,
           },
           {
             key: 'subject',
             label: 'Subject',
-            sortable: true,
-            typeOptions: {
-              type: 'link',
-              path: '/ticket',
-              idName: 'ticketId',
-              linkText: 'subject',
-            },
           },
           {
             key: 'createdDate',
             label: 'Date of Creation',
-            sortable: true,
-            typeOptions: {
-              type: 'datetime',
-            },
           },
           {
             key: 'modifiedDate',
             label: 'Last Updated',
-            sortable: true,
-            typeOptions: {
-              type: 'datetime',
-            },
           },
           {
             key: 'status',
-            sortable: true,
           },
           {
             key: 'replyStatus',
-            sortable: true,
           },
         ],
         invoices: [
@@ -1219,23 +1198,15 @@ export default {
           {
             key: 'fileName',
             label: 'Name',
-            sortable: true,
+            editable: true,
           },
           {
             key: 'fileSize',
             label: 'Size (WIP)',
-            sortable: true,
-            typeOptions: {
-              type: 'constant',
-            },
           },
           {
             key: 'visibleToCustomer',
             label: 'Visible',
-            sortable: true,
-            typeOptions: {
-              type: 'constant',
-            },
           },
         ],
       },
@@ -1291,10 +1262,12 @@ export default {
       paymentTerms: {},
       customerGroup: 0,
       ateraid: 0,
+      id: this.$route.query.id,
     }
   },
   created() {
-    this.ticketsUrl = `${process.env.VUE_APP_URL}customers/${this.id}/tickets`
+    // //Set all invoice filter options to be selected once mounted.
+    // this.toggleAll(true)
 
     this.getCustomerInfo()
     this.fetchData(
@@ -1303,14 +1276,14 @@ export default {
       this.items.assets = response.data.assets.items
       this.pagination.assets.totalItems = response.data.assets.totalItemCount
     })
-    // this.fetchData(`customers/${this.id}/tickets`, {
-    //   params: {
-    //     page: this.pagination.tickets.currentPage,
-    //     results: this.pagination.tickets.perPage,
-    //   },
-    // }).then((response) => {
-    //   this.items.tickets = response.data
-    // })
+    this.fetchData(`customers/${this.$route.query.id}/tickets`, {
+      params: {
+        page: this.pagination.tickets.currentPage,
+        results: this.pagination.tickets.perPage,
+      },
+    }).then((response) => {
+      this.items.tickets = response.data
+    })
     this.fetchData(`customer/contracts/${this.id}`).then((response) => {
       this.items.contracts = response.data.contracts
     })
@@ -1587,8 +1560,8 @@ export default {
   },
   components: {
     PaginatedTable,
-    // PasswordsTab,
-    // SubscriptionsTab,
+    PasswordsTab,
+    SubscriptionsTab,
   },
 }
 </script>

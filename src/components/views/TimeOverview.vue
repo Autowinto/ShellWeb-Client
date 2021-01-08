@@ -74,17 +74,7 @@
       </div>
       <b-row>
         <b-col>
-          <b-card header="Registered Hours Overview">
-            <paginated-table
-              :url="url"
-              :uploadUrl="uploadUrl"
-              :fields="fields"
-              :results="10"
-              :editable="true"
-              :deletable="true"
-            ></paginated-table>
-          </b-card>
-          <!-- <work-hour-table> </work-hour-table> -->
+          <work-hour-table> </work-hour-table>
         </b-col>
       </b-row>
     </div>
@@ -93,8 +83,7 @@
 
 <script>
 import TimeDisplay from '../TimeDisplay'
-// import WorkHourTable from '../WorkHourTable'
-import PaginatedTable from '../PaginatedTable'
+import WorkHourTable from '../WorkHourTable'
 import dayjs from 'dayjs'
 import axios from 'axios'
 import * as auth from '../../auth/authHelper'
@@ -102,82 +91,6 @@ import * as auth from '../../auth/authHelper'
 export default {
   data() {
     return {
-      url: `${
-        process.env.VUE_APP_URL
-      }employees/${auth.getAccountId()}/workHourRecords`,
-      uploadUrl: `${process.env.VUE_APP_URL}workHours`,
-      fields: [
-        {
-          key: 'customerName',
-          label: 'Customer',
-          sortable: true,
-          typeOptions: {
-            type: 'link',
-            path: 'customer',
-            linkText: 'customerName',
-            idName: 'customerId',
-          },
-        },
-        {
-          key: 'ticketId',
-          label: 'Ticket',
-          sortable: true,
-          typeOptions: {
-            type: 'link',
-            path: 'ticket',
-            linkText: 'ticketId',
-            idName: 'ticketId',
-          },
-        },
-        {
-          key: 'startTime',
-          sortable: true,
-          typeOptions: {
-            type: 'datetime',
-          },
-        },
-        {
-          key: 'endTime',
-          sortable: true,
-          typeOptions: {
-            type: 'datetime',
-          },
-        },
-        {
-          key: 'billable',
-          editable: true,
-          sortable: true,
-          typeOptions: {
-            type: 'boolean',
-          },
-        },
-        {
-          key: 'rate',
-          editable: true,
-          sortable: true,
-          typeOptions: {
-            type: 'rate',
-          },
-        },
-        {
-          key: 'time',
-          label: 'Actual Time',
-          editable: true,
-          sortable: true,
-          typeOptions: {
-            type: 'time',
-          },
-        },
-        {
-          key: 'timeRounded',
-          label: 'Rounded Time',
-          editable: true,
-          sortable: true,
-          typeOptions: {
-            type: 'time',
-          },
-        },
-      ],
       dateRange: {
         startDate: null,
         endDate: null,
@@ -250,8 +163,7 @@ export default {
   },
   components: {
     TimeDisplay,
-    // WorkHourTable,
-    PaginatedTable,
+    WorkHourTable,
   },
 }
 </script>

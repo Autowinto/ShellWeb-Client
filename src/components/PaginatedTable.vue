@@ -13,7 +13,7 @@
         :current-page="currentPage"
       >
         <template v-for="field in fields" v-slot:[`cell(${field.key})`]="scope">
-          <div :key="field.key" v-if="field.typeOptions == undefined">
+          <div :key="field.key" v-if="field.type == undefined">
             <span v-if="!scope.item.editing">{{ scope.item[field.key] }}</span>
             <b-input
               v-else
@@ -21,97 +21,16 @@
               v-model="scope.item[field.key]"
             ></b-input>
           </div>
-          <div :key="field.key" v-else-if="field.typeOptions.type == 'link'">
+          <div :key="field.key" v-else-if="field.type == 'link'">
             <b-link
               :to="{
-                path: field.typeOptions.path,
+                path: field.path,
                 query: {
-                  id: scope.item[field.typeOptions.idName],
+                  id: scope.item[field.idName],
                 },
               }"
-              >{{ scope.item[field.typeOptions.linkText] }}</b-link
+              >{{ scope.item.name }}</b-link
             >
-          </div>
-          <div
-            :key="field.key"
-            v-else-if="field.typeOptions.type == 'datetime'"
-          >
-            <span>
-              {{ formatDate(scope.item[field.key]) }}
-            </span>
-          </div>
-          <div :key="field.key" v-else-if="field.typeOptions.type == 'time'">
-            <span v-if="!scope.item.editing">
-              {{ scope.item[field.key] }}
-            </span>
-            <b-time v-else v-model="scope.item[field.key]"></b-time>
-          </div>
-          <div :key="field.key" v-else-if="field.typeOptions.type == 'date'">
-            <div v-if="!scope.item.editing">
-              {{ formatDate(scope.item.startDate) }}
-            </div>
-            <div v-else-if="scope.item.editing">
-              <b-datepicker
-                size="sm"
-                calendar-width="350px"
-                v-model="scope.item.startDate"
-              ></b-datepicker>
-            </div>
-          </div>
-          <!--- Custom Stuff. Might rework. --->
-          <div :key="field.key" v-else-if="field.typeOptions.type == 'boolean'">
-            <div v-if="!scope.item.editing">
-              <b-badge variant="success" v-if="scope.item[field.key] == 'true'">
-                {{ scope.item[field.key] }}</b-badge
-              >
-              <b-badge variant="danger" v-else>
-                {{ scope.item[field.key] }}</b-badge
-              >
-            </div>
-            <b-checkbox v-else v-model="scope.item[field.key]"></b-checkbox>
-          </div>
-          <div :key="field.key" v-else-if="field.typeOptions.type == 'rate'">
-            <span v-if="!scope.item.editing"
-              >{{ scope.item[field.key] }}DKK
-            </span>
-            <b-input
-              v-else
-              v-model="scope.item[field.key]"
-              type="number"
-              step="0.01"
-            ></b-input>
-          </div>
-          <div :key="field.key" v-else-if="field.typeOptions.type == 'select'">
-            <span v-if="!scope.item.editing">{{ scope.item[field.key] }}</span>
-            <b-select
-              v-else
-              v-model="scope.item[field.key]"
-              :options="field.typeOptions.options"
-            ></b-select>
-          </div>
-          <div :key="field.key" v-else-if="field.typeOptions.type == 'status'">
-            <div v-if="!scope.item.editing">
-              <div v-if="scope.item[field.key] == '1'">
-                <b-badge size="sm" variant="success">Active</b-badge>
-              </div>
-              <div v-else>
-                <b-badge size="sm" variant="danger">Inactive</b-badge>
-              </div>
-            </div>
-            <div v-else>
-              <b-checkbox
-                v-model="scope.item[field.key]"
-                value="1"
-                unchecked-value="0"
-              >
-              </b-checkbox>
-            </div>
-          </div>
-          <div
-            :key="field.key"
-            v-else-if="field.typeOptions.type == 'constant'"
-          >
-            <span> {{ scope.item[field.key] }}</span>
           </div>
         </template>
 
@@ -127,18 +46,17 @@
               v-if="downloadable"
               variant="primary"
               class="fas fa-download mr-1"
-              @click="doDownload(scope)"
+              @click="doDownload(scope.item)"
             ></b-btn>
             <b-btn
               v-if="deletable"
               variant="danger"
               class="fas fa-trash-alt"
-              @click="doDelete(scope)"
+              @click="doDelete(scope.item)"
             ></b-btn>
           </div>
           <div v-else>
             <b-btn variant="success" @click="sendEdit(scope.item)">Save</b-btn>
-            <b-btn variant="danger" @click="cancelEdit(scope)">Cancel</b-btn>
           </div>
         </template>
 
@@ -162,7 +80,6 @@
 <script>
 import axios from 'axios'
 import download from 'downloadjs'
-import dayjs from 'dayjs'
 
 export default {
   props: {
@@ -170,24 +87,13 @@ export default {
       type: String,
       required: true,
     },
-    uploadUrl: {
-      type: String,
-    },
-    downloadUrl: {
-      type: String,
-    },
     fields: {
       type: Array,
       required: false,
     },
+    primaryKey: String,
     results: Number,
-    sortColumn: {
-      type: String,
-    },
-    sortDirection: {
-      type: String,
-      default: 'ASC',
-    },
+    sortable: Boolean,
     editable: Boolean,
     downloadable: Boolean,
     deletable: Boolean,
@@ -197,17 +103,18 @@ export default {
       items: this.items,
       currentPage: 1,
       totalItems: 0,
-      sortedColumn: this.sortColumn,
-      sortedDirection: this.sortDirection,
+
+      sortColumn: null,
+      sortDirection: 'ASC',
     }
   },
   created() {
-    if (this.editable || this.downloadable || this.deletable) {
+    if (
+      this.$props.editable ||
+      this.$props.downloadable ||
+      this.$props.deletable
+    ) {
       this.fields.push({ key: 'actions' })
-    }
-
-    if (!this.sortedColumn) {
-      this.sortedColumn = this.fields[0].key
     }
 
     this.loadData()
@@ -226,28 +133,26 @@ export default {
           params: {
             page: this.currentPage,
             results: this.results,
-            sortColumn: this.sortedColumn,
-            sortDirection: this.sortedDirection,
+            sortColumn: this.sortColumn,
+            sortDirection: this.sortDirection,
           },
         })
         let data = response.data
 
         this.items = data.collection
-        this.totalItems = data.pagination.totalItems
+        this.totalItems = data.totalCount
       } catch (error) {
         console.log(error)
       }
     },
-    formatDate(date) {
-      return dayjs(date).format('DD-MM-YYYY HH:mm:ss')
-    },
     sort(ctx) {
-      this.sortedColumn = ctx.sortBy
+      console.log(ctx)
+      this.sortColumn = ctx.sortBy
 
       if (ctx.sortDesc) {
-        this.sortedDirection = 'DESC'
+        this.sortDirection = 'DESC'
       } else {
-        this.sortedDirection = 'ASC'
+        this.sortDirection = 'ASC'
       }
 
       this.loadData()
@@ -255,33 +160,34 @@ export default {
     doEdit(item) {
       this.$set(item, 'editing', true)
     },
-    cancelEdit(data) {
-      this.loadData().then(() => {
-        this.$set(data.item, 'editing', false)
-      })
-    },
     async sendEdit(item) {
       try {
-        axios.put(`${this.uploadUrl}/${item.id}`, item).then(() => {
-          this.$set(item, 'editing', false)
-        })
+        axios
+          .put(`${this.itemUrl}/${item[this.$props.primaryKey]}`, item)
+          .then(() => {
+            this.$set(item, 'editing', false)
+          })
       } catch (error) {
         console.log(error)
       }
     },
-    async doDownload(scope) {
-      let file = await axios.get(`${this.downloadUrl}/${scope.item.id}`)
+    async doDownload(item) {
+      let file = await axios.get(
+        `${this.itemUrl}/${item[this.$props.primaryKey]}`
+      )
 
       download(
-        `data:${scope.item.fileType};base64,${file.data}`,
-        scope.item.fileName,
-        scope.item.fileType
+        `data:${item.fileType};base64,${file.data}`,
+        item.fileName,
+        item.fileType
       ) //FIXME: REWRITE THIS FOR MODULARITY
     },
-    doDelete(scope) {
-      axios.delete(`${this.uploadUrl}/${scope.item.id}`).then(() => {
-        this.loadData()
-      })
+    doDelete(item) {
+      axios
+        .delete(`${this.itemUrl}/${item[this.$props.primaryKey]}`)
+        .then(() => {
+          this.loadData()
+        })
     },
   },
   watch: {

@@ -6,6 +6,9 @@
       </h6>
     </div>
     <div class="card-body">
+      <!-- <b-card bg-variant="light" class="mb-3">
+        <b-select :options="options"></b-select> 
+      </b-card> -->
       <b-table
         :items="workHourRecords"
         :fields="fields"
@@ -176,6 +179,9 @@ export default {
         },
       },
     }
+  },
+  created() {
+    this.fetchWorkHourRecords()
   },
   methods: {
     async fetchWorkHourRecords() {
