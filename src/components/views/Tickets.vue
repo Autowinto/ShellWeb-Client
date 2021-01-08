@@ -3,11 +3,26 @@
     <h3 class="text-dark mb-4">Tickets</h3>
     <div class="card shadow">
       <div class="card-header py-3">
-        <p class="text-primary m-0 font-weight-bold">Tickets</p>
+        <p class="text-primary m-0 font-weight-bold">Tickets Info</p>
       </div>
       <div class="card-body">
-        <!-- <div class="row"> -->
-        <!-- <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-6 text-nowrap">
+            <div
+              id="dataTable_length"
+              class="dataTables_length"
+              aria-controls="dataTable"
+            >
+              <label>
+                Show&nbsp;
+                <b-form-select
+                  v-model="results"
+                  :options="paginationOptions"
+                ></b-form-select>
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6">
             <div class="text-md-right dataTables_filter" id="dataTable_filter">
               <label>
                 <input
@@ -18,15 +33,35 @@
                 />
               </label>
             </div>
-          </div> -->
-        <!-- </div> -->
-        <paginated-table
-          :url="url"
-          :results="10"
-          :fields="fields"
-          :sortColumn="'ticketId'"
-          :sortDirection="'DESC'"
-        ></paginated-table>
+          </div>
+        </div>
+        <div>
+          <b-table
+            show-empty
+            outlined
+            hover
+            :items="items"
+            :fields="fields"
+            :per-page="0"
+            :current-page="currentPage"
+          >
+            <template v-slot:cell(ticketId)="data">
+              <b-link
+                :to="{
+                  path: '/ticket',
+                  query: { ticketID: data.item.ticketId },
+                }"
+                >{{ data.item.ticketId }}</b-link
+              >
+            </template>
+          </b-table>
+          <b-pagination
+            size="md"
+            v-model="currentPage"
+            :total-rows="totalItems"
+            :per-page="results"
+          ></b-pagination>
+        </div>
         <div class="row">
           <button
             onclick="window.location.href = 'customerform.html';"
@@ -41,38 +76,71 @@
 </template>
 
 <script>
-import PaginatedTable from '../PaginatedTable'
+import axios from 'axios'
 
 export default {
-  components: {
-    PaginatedTable,
-  },
   data() {
     return {
-      url: `${process.env.VUE_APP_URL}tickets`,
       fields: [
         {
           key: 'customerName',
-          sortable: true,
         },
         {
           key: 'ticketId',
           label: 'Ticket ID',
-          sortable: true,
         },
         {
           key: 'subject',
           label: 'Name',
-          sortable: true,
-          typeOptions: {
-            type: 'link',
-            path: 'ticket',
-            idName: 'ticketId',
-            linkText: 'subject',
-          },
         },
       ],
+      items: [],
+      currentPage: 1,
+      results: 10,
+      totalItems: 0,
+      paginationOptions: [
+        { value: 10, text: '10' },
+        { value: 25, text: '25' },
+        { value: 50, text: '50' },
+      ],
     }
+  },
+  created() {},
+  mounted() {
+    this.fetchData()
+  },
+  methods: {
+    fetchData() {
+      axios
+        .get(`${process.env.VUE_APP_URL}tickets`, {
+          params: {
+            page: this.currentPage,
+            results: this.results,
+          },
+        })
+        .then((response) => {
+          const data = response.data
+          console.log(data)
+          this.items = data.collection
+
+          this.totalItems = data.pagination.totalItems
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    },
+  },
+  watch: {
+    currentPage: {
+      handler: function () {
+        this.fetchData() //Do error handling here in the future
+      },
+    },
+    results: {
+      handler: function () {
+        this.fetchData()
+      },
+    },
   },
 }
 </script>

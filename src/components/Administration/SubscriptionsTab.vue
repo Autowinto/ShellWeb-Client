@@ -14,28 +14,39 @@
       >
     </b-col>
     <b-collapse id="groupsAccordion" accordion="accordion">
-      <paginated-table
-        :url="subGroupUrl"
-        :uploadUrl="subGroupUrl"
-        :fields="groupFields"
-        :results="10"
-        :sortColumn="'name'"
-        :sortDirection="'DESC'"
-        :editable="true"
-        :deletable="true"
-      ></paginated-table>
+      <b-table :items="groups" :fields="groupFields" outlined hover show-empty>
+        <template #cell(name)="data">
+          <div v-if="data.item.editing">
+            <b-input v-model="data.item.name" type="text"></b-input>
+          </div>
+          <div v-else>
+            {{ data.item.name }}
+          </div>
+        </template>
+        <template #cell(id)="data">
+          <div v-if="!data.item.editing">
+            <b-btn
+              variant="primary"
+              class="fas fa-edit mr-2"
+              @click="doEdit(data)"
+            ></b-btn>
+            <b-btn
+              variant="danger"
+              class="fas fa-trash"
+              @click="deleteGroup(data.item)"
+            ></b-btn>
+          </div>
+          <div v-else-if="data.item.editing">
+            <b-btn variant="success" class="mr-1" @click="sendEdit(data)"
+              >Save</b-btn
+            >
+            <b-btn variant="danger" @click="cancelEdit(data)">Cancel</b-btn>
+          </div>
+        </template>
+      </b-table>
+      <!-- <paginated-table></paginated-table> -->
     </b-collapse>
-    <paginated-table
-      :url="subUrl"
-      :uploadUrl="subUrl"
-      :fields="subscriptionFields"
-      :sortColumn="'product'"
-      :sortDirection="'DESC'"
-      :editable="true"
-      :deletable="true"
-      :results="10"
-    ></paginated-table>
-    <!-- <b-table
+    <b-table
       :items="subscriptions"
       :fields="subscriptionFields"
       show-empty
@@ -176,7 +187,7 @@
       v-model="currentPage"
       :total-rows="totalItems"
       :per-page="10"
-    ></b-pagination> -->
+    ></b-pagination>
     <b-modal
       id="createSubscriptionModal"
       centered
@@ -346,17 +357,15 @@
 
 <script>
 import axios from 'axios'
-import PaginatedTable from '../PaginatedTable'
+// import PaginatedTable from '../PaginatedTable'
 import dayjs from 'dayjs'
 
 export default {
   components: {
-    PaginatedTable,
+    // PaginatedTable,
   },
   data() {
     return {
-      subUrl: `${process.env.VUE_APP_URL}subscriptions`,
-      subGroupUrl: `${process.env.VUE_APP_URL}subscriptionGroups`,
       subscriptions: [],
       groups: [],
       subscriptionCreationForm: {},
@@ -364,86 +373,52 @@ export default {
       groupFields: [
         {
           key: 'name',
-          sortable: true,
+        },
+        {
+          key: 'id',
+          label: 'Actions',
+          class: 'w-25',
         },
       ],
       subscriptionFields: [
         {
           key: 'product',
-          sortable: true,
-          typeOptions: {
-            type: 'select',
-            options: this.productOptions,
-          },
         },
         {
           key: 'name',
-          sortable: true,
         },
         {
           key: 'billingEngineId',
           label: 'Billing',
-          sortable: true,
-          typeOptions: {
-            type: 'select',
-            options: this.billingEngineOptions,
-          },
         },
         {
           key: 'price',
-          sortable: true,
-          typeOptions: {
-            type: 'rate',
-          },
         },
         {
-          key: 'groupId',
+          key: 'groupName',
           label: 'Group',
-          sortable: true,
-          typeOptions: {
-            type: 'select',
-            options: this.groupOptions,
-          },
         },
         {
           key: 'startDate',
-          sortable: true,
-          typeOptions: {
-            type: 'date',
-          },
         },
         {
           key: 'endDate',
-          sortable: true,
-          typeOptions: {
-            type: 'date',
-          },
         },
         {
           key: 'ticketFrequencyId',
           label: 'Ticket Frequency',
-          sortable: true,
-          typeOptions: {
-            type: 'select',
-            options: this.frequencyOptions,
-          },
         },
         {
           key: 'paymentFrequencyId',
           label: 'Payment Frequency',
-          sortable: true,
-          typeOptions: {
-            type: 'select',
-            options: this.frequencyOptions,
-          },
         },
         {
-          key: 'active',
+          key: 'deactivated',
           label: 'Status',
-          sortable: true,
-          typeOptions: {
-            type: 'status', //This is very custom and propably a good idea to rewrite sometime
-          },
+        },
+        {
+          key: 'id',
+          label: 'Actions',
         },
       ],
       productOptions: [],
@@ -456,6 +431,7 @@ export default {
   },
   created() {
     this.loadGroups()
+    this.loadSubscriptions()
     this.populateOptions()
   },
   methods: {
@@ -483,15 +459,12 @@ export default {
         })
       }
 
-      this.subscriptionFields[0].typeOptions.options = this.productOptions //This is a bit hacky. Might be a better solution
-
       for (let engine of engines.data) {
         this.billingEngineOptions.push({
           value: engine.id,
           text: engine.name,
         })
       }
-      this.subscriptionFields[2].typeOptions.options = this.billingEngineOptions //This is a bit hacky. Might be a better solution
 
       for (let frequency of frequencies.data) {
         this.frequencyOptions.push({
@@ -499,8 +472,6 @@ export default {
           text: frequency.name,
         })
       }
-      this.subscriptionFields[7].typeOptions.options = this.frequencyOptions //This is a bit hacky. Might be a better solution
-      this.subscriptionFields[8].typeOptions.options = this.frequencyOptions //This is a bit hacky. Might be a better solution
 
       this.groupOptions = [] //This is a bad fix
       for (let group of this.groups) {
@@ -509,23 +480,11 @@ export default {
           text: group.name,
         })
       }
-
-      this.subscriptionFields[4].typeOptions.options = this.groupOptions //This is a bit hacky. Might be a better solution
     },
     async loadGroups() {
-      let response = await axios.get(
-        `${process.env.VUE_APP_URL}subscriptionGroups`,
-        {
-          params: {
-            page: 1,
-            results: 1000,
-            sortColumn: 'name',
-            sortDirection: 'DESC',
-          },
-        }
-      )
+      let data = await axios.get(`${process.env.VUE_APP_URL}subscriptionGroups`)
 
-      this.groups = response.data.collection
+      this.groups = data.data
     },
     deleteGroup(item) {
       axios

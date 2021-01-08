@@ -324,7 +324,7 @@ export default {
     return {
       items: {},
       comments: [],
-      ticketID: this.$route.query.id,
+      ticketID: this.$route.query.ticketID,
     }
   },
   created() {

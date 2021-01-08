@@ -78,13 +78,35 @@
                 </div>
                 <div class="card-body shadow">
                   <div>
-                    <paginated-table
-                      :url="url"
+                    <b-table
+                      show-empty
+                      outlined
+                      hover
+                      :items="tickets"
                       :fields="fields"
-                      :results="10"
-                      :sortColumn="'ticketId'"
-                      :sortDirection="'DESC'"
-                    ></paginated-table>
+                      :per-page="0"
+                    >
+                      <template v-slot:cell(subject)="data">
+                        <b-link
+                          :to="{
+                            path: '/ticket',
+                            query: { ticketID: data.item.ticket_id },
+                          }"
+                          >{{ data.item.subject }}</b-link
+                        >
+                      </template>
+                      <template v-slot:cell(created_date)="data">
+                        <p class="m-0 p-0">
+                          {{ data.item.created_date | dayjsDateTime }}
+                        </p>
+                      </template>
+                      <!--Template for formatting the updated date-->
+                      <template v-slot:cell(modified_date)="data">
+                        <p class="m-0 p-0">
+                          {{ data.item.modified_date | dayjsDateTime }}
+                        </p>
+                      </template>
+                    </b-table>
                   </div>
                 </div>
               </div>
@@ -198,12 +220,10 @@
 <script>
 import axios from 'axios'
 import dayjs from 'dayjs'
-import PaginatedTable from '../PaginatedTable'
 
 export default {
   data() {
     return {
-      url: `${process.env.VUE_APP_URL}contact/tickets/${this.$route.query.contactid}/1/10`,
       contactInfo: {},
       tickets: [],
       form: {
@@ -219,36 +239,24 @@ export default {
         {
           key: 'ticketId',
           label: 'Ticket ID',
-          sortable: true,
         },
         {
           key: 'subject',
           label: 'Subject',
-          sortable: true,
-          typeOptions: {
-            type: 'link',
-            path: '/ticket',
-            idName: 'ticketId',
-            linkText: 'subject',
-          },
         },
         {
           key: 'createdDate',
           label: 'Date of Creation',
-          sortable: true,
         },
         {
           key: 'modifiedDate',
           label: 'Last Updated',
-          sortable: true,
         },
         {
           key: 'status',
-          sortable: true,
         },
         {
           key: 'replyStatus',
-          sortable: true,
         },
       ],
     }
@@ -306,9 +314,6 @@ export default {
     dayjsDateTime: function (date) {
       return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
     },
-  },
-  components: {
-    PaginatedTable,
   },
 }
 </script>

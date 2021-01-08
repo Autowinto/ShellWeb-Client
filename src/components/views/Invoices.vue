@@ -9,9 +9,7 @@
         <div class="card-body">
           <div class="row mb-2">
             <div class="col-lg">
-              <b-button variant="primary" v-b-modal.cSelectModal
-                >Select Customer</b-button
-              >
+              <b-button variant="primary" v-b-modal.cSelectModal>Select Customer</b-button>
             </div>
             <div class="text-right col-3">
               <span class="mr-1">Balance including current amounts:</span>
@@ -102,32 +100,15 @@
               <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">
-                      Temporary Modal
-                    </h5>
-                    <button
-                      type="button"
-                      class="close"
-                      data-dismiss="modal"
-                      aria-label="Close"
-                    >
+                    <h5 class="modal-title" id="exampleModalLongTitle">Temporary Modal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <div class="modal-body">
-                    Much easier to design with access to the API
-                  </div>
+                  <div class="modal-body">Much easier to design with access to the API</div>
                   <div class="modal-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      data-dismiss="modal"
-                    >
-                      Close
-                    </button>
-                    <button type="button" class="btn btn-primary">
-                      Save changes
-                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
                   </div>
                 </div>
               </div>
@@ -141,21 +122,11 @@
               aria-labelledby="exampleModalCenterTitle"
               aria-hidden="true"
             >
-              <div
-                class="modal-dialog modal-dialog-centered modal-lg"
-                role="document"
-              >
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">
-                      Invoice
-                    </h5>
-                    <button
-                      type="button"
-                      class="close"
-                      data-dismiss="modal"
-                      aria-label="Close"
-                    >
+                    <h5 class="modal-title" id="exampleModalLongTitle">Invoice</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
@@ -163,13 +134,7 @@
                     <img src="assets/img/invoice.png" />
                   </div>
                   <div class="modal-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      data-dismiss="modal"
-                    >
-                      Close
-                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   </div>
                 </div>
               </div>
@@ -180,7 +145,7 @@
               <div class="row">
                 <img
                   class="img-thumbnail btn p-0"
-                  style="max-width: 15%"
+                  style="max-width: 15%;"
                   data-toggle="modal"
                   data-target="#invoicemodal"
                   src="assets/img/invoice.png"
@@ -188,9 +153,7 @@
 
                 <div class="col">
                   <div class="row m-0 p-0">
-                    <span class="small font-weight-bold mb-1 mr-2"
-                      >Subtotal:</span
-                    >
+                    <span class="small font-weight-bold mb-1 mr-2">Subtotal:</span>
                     <span class="small font-weight-bold">7.339,50</span>
                   </div>
                   <div class="row m-0 mb-3 p-0">
@@ -198,9 +161,7 @@
                     <span class="small font-weight-bold">1.834,88</span>
                   </div>
                   <div class="row m-0 mb-3 p-0">
-                    <span class="small font-weight-bold mb-1 mr-2"
-                      >Profit:</span
-                    >
+                    <span class="small font-weight-bold mb-1 mr-2">Profit:</span>
                     <span class="small font-weight-bold">7.139,50 (97%)</span>
                   </div>
                   <div class="col m-0 p-0">
@@ -226,12 +187,8 @@
                 data-toggle="collapse"
                 type="button"
                 data-target="#invoiceform"
-              >
-                New Invoice Line
-              </button>
-              <button class="btn btn-primary mr-2">
-                Post and Send Invoice
-              </button>
+              >New Invoice Line</button>
+              <button class="btn btn-primary mr-2">Post and Send Invoice</button>
             </div>
             <div class="text-left col">
               <select class="form-control mr-2">
@@ -242,7 +199,7 @@
               </select>
             </div>
             <div>
-              <div class="input-group text-right" style="height: 38px">
+              <div class="input-group text-right" style="height: 38px;">
                 <button class="btn btn-primary fas fa-table mr-2"></button>
                 <button class="btn btn-primary fas fa-print mr-2"></button>
               </div>
@@ -268,34 +225,19 @@
                   <label for="group">
                     <strong>Group</strong>
                   </label>
-                  <input
-                    class="form-control"
-                    type="number"
-                    name="group"
-                    step="1"
-                  />
+                  <input class="form-control" type="number" name="group" step="1" />
                 </div>
                 <div class="col">
                   <label for="salesprice">
                     <strong>Salesprice</strong>
                   </label>
-                  <input
-                    class="form-control"
-                    type="number"
-                    step="0.01"
-                    name="salesprice"
-                  />
+                  <input class="form-control" type="number" step="0.01" name="salesprice" />
                 </div>
                 <div class="col">
                   <label for="cost">
                     <strong>Cost</strong>
                   </label>
-                  <input
-                    class="form-control"
-                    type="number"
-                    step="0.01"
-                    name="cost"
-                  />
+                  <input class="form-control" type="number" step="0.01" name="cost" />
                 </div>
               </div>
               <div class="form-row p-1 py-2">
@@ -304,16 +246,14 @@
                   class="btn btn-primary"
                   data-toggle="collapse"
                   data-target="productform"
-                >
-                  Add
-                </button>
+                >Add</button>
               </div>
             </form>
           </div>
           <div
             class="table-responsive table mt-2 table-sm"
             id="dataTable"
-            style="overflow-x: hidden"
+            style="overflow-x: hidden;"
             role="grid"
             aria-describedby="dataTable_info"
           >
@@ -342,23 +282,14 @@
                   <td>624,50</td>
                   <td class="text-right">
                     <button
-                      style="width: 45px"
+                      style="width: 45px;"
                       class="btn btn-primary far fa-edit"
                       data-toggle="collapse"
                       data-target="#producteditform1"
                     ></button>
-                    <button
-                      style="width: 45px"
-                      class="btn btn-primary far fa-file-alt"
-                    ></button>
-                    <button
-                      style="width: 45px"
-                      class="btn btn-primary far fa-clone mr-3"
-                    ></button>
-                    <button
-                      style="width: 45px"
-                      class="btn btn-danger fa fa-trash"
-                    ></button>
+                    <button style="width: 45px;" class="btn btn-primary far fa-file-alt"></button>
+                    <button style="width: 45px;" class="btn btn-primary far fa-clone mr-3"></button>
+                    <button style="width: 45px;" class="btn btn-danger fa fa-trash"></button>
                   </td>
                 </tr>
                 <tr>
@@ -371,42 +302,25 @@
                             <label for="number">
                               <strong>Line Number</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              name="number"
-                            />
+                            <input class="form-control" type="number" name="number" />
                           </div>
                           <div class="col">
                             <label for="name">
                               <strong>Product Number</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              name="name"
-                            />
+                            <input class="form-control" type="number" name="name" />
                           </div>
                           <div class="col">
                             <label for="group">
                               <strong>Product Name</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="text"
-                              name="group"
-                            />
+                            <input class="form-control" type="text" name="group" />
                           </div>
                           <div class="col">
                             <label for="amount">
                               <strong>Amount</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.01"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.01" name="salesprice" />
                           </div>
                           <div class="col">
                             <label for="cost">
@@ -421,34 +335,19 @@
                             <label for="amount">
                               <strong>Unit Price</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.01"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.01" name="salesprice" />
                           </div>
                           <div class="col">
                             <label for="amount">
                               <strong>Discount (%)</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.1"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.1" name="salesprice" />
                           </div>
                           <div class="col">
                             <label for="amount">
                               <strong>Total</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.01"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.01" name="salesprice" />
                           </div>
                         </div>
                         <div class="form-row p-1 py-2">
@@ -457,9 +356,7 @@
                             class="btn btn-primary"
                             data-toggle="collapse"
                             data-target="productform"
-                          >
-                            Save
-                          </button>
+                          >Save</button>
                         </div>
                       </form>
                     </div>
@@ -476,23 +373,14 @@
                   <td>624,50</td>
                   <td class="text-right">
                     <button
-                      style="width: 45px"
+                      style="width: 45px;"
                       class="btn btn-primary far fa-edit"
                       data-toggle="collapse"
                       data-target="#producteditform1"
                     ></button>
-                    <button
-                      style="width: 45px"
-                      class="btn btn-primary far fa-file-alt"
-                    ></button>
-                    <button
-                      style="width: 45px"
-                      class="btn btn-primary far fa-clone mr-3"
-                    ></button>
-                    <button
-                      style="width: 45px"
-                      class="btn btn-danger fa fa-trash"
-                    ></button>
+                    <button style="width: 45px;" class="btn btn-primary far fa-file-alt"></button>
+                    <button style="width: 45px;" class="btn btn-primary far fa-clone mr-3"></button>
+                    <button style="width: 45px;" class="btn btn-danger fa fa-trash"></button>
                   </td>
                 </tr>
                 <tr>
@@ -505,42 +393,25 @@
                             <label for="number">
                               <strong>Line Number</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              name="number"
-                            />
+                            <input class="form-control" type="number" name="number" />
                           </div>
                           <div class="col">
                             <label for="name">
                               <strong>Product Number</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              name="name"
-                            />
+                            <input class="form-control" type="number" name="name" />
                           </div>
                           <div class="col">
                             <label for="group">
                               <strong>Product Name</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="text"
-                              name="group"
-                            />
+                            <input class="form-control" type="text" name="group" />
                           </div>
                           <div class="col">
                             <label for="amount">
                               <strong>Amount</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.01"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.01" name="salesprice" />
                           </div>
                           <div class="col">
                             <label for="cost">
@@ -555,34 +426,19 @@
                             <label for="amount">
                               <strong>Unit Price</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.01"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.01" name="salesprice" />
                           </div>
                           <div class="col">
                             <label for="amount">
                               <strong>Discount (%)</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.1"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.1" name="salesprice" />
                           </div>
                           <div class="col">
                             <label for="amount">
                               <strong>Total</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.01"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.01" name="salesprice" />
                           </div>
                         </div>
                         <div class="form-row p-1 py-2">
@@ -591,9 +447,7 @@
                             class="btn btn-primary"
                             data-toggle="collapse"
                             data-target="productform"
-                          >
-                            Save
-                          </button>
+                          >Save</button>
                         </div>
                       </form>
                     </div>
@@ -610,23 +464,14 @@
                   <td>624,50</td>
                   <td class="text-right">
                     <button
-                      style="width: 45px"
+                      style="width: 45px;"
                       class="btn btn-primary far fa-edit"
                       data-toggle="collapse"
                       data-target="#producteditform1"
                     ></button>
-                    <button
-                      style="width: 45px"
-                      class="btn btn-primary far fa-file-alt"
-                    ></button>
-                    <button
-                      style="width: 45px"
-                      class="btn btn-primary far fa-clone mr-3"
-                    ></button>
-                    <button
-                      style="width: 45px"
-                      class="btn btn-danger fa fa-trash"
-                    ></button>
+                    <button style="width: 45px;" class="btn btn-primary far fa-file-alt"></button>
+                    <button style="width: 45px;" class="btn btn-primary far fa-clone mr-3"></button>
+                    <button style="width: 45px;" class="btn btn-danger fa fa-trash"></button>
                   </td>
                 </tr>
                 <tr>
@@ -639,42 +484,25 @@
                             <label for="number">
                               <strong>Line Number</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              name="number"
-                            />
+                            <input class="form-control" type="number" name="number" />
                           </div>
                           <div class="col">
                             <label for="name">
                               <strong>Product Number</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              name="name"
-                            />
+                            <input class="form-control" type="number" name="name" />
                           </div>
                           <div class="col">
                             <label for="group">
                               <strong>Product Name</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="text"
-                              name="group"
-                            />
+                            <input class="form-control" type="text" name="group" />
                           </div>
                           <div class="col">
                             <label for="amount">
                               <strong>Amount</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.01"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.01" name="salesprice" />
                           </div>
                           <div class="col">
                             <label for="cost">
@@ -689,34 +517,19 @@
                             <label for="amount">
                               <strong>Unit Price</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.01"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.01" name="salesprice" />
                           </div>
                           <div class="col">
                             <label for="amount">
                               <strong>Discount (%)</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.1"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.1" name="salesprice" />
                           </div>
                           <div class="col">
                             <label for="amount">
                               <strong>Total</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.01"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.01" name="salesprice" />
                           </div>
                         </div>
                         <div class="form-row p-1 py-2">
@@ -725,9 +538,7 @@
                             class="btn btn-primary"
                             data-toggle="collapse"
                             data-target="productform"
-                          >
-                            Save
-                          </button>
+                          >Save</button>
                         </div>
                       </form>
                     </div>
@@ -744,23 +555,14 @@
                   <td>624,50</td>
                   <td class="text-right">
                     <button
-                      style="width: 45px"
+                      style="width: 45px;"
                       class="btn btn-primary far fa-edit"
                       data-toggle="collapse"
                       data-target="#producteditform1"
                     ></button>
-                    <button
-                      style="width: 45px"
-                      class="btn btn-primary far fa-file-alt"
-                    ></button>
-                    <button
-                      style="width: 45px"
-                      class="btn btn-primary far fa-clone mr-3"
-                    ></button>
-                    <button
-                      style="width: 45px"
-                      class="btn btn-danger fa fa-trash"
-                    ></button>
+                    <button style="width: 45px;" class="btn btn-primary far fa-file-alt"></button>
+                    <button style="width: 45px;" class="btn btn-primary far fa-clone mr-3"></button>
+                    <button style="width: 45px;" class="btn btn-danger fa fa-trash"></button>
                   </td>
                 </tr>
                 <tr>
@@ -773,42 +575,25 @@
                             <label for="number">
                               <strong>Line Number</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              name="number"
-                            />
+                            <input class="form-control" type="number" name="number" />
                           </div>
                           <div class="col">
                             <label for="name">
                               <strong>Product Number</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              name="name"
-                            />
+                            <input class="form-control" type="number" name="name" />
                           </div>
                           <div class="col">
                             <label for="group">
                               <strong>Product Name</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="text"
-                              name="group"
-                            />
+                            <input class="form-control" type="text" name="group" />
                           </div>
                           <div class="col">
                             <label for="amount">
                               <strong>Amount</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.01"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.01" name="salesprice" />
                           </div>
                           <div class="col">
                             <label for="cost">
@@ -823,34 +608,19 @@
                             <label for="amount">
                               <strong>Unit Price</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.01"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.01" name="salesprice" />
                           </div>
                           <div class="col">
                             <label for="amount">
                               <strong>Discount (%)</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.1"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.1" name="salesprice" />
                           </div>
                           <div class="col">
                             <label for="amount">
                               <strong>Total</strong>
                             </label>
-                            <input
-                              class="form-control"
-                              type="number"
-                              step="0.01"
-                              name="salesprice"
-                            />
+                            <input class="form-control" type="number" step="0.01" name="salesprice" />
                           </div>
                         </div>
                         <div class="form-row p-1 py-2">
@@ -859,9 +629,7 @@
                             class="btn btn-primary"
                             data-toggle="collapse"
                             data-target="productform"
-                          >
-                            Save
-                          </button>
+                          >Save</button>
                         </div>
                       </form>
                     </div>
@@ -874,20 +642,10 @@
       </div>
     </div>
     <!--Modals below here-->
-    <b-modal
-      scrollable
-      hide-footer
-      centered
-      id="cSelectModal"
-      title="Select Customer"
-    >
+    <b-modal scrollable hide-footer centered id="cSelectModal" title="Select Customer">
       <b-list-group>
-        <b-list-group-item
-          button
-          v-for="(customer, idx) in customers"
-          :key="idx"
-        >
-          <h6>{{ customer.CustomerName }}</h6>
+        <b-list-group-item button v-for="(customer, idx) in customers" :key="idx">
+          <h6>{{customer.CustomerName}}</h6>
         </b-list-group-item>
       </b-list-group>
     </b-modal>
@@ -905,19 +663,19 @@ export default {
     }
   },
   created() {
-    // this.fetchData('customers')
-    // .then(response => {
-    //   console.log(response.data.customers)
-    //   this.customers = response.data.customers;
-    // })
+    this.fetchData('customers')
+    .then(response => {
+      console.log(response.data.customers)
+      this.customers = response.data.customers;
+    })
   },
   methods: {
     fetchData(endpoint) {
-      return axios.get(process.env.VUE_APP_URL + endpoint)
+      return axios.get(process.env.VUE_APP_URL + endpoint);
     },
     loadInvoices(customerid) {
       this.fetchData(`invoices/booked/${customerid}/${1}/${2}`)
-    },
-  },
-}
+    }
+  }
+};
 </script>
