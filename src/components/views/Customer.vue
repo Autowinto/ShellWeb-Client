@@ -621,67 +621,6 @@
                         :downloadUrl="`${apiUrl}invoices/booked`"
                         :downloadType="'economic'"
                       ></paginated-table>
-                      <b-table
-                        show-empty
-                        outlined
-                        hover
-                        :items="items.invoices"
-                        :fields="fields.invoices"
-                        :per-page="0"
-                        :current-page="pagination.invoices.currentPage"
-                      >
-                        <template v-slot:cell(netAmount)="data"
-                          >{{ data.item.netAmount }}
-                          {{ data.item.currency }}</template
-                        >
-                        <template v-slot:cell(remainder)="data">
-                          <h5 class="m-0 p-0">
-                            <b-badge
-                              v-if="
-                                getInvoiceStatus(
-                                  data.item.dueDate,
-                                  data.item.remainder
-                                ) == 'overdue'
-                              "
-                              variant="danger"
-                              >Overdue</b-badge
-                            >
-                            <b-badge
-                              v-else-if="
-                                getInvoiceStatus(
-                                  data.item.dueDate,
-                                  data.item.remainder
-                                ) == 'unpaid'
-                              "
-                              variant="warning"
-                              >Unpaid</b-badge
-                            >
-                            <b-badge
-                              v-else-if="
-                                getInvoiceStatus(
-                                  data.item.dueDate,
-                                  data.item.remainder
-                                ) == 'paid'
-                              "
-                              variant="success"
-                              >Paid</b-badge
-                            >
-                          </h5>
-                        </template>
-                        <template v-slot:cell(pdf)="data">
-                          <b-button
-                            variant="primary"
-                            class="fas fa-download"
-                            @click="downloadInvoice(data.item.pdf.download)"
-                          ></b-button>
-                        </template>
-                      </b-table>
-                      <b-pagination
-                        size="md"
-                        v-model="pagination.invoices.currentPage"
-                        :total-rows="pagination.invoices.totalItems"
-                        :per-page="pagination.invoices.perPage"
-                      ></b-pagination>
                     </div>
                   </b-card-text>
                 </b-tab>
