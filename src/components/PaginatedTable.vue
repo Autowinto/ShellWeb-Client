@@ -14,7 +14,7 @@
         responsive="sm"
       >
         <template v-for="field in fields" v-slot:[`cell(${field.key})`]="scope">
-          <div :key="field.key" v-if="field.type == undefined">
+          <div :key="field.key" v-if="field.typeOptions == undefined">
             <span v-if="!scope.item.editing">{{ scope.item[field.key] }}</span>
             <b-input
               v-else
@@ -22,15 +22,15 @@
               v-model="scope.item[field.key]"
             ></b-input>
           </div>
-          <div :key="field.key" v-else-if="field.type == 'link'">
+          <div :key="field.key" v-else-if="field.typeOptions.type == 'link'">
             <b-link
               :to="{
-                path: field.path,
+                path: field.typeOptions.path,
                 query: {
-                  id: scope.item[field.idName],
+                  id: scope.item[field.typeOptions.idName],
                 },
               }"
-              >{{ scope.item.name }}</b-link
+              >{{ scope.item[field.typeOptions.linkText] }}</b-link
             >
           </div>
           <div
@@ -152,17 +152,18 @@
               v-if="downloadable"
               variant="primary"
               class="fas fa-download mr-1"
-              @click="doDownload(scope.item)"
+              @click="doDownload(scope)"
             ></b-btn>
             <b-btn
               v-if="deletable"
               variant="danger"
               class="fas fa-trash-alt"
-              @click="doDelete(scope.item)"
+              @click="doDelete(scope)"
             ></b-btn>
           </div>
           <div v-else>
             <b-btn variant="success" @click="sendEdit(scope.item)">Save</b-btn>
+            <b-btn variant="danger" @click="cancelEdit(scope)">Cancel</b-btn>
           </div>
         </template>
 
@@ -206,9 +207,14 @@ export default {
       type: Array,
       required: false,
     },
-    primaryKey: String,
     results: Number,
-    sortable: Boolean,
+    sortColumn: {
+      type: String,
+    },
+    sortDirection: {
+      type: String,
+      default: 'ASC',
+    },
     editable: Boolean,
     downloadable: Boolean,
     deletable: Boolean,
@@ -218,18 +224,17 @@ export default {
       items: this.items,
       currentPage: 1,
       totalItems: 0,
-
-      sortColumn: null,
-      sortDirection: 'ASC',
+      sortedColumn: this.sortColumn,
+      sortedDirection: this.sortDirection,
     }
   },
   created() {
-    if (
-      this.$props.editable ||
-      this.$props.downloadable ||
-      this.$props.deletable
-    ) {
+    if (this.editable || this.downloadable || this.deletable) {
       this.fields.push({ key: 'actions' })
+    }
+
+    if (!this.sortedColumn) {
+      this.sortedColumn = this.fields[0].key
     }
 
     this.loadData()
@@ -248,14 +253,14 @@ export default {
           params: {
             page: this.currentPage,
             results: this.results,
-            sortColumn: this.sortColumn,
-            sortDirection: this.sortDirection,
+            sortColumn: this.sortedColumn,
+            sortDirection: this.sortedDirection,
           },
         })
         let data = response.data
 
         this.items = data.collection
-        this.totalItems = data.totalCount
+        this.totalItems = data.pagination.totalItems
       } catch (error) {
         console.log(error)
       }
@@ -267,13 +272,12 @@ export default {
       return dayjs(date).format('DD-MM-YYYY')
     },
     sort(ctx) {
-      console.log(ctx)
-      this.sortColumn = ctx.sortBy
+      this.sortedColumn = ctx.sortBy
 
       if (ctx.sortDesc) {
-        this.sortDirection = 'DESC'
+        this.sortedDirection = 'DESC'
       } else {
-        this.sortDirection = 'ASC'
+        this.sortedDirection = 'ASC'
       }
 
       this.loadData()
@@ -281,13 +285,16 @@ export default {
     doEdit(item) {
       this.$set(item, 'editing', true)
     },
+    cancelEdit(data) {
+      this.loadData().then(() => {
+        this.$set(data.item, 'editing', false)
+      })
+    },
     async sendEdit(item) {
       try {
-        axios
-          .put(`${this.itemUrl}/${item[this.$props.primaryKey]}`, item)
-          .then(() => {
-            this.$set(item, 'editing', false)
-          })
+        axios.put(`${this.uploadUrl}/${item.id}`, item).then(() => {
+          this.$set(item, 'editing', false)
+        })
       } catch (error) {
         console.log(error)
       }
@@ -305,9 +312,9 @@ export default {
       let file = await axios.get(url)
 
       download(
-        `data:${item.fileType};base64,${file.data}`,
-        item.fileName,
-        item.fileType
+        `data:${scope.item.fileType};base64,${file.data}`,
+        scope.item.fileName,
+        scope.item.fileType
       ) //FIXME: REWRITE THIS FOR MODULARITY
     },
     downloadInvoice(link) {

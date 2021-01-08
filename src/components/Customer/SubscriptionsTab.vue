@@ -223,6 +223,7 @@
 <script>
 import axios from 'axios'
 import dayjs from 'dayjs'
+import PaginatedTable from '../PaginatedTable'
 
 export default {
   data() {
@@ -273,10 +274,6 @@ export default {
         {
           key: 'billingEngineName',
           label: 'Billing Engine',
-        },
-        {
-          key: 'id',
-          label: 'Actions',
         },
       ],
     }
