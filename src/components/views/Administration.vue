@@ -75,34 +75,13 @@
               </b-tab>
               <b-tab title="Time Entries">
                 <div>
-                  <b-table
-                    show-empty
-                    outlined
-                    hover
-                    :items="items.tickets"
+                  <paginated-table
+                    :url="ticketsUrl"
                     :fields="fields.tickets"
-                    :per-page="0"
-                    :current-page="pagination.tickets.currentPage"
-                  >
-                    <template v-slot:cell(TicketTitle)="data">
-                      <b-link
-                        :to="{
-                          path: '/ticket',
-                          query: { ticketID: data.item.TicketID },
-                        }"
-                        >{{ data.item.TicketTitle }}</b-link
-                      >
-                    </template>
-                    <template v-slot:cell(totalTime)="data">
-                      {{ data.item | timeEntryTotal }}
-                    </template>
-                  </b-table>
-                  <b-pagination
-                    size="md"
-                    v-model="pagination.tickets.currentPage"
-                    :total-rows="pagination.tickets.totalItems"
-                    :per-page="pagination.tickets.perPage"
-                  ></b-pagination>
+                    :results="10"
+                    :sortColumn="'ticketId'"
+                    :sortDirection="'DESC'"
+                  ></paginated-table>
                 </div>
               </b-tab>
             </b-tabs>
@@ -121,14 +100,16 @@ import duration from 'dayjs/plugin/duration'
 //It's necessary to use the utc plugin to account for yearly changes from CET to CEST.
 import utc from 'dayjs/plugin/utc'
 import SubscriptionsTab from '../Administration/SubscriptionsTab.vue'
+import PaginatedTable from '../PaginatedTable'
 
 dayjs.extend(duration)
 dayjs.extend(utc)
 
 export default {
-  components: { SubscriptionsTab },
+  components: { SubscriptionsTab, PaginatedTable },
   data() {
     return {
+      ticketsUrl: `${process.env.VUE_APP_URL}tickets`,
       items: {
         products: [],
         productGroups: [],
@@ -181,14 +162,16 @@ export default {
         ],
         tickets: [
           {
-            key: 'TicketID',
+            key: 'ticketID',
             label: 'Ticket ID',
           },
           {
             key: 'TicketTitle',
             label: 'Ticket Name',
           },
-          'totalTime',
+          {
+            key: 'totalTime',
+          },
         ],
       },
       pagination: {
@@ -213,7 +196,7 @@ export default {
   created() {
     this.loadProducts()
     this.loadProductGroups()
-    this.loadTickets()
+    // this.loadTickets()
   },
   methods: {
     fetchData(endpoint) {

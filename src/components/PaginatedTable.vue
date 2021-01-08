@@ -5,23 +5,114 @@
         show-empty
         outlined
         hover
-        ref="attachmentsTable"
-        :items="attachments"
-        :fields="columnFields"
+        ref="table"
+        no-local-sorting
+        @sort-changed="sort"
+        :items="items"
+        :fields="fields"
         :current-page="currentPage"
       >
-        <template
-          v-for="field in editableFields"
-          v-slot:[`cell(${field.key})`]="scope"
-        >
-          <span v-if="!scope.item.editing" :key="field.key">{{
-            scope.item[field.key]
-          }}</span>
-          <b-input
-            v-else
+        <template v-for="field in fields" v-slot:[`cell(${field.key})`]="scope">
+          <div :key="field.key" v-if="field.typeOptions == undefined">
+            <span v-if="!scope.item.editing">{{ scope.item[field.key] }}</span>
+            <b-input
+              v-else
+              :key="field.key"
+              v-model="scope.item[field.key]"
+            ></b-input>
+          </div>
+          <div :key="field.key" v-else-if="field.typeOptions.type == 'link'">
+            <b-link
+              :to="{
+                path: field.typeOptions.path,
+                query: {
+                  id: scope.item[field.typeOptions.idName],
+                },
+              }"
+              >{{ scope.item[field.typeOptions.linkText] }}</b-link
+            >
+          </div>
+          <div
             :key="field.key"
-            v-model="scope.item[field.key]"
-          ></b-input>
+            v-else-if="field.typeOptions.type == 'datetime'"
+          >
+            <span>
+              {{ formatDate(scope.item[field.key]) }}
+            </span>
+          </div>
+          <div :key="field.key" v-else-if="field.typeOptions.type == 'time'">
+            <span v-if="!scope.item.editing">
+              {{ scope.item[field.key] }}
+            </span>
+            <b-time v-else v-model="scope.item[field.key]"></b-time>
+          </div>
+          <div :key="field.key" v-else-if="field.typeOptions.type == 'date'">
+            <div v-if="!scope.item.editing">
+              {{ formatDate(scope.item.startDate) }}
+            </div>
+            <div v-else-if="scope.item.editing">
+              <b-datepicker
+                size="sm"
+                calendar-width="350px"
+                v-model="scope.item.startDate"
+              ></b-datepicker>
+            </div>
+          </div>
+          <!--- Custom Stuff. Might rework. --->
+          <div :key="field.key" v-else-if="field.typeOptions.type == 'boolean'">
+            <div v-if="!scope.item.editing">
+              <b-badge variant="success" v-if="scope.item[field.key] == 'true'">
+                {{ scope.item[field.key] }}</b-badge
+              >
+              <b-badge variant="danger" v-else>
+                {{ scope.item[field.key] }}</b-badge
+              >
+            </div>
+            <b-checkbox v-else v-model="scope.item[field.key]"></b-checkbox>
+          </div>
+          <div :key="field.key" v-else-if="field.typeOptions.type == 'rate'">
+            <span v-if="!scope.item.editing"
+              >{{ scope.item[field.key] }}DKK
+            </span>
+            <b-input
+              v-else
+              v-model="scope.item[field.key]"
+              type="number"
+              step="0.01"
+            ></b-input>
+          </div>
+          <div :key="field.key" v-else-if="field.typeOptions.type == 'select'">
+            <span v-if="!scope.item.editing">{{ scope.item[field.key] }}</span>
+            <b-select
+              v-else
+              v-model="scope.item[field.key]"
+              :options="field.typeOptions.options"
+            ></b-select>
+          </div>
+          <div :key="field.key" v-else-if="field.typeOptions.type == 'status'">
+            <div v-if="!scope.item.editing">
+              <div v-if="scope.item[field.key] == '1'">
+                <b-badge size="sm" variant="success">Active</b-badge>
+              </div>
+              <div v-else>
+                <b-badge size="sm" variant="danger">Inactive</b-badge>
+              </div>
+            </div>
+            <div v-else>
+              <b-checkbox
+                v-model="scope.item[field.key]"
+                value="1"
+                unchecked-value="0"
+              >
+              </b-checkbox>
+            </div>
+          </div>
+          <div
+            :key="field.key"
+            v-else-if="field.typeOptions.type == 'constant'"
+          >
+            <span> {{ scope.item[field.key] }}</span>
+          </div>
         </template>
 
         <template v-slot:cell(actions)="scope">
@@ -36,17 +127,18 @@
               v-if="downloadable"
               variant="primary"
               class="fas fa-download mr-1"
-              @click="doDownload(scope.item)"
+              @click="doDownload(scope)"
             ></b-btn>
             <b-btn
               v-if="deletable"
               variant="danger"
               class="fas fa-trash-alt"
-              @click="doDelete(scope.item)"
+              @click="doDelete(scope)"
             ></b-btn>
           </div>
           <div v-else>
             <b-btn variant="success" @click="sendEdit(scope.item)">Save</b-btn>
+            <b-btn variant="danger" @click="cancelEdit(scope)">Cancel</b-btn>
           </div>
         </template>
 
@@ -70,6 +162,7 @@
 <script>
 import axios from 'axios'
 import download from 'downloadjs'
+import dayjs from 'dayjs'
 
 export default {
   props: {
@@ -77,85 +170,118 @@ export default {
       type: String,
       required: true,
     },
-    items: {
-      type: Array,
-    },
-    itemUrl: {
+    uploadUrl: {
       type: String,
     },
-    columnFields: {
+    downloadUrl: {
+      type: String,
+    },
+    fields: {
       type: Array,
       required: false,
     },
-    primaryKey: String,
     results: Number,
+    sortColumn: {
+      type: String,
+    },
+    sortDirection: {
+      type: String,
+      default: 'ASC',
+    },
     editable: Boolean,
     downloadable: Boolean,
     deletable: Boolean,
   },
   data() {
     return {
-      attachments: this.items,
+      items: this.items,
       currentPage: 1,
       totalItems: 0,
+      sortedColumn: this.sortColumn,
+      sortedDirection: this.sortDirection,
     }
   },
   created() {
-    if (
-      this.$props.editable ||
-      this.$props.downloadable ||
-      this.$props.deletable
-    ) {
-      this.columnFields.push({ key: 'actions' })
+    if (this.editable || this.downloadable || this.deletable) {
+      this.fields.push({ key: 'actions' })
+    }
+
+    if (!this.sortedColumn) {
+      this.sortedColumn = this.fields[0].key
     }
 
     this.loadData()
   },
   computed: {
     editableFields() {
-      return this.columnFields.filter((field) => {
+      return this.fields.filter((field) => {
         return field.editable === true
       })
     },
   },
   methods: {
     async loadData() {
-      let response = await axios.get(this.$props.url, {
-        params: {
-          page: this.currentPage,
-          results: this.results,
-        },
-      })
-      this.attachments = response.data.data
-      this.totalItems = response.data.entryCount
+      try {
+        let response = await axios.get(this.$props.url, {
+          params: {
+            page: this.currentPage,
+            results: this.results,
+            sortColumn: this.sortedColumn,
+            sortDirection: this.sortedDirection,
+          },
+        })
+        let data = response.data
+
+        this.items = data.collection
+        this.totalItems = data.pagination.totalItems
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    formatDate(date) {
+      return dayjs(date).format('DD-MM-YYYY HH:mm:ss')
+    },
+    sort(ctx) {
+      this.sortedColumn = ctx.sortBy
+
+      if (ctx.sortDesc) {
+        this.sortedDirection = 'DESC'
+      } else {
+        this.sortedDirection = 'ASC'
+      }
+
+      this.loadData()
     },
     doEdit(item) {
       this.$set(item, 'editing', true)
     },
-    sendEdit(item) {
-      axios
-        .put(`${this.itemUrl}/${item[this.$props.primaryKey]}`, item)
-        .then(() => {
+    cancelEdit(data) {
+      this.loadData().then(() => {
+        this.$set(data.item, 'editing', false)
+      })
+    },
+    async sendEdit(item) {
+      try {
+        axios.put(`${this.uploadUrl}/${item.id}`, item).then(() => {
           this.$set(item, 'editing', false)
         })
+      } catch (error) {
+        console.log(error)
+      }
     },
-    async doDownload(item) {
-      let file = await axios.get(
-        `${this.itemUrl}/${item[this.$props.primaryKey]}`
-      )
+    async doDownload(scope) {
+      let file = await axios.get(`${this.downloadUrl}/${scope.item.id}`)
 
       download(
-        `data:${item.fileType};base64,${file.data}`,
-        item.fileName,
-        item.fileType
+        `data:${scope.item.fileType};base64,${file.data}`,
+        scope.item.fileName,
+        scope.item.fileType
       ) //FIXME: REWRITE THIS FOR MODULARITY
     },
-    doDelete(item) {
-      axios
-        .delete(`${this.itemUrl}/${item[this.$props.primaryKey]}`)
-        .then(() => {
-          this.loadData()
-        })
+    doDelete(scope) {
+      axios.delete(`${this.uploadUrl}/${scope.item.id}`).then(() => {
+        this.loadData()
+      })
     },
   },
   watch: {
