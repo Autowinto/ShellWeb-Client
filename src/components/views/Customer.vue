@@ -564,7 +564,7 @@
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Passwords">
-                  <!-- <passwords-tab></passwords-tab> -->
+                  <passwords-tab></passwords-tab>
                 </b-tab>
                 <b-tab title="Attachments">
                   <b-card-text>
@@ -694,7 +694,7 @@
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Subscriptions">
-                  <!-- <subscriptions-tab></subscriptions-tab> -->
+                  <subscriptions-tab></subscriptions-tab>
                 </b-tab>
                 <b-tab title="DNS">
                   <b-card-text>Tab contents 2</b-card-text>
@@ -1107,8 +1107,8 @@ import fileDownload from 'js-file-download'
 import download from 'downloadjs'
 import PaginatedTable from '../PaginatedTable'
 import { getToken } from '../../auth/authHelper'
-// import SubscriptionsTab from '../Customer/SubscriptionsTab.vue'
-// import PasswordsTab from '../Customer/PasswordsTab.vue'
+import SubscriptionsTab from '../Customer/SubscriptionsTab.vue'
+import PasswordsTab from '../Customer/PasswordsTab.vue'
 
 export default {
   data() {
@@ -1587,8 +1587,8 @@ export default {
   },
   components: {
     PaginatedTable,
-    // PasswordsTab,
-    // SubscriptionsTab,
+    PasswordsTab,
+    SubscriptionsTab,
   },
 }
 </script>

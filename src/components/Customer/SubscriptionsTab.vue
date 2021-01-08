@@ -13,7 +13,7 @@
       :sortDirection="'DESC'"
     >
     </paginated-table>
-    <b-table
+    <!-- <b-table
       show-empty
       outlined
       hover
@@ -90,7 +90,7 @@
           ></b-datepicker>
         </div>
       </template>
-      <!-- <template #cell(billingEngineName)="data">
+      <template #cell(billingEngineName)="data">
         <div v-if="!data.item.editing">
           {{ data.item.billingEngineName }}
         </div>
@@ -102,7 +102,7 @@
           ></b-select>
         </div>
       </template> -->
-      <template #cell(id)="data">
+    <!-- <template #cell(id)="data">
         <div v-if="!data.item.editing">
           <b-btn
             variant="primary"
@@ -123,7 +123,7 @@
       v-model="currentPage"
       :total-rows="totalItems"
       :per-page="results"
-    ></b-pagination>
+    ></b-pagination> -->
     <b-modal
       id="customerSubscriptionModal"
       ref="customerSubscriptionModal"
@@ -226,6 +226,7 @@ import PaginatedTable from '../PaginatedTable'
 export default {
   data() {
     return {
+      id: this.$route.query.id,
       url: `${process.env.VUE_APP_URL}subscriptions/instances/${this.id}`,
       form: {},
       subscriptions: [],
@@ -235,7 +236,6 @@ export default {
       results: 10,
       subscriptionOptions: [],
       billingEngineOptions: [],
-      id: this.$route.query.customerID,
       fields: [
         {
           key: 'name',
@@ -264,7 +264,6 @@ export default {
     }
   },
   created() {
-    this.loadSubscriptionInstances()
     this.populateOptions()
     this.resetForm()
   },

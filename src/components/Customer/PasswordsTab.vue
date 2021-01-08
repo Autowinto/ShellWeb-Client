@@ -242,7 +242,8 @@ export default {
     }
   },
   async created() {
-    this.customerId = this.$route.query.customerID //TODO: Change this to customerId
+    this.customerId = this.$route.query.id
+    console.log(this.customerId)
     this.creationForm.customer = this.customerId
     this.accessLevel = store.state.role.role
     this.fetchPasswords()
