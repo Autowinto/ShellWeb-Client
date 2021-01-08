@@ -5,6 +5,14 @@
         Create Subscription
       </b-btn>
     </b-card>
+    <paginated-table
+      :url="url"
+      :fields="fields"
+      :results="10"
+      :sortColumn="'product'"
+      :sortDirection="'DESC'"
+    >
+    </paginated-table>
     <b-table
       show-empty
       outlined
@@ -213,10 +221,12 @@
 <script>
 import axios from 'axios'
 import dayjs from 'dayjs'
+import PaginatedTable from '../PaginatedTable'
 
 export default {
   data() {
     return {
+      url: `${process.env.VUE_APP_URL}subscriptions/instances/${this.id}`,
       form: {},
       subscriptions: [],
       subscriptionInstances: [],
@@ -249,10 +259,6 @@ export default {
         {
           key: 'billingEngineName',
           label: 'Billing Engine',
-        },
-        {
-          key: 'id',
-          label: 'Actions',
         },
       ],
     }
@@ -349,6 +355,9 @@ export default {
     currentPage() {
       this.loadSubscriptionInstances()
     },
+  },
+  components: {
+    PaginatedTable,
   },
 }
 </script>

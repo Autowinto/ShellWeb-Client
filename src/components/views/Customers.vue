@@ -8,16 +8,7 @@
       <div class="card-body">
         <b-card bg-variant="light" class="mb-3">
           <div class="row">
-            <div class="col-md-6 text-nowrap">
-              <label>
-                Show&nbsp;
-                <b-form-select
-                  v-model="perPage"
-                  :options="paginationOptions"
-                ></b-form-select>
-              </label>
-            </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
               <div
                 class="text-md-right dataTables_filter"
                 id="dataTable_filter"
@@ -30,35 +21,13 @@
           </div>
         </b-card>
         <div>
-          <paginated-table :url="customersUrl" :results="10" :fields="fields">
-          </paginated-table>
-          <!-- <b-table
-            show-empty
-            outlined
-            hover
-            :items="items"
+          <paginated-table
+            :url="url"
+            :results="10"
             :fields="fields"
-            :per-page="0"
-            :current-page="currentPage"
+            :sortColumn="'name'"
           >
-            <template v-slot:cell(name)="data">
-              <b-link
-                :to="{
-                  path: '/customer',
-                  query: {
-                    customerID: data.item.corporateIdentificationNumber,
-                  },
-                }"
-                >{{ data.item.name }}</b-link
-              >
-            </template>
-          </b-table>
-          <b-pagination
-            size="md"
-            v-model="currentPage"
-            :total-rows="totalItems"
-            :per-page="perPage"
-          ></b-pagination> -->
+          </paginated-table>
         </div>
       </div>
     </div>
@@ -304,7 +273,7 @@ export default {
   },
   data() {
     return {
-      customersUrl: `${process.env.VUE_APP_URL}customers`,
+      url: `${process.env.VUE_APP_URL}customers`,
       showError: false,
       dropdownData: {
         paymentTerms: [],
@@ -337,25 +306,17 @@ export default {
           key: 'name',
           label: 'Name',
           sortable: true,
-          type: 'link',
-          path: 'customer',
-          idName: 'customerId',
+          typeOptions: {
+            type: 'link',
+            linkText: 'name',
+            path: 'customer',
+            idName: 'customerId',
+          },
         },
-      ],
-      items: [],
-      currentPage: 1,
-      perPage: 10,
-      totalItems: 0,
-      paginationOptions: [
-        { value: 10, text: '10' },
-        { value: 25, text: '25' },
-        { value: 50, text: '50' },
       ],
     }
   },
   created() {
-    // this.fetchData()
-
     //Collect these calls in one axios.all call
     axios
       .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
@@ -403,24 +364,6 @@ export default {
       })
   },
   methods: {
-    fetchData() {
-      axios
-        .get(`${process.env.VUE_APP_URL}customers`, {
-          params: {
-            page: this.currentPage,
-            results: this.perPage,
-          },
-        })
-        .then((response) => {
-          const data = response.data
-          this.items = data.collection
-          // this.currentPage = parseInt(data.pagination.skipPages) + 1
-          this.totalItems = data.pagination.results
-        })
-        .catch((err) => {
-          console.error(err)
-        })
-    },
     submitCustomer() {
       axios
         .post(`${process.env.VUE_APP_URL}customer`, this.form)
@@ -441,18 +384,6 @@ export default {
     scrollToModalTop() {
       var modal = document.getElementById('customerForm')
       modal.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-    },
-  },
-  watch: {
-    currentPage: {
-      handler: function () {
-        this.fetchData() //Do error handling here in the future
-      },
-    },
-    perPage: {
-      handler: function () {
-        this.fetchData()
-      },
     },
   },
 }
