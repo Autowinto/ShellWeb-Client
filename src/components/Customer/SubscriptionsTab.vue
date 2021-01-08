@@ -5,7 +5,17 @@
         Create Subscription
       </b-btn>
     </b-card>
-    <b-table
+    <paginated-table
+      :url="url"
+      :uploadUrl="uploadUrl"
+      :fields="fields"
+      :results="10"
+      :sortColumn="'product'"
+      :sortDirection="'DESC'"
+      :editable="true"
+    >
+    </paginated-table>
+    <!-- <b-table
       show-empty
       outlined
       hover
@@ -82,7 +92,7 @@
           ></b-datepicker>
         </div>
       </template>
-      <!-- <template #cell(billingEngineName)="data">
+      <template #cell(billingEngineName)="data">
         <div v-if="!data.item.editing">
           {{ data.item.billingEngineName }}
         </div>
@@ -94,7 +104,7 @@
           ></b-select>
         </div>
       </template> -->
-      <template #cell(id)="data">
+    <!-- <template #cell(id)="data">
         <div v-if="!data.item.editing">
           <b-btn
             variant="primary"
@@ -115,7 +125,7 @@
       v-model="currentPage"
       :total-rows="totalItems"
       :per-page="results"
-    ></b-pagination>
+    ></b-pagination> -->
     <b-modal
       id="customerSubscriptionModal"
       ref="customerSubscriptionModal"
@@ -217,6 +227,9 @@ import dayjs from 'dayjs'
 export default {
   data() {
     return {
+      id: this.$route.query.id,
+      url: `${process.env.VUE_APP_URL}subscriptions/instances/${this.$route.query.id}`,
+      uploadUrl: `${process.env.VUE_APP_URL}subscriptions/instances`,
       form: {},
       subscriptions: [],
       subscriptionInstances: [],
@@ -225,10 +238,10 @@ export default {
       results: 10,
       subscriptionOptions: [],
       billingEngineOptions: [],
-      id: this.$route.query.customerID,
       fields: [
         {
           key: 'name',
+          sortable: true,
         },
         {
           key: 'subscriptionName',
@@ -239,12 +252,23 @@ export default {
         },
         {
           key: 'unitPrice',
+          typeOptions: {
+            type: 'rate',
+          },
         },
         {
           key: 'startDate',
+          sortable: true,
+          typeOptions: {
+            type: 'date',
+          },
         },
         {
           key: 'endDate',
+          sortable: true,
+          typeOptions: {
+            type: 'date',
+          },
         },
         {
           key: 'billingEngineName',
@@ -258,24 +282,10 @@ export default {
     }
   },
   created() {
-    this.loadSubscriptionInstances()
     this.populateOptions()
     this.resetForm()
   },
   methods: {
-    async loadSubscriptionInstances() {
-      let response = await axios.get(
-        `${process.env.VUE_APP_URL}subscriptions/instances/${this.id}`,
-        {
-          params: {
-            page: this.currentPage,
-            results: this.results,
-          },
-        }
-      )
-      this.subscriptionInstances = response.data.collection
-      this.totalItems = response.data.totalItems
-    },
     resetForm() {
       this.form = {
         customerId: Number(this.$route.query.customerID),
@@ -323,7 +333,13 @@ export default {
     },
     async populateOptions() {
       let subResponse = await axios.get(
-        `${process.env.VUE_APP_URL}subscriptions`
+        `${process.env.VUE_APP_URL}subscriptions`,
+        {
+          params: {
+            sortColumn: 'id',
+            sortDirection: 'ASC',
+          },
+        }
       )
       this.subscriptions = subResponse.data.collection
 
@@ -345,10 +361,8 @@ export default {
       // }
     },
   },
-  watch: {
-    currentPage() {
-      this.loadSubscriptionInstances()
-    },
+  components: {
+    PaginatedTable,
   },
 }
 </script>

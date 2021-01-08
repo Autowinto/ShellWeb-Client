@@ -95,9 +95,7 @@ export function checkAuthenticationStatus() {
     } else if (currentAccounts.length > 1) {
       //More than one account signed in currently
       for (var account in currentAccounts) {
-        if (
-          currentAccounts[account].tenantId == process.env.VUE_APP_TENANT_ID
-        ) {
+        if (currentAccounts[account].tenantId == process.env.VUE_APP_TENANT_ID) {
           getGraphToken(currentAccounts[account]) //Attempt getting a graph token to truly make sure that the user is authenticated.
             .then(() => {
               loginBackend(currentAccounts[account])

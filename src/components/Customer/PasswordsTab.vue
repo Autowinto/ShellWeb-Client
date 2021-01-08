@@ -9,7 +9,16 @@
             </b-btn>
           </b-col>
         </b-card>
-        <b-table
+        <paginated-table
+          :url="url"
+          :uploadUrl="uploadUrl"
+          :fields="fields"
+          :results="10"
+          :sortColumn="'name'"
+          :sortDirection="'DESC'"
+          :editable="true"
+        ></paginated-table>
+        <!-- <b-table
           show-empty
           outlined
           hover
@@ -82,7 +91,7 @@
           :total-rows="totalItems"
           :per-page="results"
         >
-        </b-pagination>
+        </b-pagination> -->
       </div>
     </b-card-text>
     <b-modal
@@ -194,11 +203,14 @@
 import axios from 'axios'
 import * as auth from '../../auth/authHelper'
 import store from '../../auth/store'
+import PaginatedTable from '../PaginatedTable'
 
 export default {
   data() {
     return {
-      customerId: null,
+      customerId: this.$route.query.id,
+      url: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/passwords`,
+      uploadUrl: `${process.env.VUE_APP_URL}passwords`,
       results: 10,
       currentPage: 1,
       totalItems: 10,
@@ -211,41 +223,46 @@ export default {
         {
           key: 'name',
           label: 'Name',
-          editable: true,
+          sortable: true,
         },
         {
           key: 'domain',
-          editable: true,
+          sortable: true,
         },
         {
           key: 'url',
           label: 'URL',
-          editable: true,
+          sortable: true,
         },
         {
           key: 'username',
-          editable: true,
+          sortable: true,
         },
         {
           key: 'password',
-          editable: true,
+          sortable: true,
+          typeOptions: {
+            type: 'password',
+            url: `${process.env.VUE_APP_URL}passwords`,
+          },
         },
         {
           key: 'accessLevel',
-          editable: true,
-        },
-        {
-          key: 'togglePass',
-          label: 'Actions',
+          sortable: true,
+          typeOptions: {
+            type: 'select',
+            options: this.securityOptions,
+          },
         },
       ],
     }
   },
   async created() {
-    this.customerId = this.$route.query.customerID //TODO: Change this to customerId
+    this.customerId = this.$route.query.id
+    // console.log(this.customerId)
     this.creationForm.customer = this.customerId
     this.accessLevel = store.state.role.role
-    this.fetchPasswords()
+    // this.fetchPasswords()
     this.fetchSecurityLevels()
   },
   methods: {
@@ -292,6 +309,7 @@ export default {
           value: role.roleId,
           text: role.name,
         })
+        this.fields[5].typeOptions.options = this.securityOptions
       }
     },
     async submitPassword() {
@@ -343,6 +361,9 @@ export default {
     currentPage() {
       this.fetchPasswords()
     },
+  },
+  components: {
+    PaginatedTable,
   },
 }
 </script>

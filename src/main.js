@@ -2,9 +2,11 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 import('../src/assets/bootstrap/css/bootstrap.min.css')
 import('../src/assets/fonts/fontawesome-all.min.css')
-import BootstrapVue from 'bootstrap-vue'
+import { BootstrapVue } from 'bootstrap-vue'
 import VueCompositionAPI from '@vue/composition-api'
 import VueFileAgent from 'vue-file-agent'
 import 'vue-file-agent/dist/vue-file-agent.css'
