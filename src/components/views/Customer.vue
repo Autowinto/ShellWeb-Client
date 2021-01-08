@@ -607,28 +607,20 @@
                   <b-card-text>
                     <div>
                       <b-card bg-variant="light" class="mb-3">
-                        <!-- <b-form-checkbox
-                          v-model="pagination.invoices.filterOptions.allSelected"
-                          :indeterminate="pagination.invoices.filterOptions.indeterminate"
-                          aria-describedby="pagination.invoices.filterOptions.options"
-                          aria-controls="pagination.invoices.filterOptions.options"
-                          @change="toggleAll"
-                        >
-                          {{ pagination.invoices.filterOptions.allSelected ? 'Deselect All' : 'Select All'}}
-                        </b-form-checkbox>
-                      <b-form-checkbox-group
-                        v-model="pagination.invoices.filterOptions.selected"
-                        :options="pagination.invoices.filterOptions.options"
-                      >
-
-                        </b-form-checkbox-group>-->
                         <b-select
                           v-model="pagination.invoices.filterOptions.selected"
                           :options="pagination.invoices.filterOptions.options"
                           @change="loadInvoices"
                         ></b-select>
                       </b-card>
-
+                      <paginated-table
+                        :url="invoicesUrl"
+                        :fields="fields.invoices"
+                        :results="10"
+                        :downloadable="true"
+                        :downloadUrl="`${apiUrl}invoices/booked`"
+                        :downloadType="'economic'"
+                      ></paginated-table>
                       <b-table
                         show-empty
                         outlined
@@ -1119,6 +1111,7 @@ export default {
       apiUrl: `${process.env.VUE_APP_URL}`,
       ticketsUrl: null,
       uploadUrl: `${process.env.VUE_APP_URL}attachments/customers/${this.$route.query.id}`,
+      invoicesUrl: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/booked`,
       dropdownData: {
         paymentTerms: [],
         customerGroups: [],
@@ -1194,25 +1187,35 @@ export default {
           {
             key: 'bookedInvoiceNumber', //Fix this so it fits all invoices and not just the booked ones
             label: 'Invoice Number',
+            sortable: true,
           },
           {
             key: 'date',
             label: 'Date Created',
+            typeOptions: {
+              type: 'date',
+            },
           },
           {
             key: 'dueDate',
             label: 'Due On',
+            typeOptions: {
+              type: 'date',
+            },
           },
           {
             key: 'netAmount',
+            typeOptions: {
+              type: 'rate',
+            },
           },
           {
             key: 'remainder',
             label: 'Payment',
-          },
-          {
-            key: 'pdf',
-            label: '',
+            sortable: true,
+            typeOptions: {
+              type: 'paid',
+            },
           },
         ],
         attachments: [
@@ -1260,8 +1263,14 @@ export default {
           totalItems: 0,
           filterOptions: {
             options: [
-              { text: 'Booked', value: 'booked' },
-              { text: 'Drafts', value: 'drafts' },
+              {
+                text: 'Booked',
+                value: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/booked`,
+              },
+              {
+                text: 'Drafts',
+                value: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/drafts`,
+              },
               // { text: 'Unpaid', value: 'unpaid'},
               // { text: 'Paid', value: 'paid'},
               // { text: 'Overdue', value: 'overdue'},
@@ -1362,7 +1371,6 @@ export default {
         }
       })
     this.loadInvoices()
-    this.loadAttachments()
   },
   methods: {
     getCustomerInfo() {
@@ -1399,22 +1407,25 @@ export default {
     dayjs: function () {
       return dayjs()
     },
-    loadInvoices() {
-      const selected = this.pagination.invoices.filterOptions.selected
-      axios
-        .get(
-          `${process.env.VUE_APP_URL}customers/${this.id}/invoices/${selected}`,
-          {
-            params: {
-              page: 1,
-              results: 20,
-            },
-          }
-        )
-        .then((response) => {
-          this.items.invoices = response.data.collection
-          this.pagination.invoices.totalItems = response.data.collection.length
-        })
+    loadInvoices(ctx) {
+      // this.$set(this.invoicesUrl)
+      // this.invoicesUrl = ctx
+      console.log(ctx)
+      // const selected = this.pagination.invoices.filterOptions.selected
+      // axios
+      //   .get(
+      //     `${process.env.VUE_APP_URL}customers/${this.id}/invoices/${selected}`,
+      //     {
+      //       params: {
+      //         page: 1,
+      //         results: 20,
+      //       },
+      //     }
+      //   )
+      //   .then((response) => {
+      //     this.items.invoices = response.data.collection
+      //     this.pagination.invoices.totalItems = response.data.collection.length
+      //   })
     },
     downloadInvoice(link) {
       axios

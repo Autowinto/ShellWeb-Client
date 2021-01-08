@@ -11,6 +11,7 @@
         :items="items"
         :fields="fields"
         :current-page="currentPage"
+        responsive="sm"
       >
         <template v-for="field in fields" v-slot:[`cell(${field.key})`]="scope">
           <div :key="field.key" v-if="field.typeOptions == undefined">
@@ -37,7 +38,7 @@
             v-else-if="field.typeOptions.type == 'datetime'"
           >
             <span>
-              {{ formatDate(scope.item[field.key]) }}
+              {{ formatDateTime(scope.item[field.key]) }}
             </span>
           </div>
           <div :key="field.key" v-else-if="field.typeOptions.type == 'time'">
@@ -48,13 +49,13 @@
           </div>
           <div :key="field.key" v-else-if="field.typeOptions.type == 'date'">
             <div v-if="!scope.item.editing">
-              {{ formatDate(scope.item.startDate) }}
+              {{ formatDate(scope.item[field.key]) }}
             </div>
             <div v-else-if="scope.item.editing">
               <b-datepicker
                 size="sm"
                 calendar-width="350px"
-                v-model="scope.item.startDate"
+                v-model="scope.item[field.key]"
               ></b-datepicker>
             </div>
           </div>
@@ -113,6 +114,30 @@
           >
             <span> {{ scope.item[field.key] }}</span>
           </div>
+          <div
+            :key="field.key"
+            v-else-if="field.typeOptions.type == 'password'"
+          >
+            <div>
+              <b-btn
+                variant="primary"
+                v-if="scope.item[field.key] === undefined"
+                class="fas fa-eye"
+                @click="getPassword(scope)"
+              ></b-btn>
+              <span v-else>{{ scope.item[field.key] }}</span>
+            </div>
+          </div>
+          <div :key="field.key" v-else-if="field.typeOptions.type == 'paid'">
+            <div v-if="!scope.item.editing">
+              <b-badge v-if="scope.item[field.key] == 0" variant="success"
+                >Paid</b-badge
+              >
+              <b-badge v-if="scope.item[field.key] != 0" variant="warning"
+                >Unpaid</b-badge
+              >
+            </div>
+          </div>
         </template>
 
         <template v-slot:cell(actions)="scope">
@@ -163,6 +188,7 @@
 import axios from 'axios'
 import download from 'downloadjs'
 import dayjs from 'dayjs'
+import * as auth from '../auth/authHelper'
 
 export default {
   props: {
@@ -176,6 +202,7 @@ export default {
     downloadUrl: {
       type: String,
     },
+    downloadType: String,
     fields: {
       type: Array,
       required: false,
@@ -238,8 +265,11 @@ export default {
         console.log(error)
       }
     },
-    formatDate(date) {
+    formatDateTime(date) {
       return dayjs(date).format('DD-MM-YYYY HH:mm:ss')
+    },
+    formatDate(date) {
+      return dayjs(date).format('DD-MM-YYYY')
     },
     sort(ctx) {
       this.sortedColumn = ctx.sortBy
@@ -270,7 +300,16 @@ export default {
       }
     },
     async doDownload(scope) {
-      let file = await axios.get(`${this.downloadUrl}/${scope.item.id}`)
+      if (this.downloadType == 'economic') {
+        this.downloadInvoice(scope.item.pdf.download)
+      } else {
+        this.downloadAttachment(scope)
+      }
+    },
+    async downloadAttachment(scope) {
+      let url = `${this.downloadUrl}/${scope.item.id}`
+
+      let file = await axios.get(url)
 
       download(
         `data:${scope.item.fileType};base64,${file.data}`,
@@ -278,10 +317,43 @@ export default {
         scope.item.fileType
       ) //FIXME: REWRITE THIS FOR MODULARITY
     },
+    downloadInvoice(link) {
+      //It's necessary for now to sepparate the two. Might change
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/pdf`, {
+          params: {
+            url: link,
+          },
+          responseType: 'arraybuffer',
+        })
+        .then((response) => {
+          download(response.data, 'invoice.pdf')
+        })
+    },
     doDelete(scope) {
       axios.delete(`${this.uploadUrl}/${scope.item.id}`).then(() => {
         this.loadData()
       })
+    },
+    async getPassword(scope) {
+      let request = await axios.get(
+        `${process.env.VUE_APP_URL}passwords/${scope.item.passwordId}`,
+        {
+          params: {
+            employeeId: await auth.getAccountId(),
+          },
+        }
+      )
+
+      let passwords = this.items
+
+      for (var password of passwords) {
+        if (password.passwordId === scope.item.passwordId) {
+          this.$set(scope.item, 'password', request.data)
+          password.password = request.data
+          // this.$refs.passTable.refresh()
+        }
+      }
     },
   },
   watch: {

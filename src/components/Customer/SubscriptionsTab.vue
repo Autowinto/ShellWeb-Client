@@ -7,10 +7,12 @@
     </b-card>
     <paginated-table
       :url="url"
+      :uploadUrl="uploadUrl"
       :fields="fields"
       :results="10"
       :sortColumn="'product'"
       :sortDirection="'DESC'"
+      :editable="true"
     >
     </paginated-table>
     <!-- <b-table
@@ -227,7 +229,8 @@ export default {
   data() {
     return {
       id: this.$route.query.id,
-      url: `${process.env.VUE_APP_URL}subscriptions/instances/${this.id}`,
+      url: `${process.env.VUE_APP_URL}subscriptions/instances/${this.$route.query.id}`,
+      uploadUrl: `${process.env.VUE_APP_URL}subscriptions/instances`,
       form: {},
       subscriptions: [],
       subscriptionInstances: [],
@@ -239,6 +242,7 @@ export default {
       fields: [
         {
           key: 'name',
+          sortable: true,
         },
         {
           key: 'subscriptionName',
@@ -249,12 +253,23 @@ export default {
         },
         {
           key: 'unitPrice',
+          typeOptions: {
+            type: 'rate',
+          },
         },
         {
           key: 'startDate',
+          sortable: true,
+          typeOptions: {
+            type: 'date',
+          },
         },
         {
           key: 'endDate',
+          sortable: true,
+          typeOptions: {
+            type: 'date',
+          },
         },
         {
           key: 'billingEngineName',
@@ -268,19 +283,6 @@ export default {
     this.resetForm()
   },
   methods: {
-    async loadSubscriptionInstances() {
-      let response = await axios.get(
-        `${process.env.VUE_APP_URL}subscriptions/instances/${this.id}`,
-        {
-          params: {
-            page: this.currentPage,
-            results: this.results,
-          },
-        }
-      )
-      this.subscriptionInstances = response.data.collection
-      this.totalItems = response.data.totalItems
-    },
     resetForm() {
       this.form = {
         customerId: Number(this.$route.query.customerID),
@@ -328,7 +330,13 @@ export default {
     },
     async populateOptions() {
       let subResponse = await axios.get(
-        `${process.env.VUE_APP_URL}subscriptions`
+        `${process.env.VUE_APP_URL}subscriptions`,
+        {
+          params: {
+            sortColumn: 'id',
+            sortDirection: 'ASC',
+          },
+        }
       )
       this.subscriptions = subResponse.data.collection
 
@@ -348,11 +356,6 @@ export default {
       //     text: engine.name,
       //   })
       // }
-    },
-  },
-  watch: {
-    currentPage() {
-      this.loadSubscriptionInstances()
     },
   },
   components: {
