@@ -5,6 +5,7 @@
         show-empty
         outlined
         hover
+        fixed
         ref="table"
         no-local-sorting
         @sort-changed="sort"
