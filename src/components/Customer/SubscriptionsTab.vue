@@ -274,6 +274,9 @@ export default {
         {
           key: 'billingEngineName',
           label: 'Billing Engine',
+          typeOptions: {
+            type: 'constant', //Change this when adding more billing engine options
+          },
         },
       ],
     }
@@ -285,7 +288,7 @@ export default {
   methods: {
     resetForm() {
       this.form = {
-        customerId: Number(this.$route.query.customerID),
+        customerId: this.$route.query.id,
       }
     },
     postSubscription() {

@@ -11,16 +11,7 @@
           <div class="row mb-3">
             <div class="col">
               <div class="card shadow">
-                <div class="card-header py-3">
-                  <div class="row">
-                    <div class="col">
-                      <h6 class="text-primary m-0 font-weight-bold">
-                        Customer Information
-                      </h6>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-body">
+                <b-card header="Customer Information">
                   <div class="row">
                     <div class="col">
                       <div class="mb-3">
@@ -116,7 +107,7 @@
                   <button class="btn btn-danger w-100" v-b-modal.deletionModal>
                     Delete Customer
                   </button>
-                </div>
+                </b-card>
               </div>
             </div>
           </div>
