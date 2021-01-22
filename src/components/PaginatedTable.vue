@@ -120,13 +120,32 @@
             v-else-if="field.typeOptions.type == 'password'"
           >
             <div>
-              <b-btn
-                variant="primary"
-                v-if="scope.item[field.key] === undefined"
-                class="fas fa-eye"
-                @click="getPassword(scope)"
-              ></b-btn>
-              <span v-else>{{ scope.item[field.key] }}</span>
+              <div v-if="!scope.item.editing">
+                <b-btn
+                  variant="primary"
+                  v-if="
+                    scope.item[field.key] === undefined &&
+                    employeeAccessLevel >= scope.item.accessLevel
+                  "
+                  class="fas fa-eye"
+                  @click="getPassword(scope)"
+                ></b-btn>
+                <span v-else>{{ scope.item[field.key] }}</span>
+              </div>
+              <div v-else>
+                <div v-if="employeeAccessLevel >= scope.item.accessLevel">
+                  <b-btn
+                    variant="primary"
+                    v-if="
+                      scope.item[field.key] === undefined &&
+                      employeeAccessLevel >= scope.item.accessLevel
+                    "
+                    class="fas fa-eye"
+                    @click="getPassword(scope)"
+                  ></b-btn>
+                  <b-input v-else v-model="scope.item[field.key]"></b-input>
+                </div>
+              </div>
             </div>
           </div>
           <div :key="field.key" v-else-if="field.typeOptions.type == 'paid'">
@@ -245,6 +264,9 @@ export default {
       return this.fields.filter((field) => {
         return field.editable === true
       })
+    },
+    employeeAccessLevel() {
+      return this.$store.state.role.role
     },
   },
   methods: {
