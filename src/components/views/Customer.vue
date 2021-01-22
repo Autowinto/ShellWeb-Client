@@ -596,23 +596,30 @@
                 </b-tab>
                 <b-tab title="Invoices">
                   <b-card-text>
-                    <div>
-                      <b-card bg-variant="light" class="mb-3">
-                        <b-select
-                          v-model="pagination.invoices.filterOptions.selected"
-                          :options="pagination.invoices.filterOptions.options"
-                          @change="loadInvoices"
-                        ></b-select>
-                      </b-card>
-                      <paginated-table
-                        :url="invoicesUrl"
-                        :fields="fields.invoices"
-                        :results="10"
-                        :downloadable="true"
-                        :downloadUrl="`${apiUrl}invoices/booked`"
-                        :downloadType="'economic'"
-                      ></paginated-table>
-                    </div>
+                    <b-card bg-variant="light" class="mb-3">
+                      <b-row>
+                        <b-col cols="10">
+                          <b-select
+                            v-model="pagination.invoices.filterOptions.selected"
+                            :options="pagination.invoices.filterOptions.options"
+                            @change="loadInvoices"
+                          ></b-select>
+                        </b-col>
+                        <b-col>
+                          <b-btn variant="success" @click="generateInvoice"
+                            >Generate Invoice</b-btn
+                          >
+                        </b-col>
+                      </b-row>
+                    </b-card>
+                    <paginated-table
+                      :url="invoicesUrl"
+                      :fields="fields.invoices"
+                      :results="10"
+                      :downloadable="true"
+                      :downloadUrl="`${apiUrl}invoices/booked`"
+                      :downloadType="'economic'"
+                    ></paginated-table>
                   </b-card-text>
                 </b-tab>
                 <b-tab title="Subscriptions">
@@ -1368,6 +1375,20 @@ export default {
         .then((response) => {
           fileDownload(response.data, 'invoice.pdf')
         })
+    },
+    async generateInvoice() {
+      let response = await axios.get(
+        `${process.env.VUE_APP_URL}invoices/customers/${this.id}`
+      )
+
+      download(
+        JSON.stringify(response.data),
+        `${this.customerInfo.economic.name} faktura data.json`,
+        'application/json'
+      )
+      // let something = window.open('data:application/json,' + response.data)
+      // something.focus()
+      console.log(response)
     },
     getInvoiceStatus(date, remainder) {
       const today = new Date()
