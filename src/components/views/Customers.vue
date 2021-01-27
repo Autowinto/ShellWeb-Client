@@ -366,7 +366,7 @@ export default {
   methods: {
     submitCustomer() {
       axios
-        .post(`${process.env.VUE_APP_URL}customer`, this.form)
+        .post(`${process.env.VUE_APP_URL}customers`, this.form)
         .then(() => {
           //Refresh table of customers
           this.$refs['customerFormModal'].hide()
