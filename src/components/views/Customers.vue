@@ -301,6 +301,7 @@ export default {
           key: 'customerId',
           label: 'Customer ID',
           sortable: true,
+          thClass: 'idColumn',
         },
         {
           key: 'name',
@@ -392,5 +393,9 @@ export default {
 <style lang="css">
 .form-row {
   color: black;
+}
+
+.idColumn {
+  width: 15%;
 }
 </style>

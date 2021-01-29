@@ -5,7 +5,7 @@
         show-empty
         outlined
         hover
-        fixed
+        :fixed="fixed"
         ref="table"
         no-local-sorting
         @sort-changed="sort"
@@ -238,6 +238,7 @@ export default {
     editable: Boolean,
     downloadable: Boolean,
     deletable: Boolean,
+    fixed: Boolean,
   },
   data() {
     return {
