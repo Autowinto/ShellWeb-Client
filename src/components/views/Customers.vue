@@ -22,6 +22,7 @@
         </b-card>
         <div>
           <paginated-table
+            ref="customersTable"
             :url="url"
             :results="10"
             :fields="fields"
@@ -371,7 +372,7 @@ export default {
         .then(() => {
           //Refresh table of customers
           this.$refs['customerFormModal'].hide()
-          this.fetchData()
+          this.$refs.customersTable.loadData()
         })
         .catch((error) => {
           console.log(error)

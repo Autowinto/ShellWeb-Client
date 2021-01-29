@@ -10,6 +10,7 @@
           </b-col>
         </b-card>
         <paginated-table
+          ref="passwordsTable"
           :url="url"
           :uploadUrl="uploadUrl"
           :fields="fields"
@@ -267,18 +268,22 @@ export default {
   },
   methods: {
     async fetchPasswords() {
-      let passwordRequest = await axios.get(
-        `${process.env.VUE_APP_URL}customers/${this.customerId}/passwords`,
-        {
-          params: {
-            page: this.currentPage,
-            results: this.results,
-          },
-        }
-      )
-      let passwordData = passwordRequest.data
-      this.items = passwordData.passwords
-      this.totalItems = passwordData.count
+      try {
+        let passwordRequest = await axios.get(
+          `${process.env.VUE_APP_URL}customers/${this.customerId}/passwords`,
+          {
+            params: {
+              page: this.currentPage,
+              results: this.results,
+            },
+          }
+        )
+        let passwordData = passwordRequest.data
+        this.items = passwordData.passwords
+        this.totalItems = passwordData.count
+      } catch (error) {
+        console.log(error)
+      }
     },
     async getPassword(passwordId) {
       let request = await axios.get(
@@ -318,7 +323,7 @@ export default {
         .then(() => {
           this.$refs['createPasswordModal'].hide()
           this.creationForm = { customer: this.customerId, securityLevel: 0 }
-          this.fetchPasswords()
+          this.$refs.passwordsTable.loadData()
         })
     },
     doEdit(data) {
