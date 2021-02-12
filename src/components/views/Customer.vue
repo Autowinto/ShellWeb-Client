@@ -1377,8 +1377,8 @@ export default {
         })
     },
     async generateInvoice() {
-      let response = await axios.get(
-        `${process.env.VUE_APP_URL}invoices/customers/${this.id}`
+      let response = await axios.post(
+        `${process.env.VUE_APP_URL}customers/${this.id}/invoices/drafts`
       )
 
       download(
