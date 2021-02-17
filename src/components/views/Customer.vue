@@ -598,17 +598,12 @@
                   <b-card-text>
                     <b-card bg-variant="light" class="mb-3">
                       <b-row>
-                        <b-col cols="10">
+                        <b-col>
                           <b-select
                             v-model="pagination.invoices.filterOptions.selected"
                             :options="pagination.invoices.filterOptions.options"
                             @change="loadInvoices"
                           ></b-select>
-                        </b-col>
-                        <b-col>
-                          <b-btn variant="success" @click="generateInvoice"
-                            >Generate Invoice</b-btn
-                          >
                         </b-col>
                       </b-row>
                     </b-card>
@@ -1375,20 +1370,6 @@ export default {
         .then((response) => {
           fileDownload(response.data, 'invoice.pdf')
         })
-    },
-    async generateInvoice() {
-      let response = await axios.post(
-        `${process.env.VUE_APP_URL}customers/${this.id}/invoices/drafts`
-      )
-
-      download(
-        JSON.stringify(response.data),
-        `${this.customerInfo.economic.name} faktura data.json`,
-        'application/json'
-      )
-      // let something = window.open('data:application/json,' + response.data)
-      // something.focus()
-      console.log(response)
     },
     getInvoiceStatus(date, remainder) {
       const today = new Date()

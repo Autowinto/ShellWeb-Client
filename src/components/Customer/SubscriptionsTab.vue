@@ -1,9 +1,16 @@
 <template>
   <div>
     <b-card class="text-right mb-3" bg-variant="light">
-      <b-btn v-b-modal.customerSubscriptionModal variant="success">
-        Create Subscription
-      </b-btn>
+      <b-row>
+        <b-col>
+          <b-btn variant="success" class="mr-2" @click="generateInvoice">
+            Generate Invoice
+          </b-btn>
+          <b-btn v-b-modal.customerSubscriptionModal variant="success">
+            Create Subscription
+          </b-btn>
+        </b-col>
+      </b-row>
     </b-card>
     <paginated-table
       :url="url"
@@ -15,117 +22,6 @@
       :editable="true"
     >
     </paginated-table>
-    <!-- <b-table
-      show-empty
-      outlined
-      hover
-      :items="subscriptionInstances"
-      :fields="fields"
-    >
-      <template #cell(name)="data">
-        <div v-if="!data.item.editing">
-          {{ data.item.name }}
-        </div>
-        <div v-else-if="data.item.editing">
-          <b-input v-model="data.item.name"></b-input>
-        </div>
-      </template>
-      <template #cell(subscriptionName)="data">
-        <div v-if="!data.item.editing">
-          {{ data.item.subscriptionName }}
-        </div>
-        <div v-if="data.item.editing">
-          <b-select
-            required
-            v-model="data.item.subscriptionId"
-            :options="subscriptionOptions"
-          ></b-select>
-        </div>
-      </template>
-      <template #cell(units)="data">
-        <div v-if="!data.item.editing">{{ data.item.units }}</div>
-        <div v-if="data.item.editing">
-          <b-input v-model="data.item.units" type="number"></b-input>
-        </div>
-      </template>
-      <template #cell(unitPrice)="data">
-        <div v-if="!data.item.editing">{{ data.item.unitPrice }}</div>
-        <div v-if="data.item.editing">
-          <b-input
-            v-model="data.item.unitPrice"
-            type="number"
-            step="0.01"
-          ></b-input>
-        </div>
-      </template>
-      <template #cell(price)="data">
-        <div v-if="!data.item.editing">{{ data.item.price }}DKK</div>
-        <div v-else-if="data.item.editing">
-          <b-input
-            type="number"
-            step="0.01"
-            v-model="data.item.price"
-          ></b-input>
-        </div>
-      </template>
-      <template #cell(startDate)="data">
-        <div v-if="!data.item.editing">
-          {{ formatDate(data.item.startDate) }}
-        </div>
-        <div v-else-if="data.item.editing">
-          <b-datepicker
-            size="sm"
-            calendar-width="350px"
-            v-model="data.item.startDate"
-          ></b-datepicker>
-        </div>
-      </template>
-      <template #cell(endDate)="data">
-        <div v-if="!data.item.editing">
-          {{ formatDate(data.item.endDate) }}
-        </div>
-        <div v-else-if="data.item.editing">
-          <b-datepicker
-            size="sm"
-            calendar-width="350px"
-            v-model="data.item.endDate"
-          ></b-datepicker>
-        </div>
-      </template>
-      <template #cell(billingEngineName)="data">
-        <div v-if="!data.item.editing">
-          {{ data.item.billingEngineName }}
-        </div>
-        <div v-else-if="data.item.editing">
-          <b-select
-            required
-            v-model="data.item.billingEngineId"
-            :options="billingEngineOptions"
-          ></b-select>
-        </div>
-      </template> -->
-    <!-- <template #cell(id)="data">
-        <div v-if="!data.item.editing">
-          <b-btn
-            variant="primary"
-            class="fas fa-edit mr-2"
-            @click="doEdit(data)"
-          ></b-btn>
-        </div>
-        <div v-else-if="data.item.editing">
-          <b-btn variant="success" class="mr-1" @click="sendSubEdit(data)"
-            >Save</b-btn
-          >
-          <b-btn variant="danger" @click="cancelEdit(data)">Cancel</b-btn>
-        </div>
-      </template>
-    </b-table>
-    <b-pagination
-      size="md"
-      v-model="currentPage"
-      :total-rows="totalItems"
-      :per-page="results"
-    ></b-pagination> -->
     <b-modal
       id="customerSubscriptionModal"
       ref="customerSubscriptionModal"
@@ -330,6 +226,13 @@ export default {
       this.$set(this.form, 'unitPrice', object.price)
       this.$set(this.form, 'startDate', object.startDate)
       this.$set(this.form, 'endDate', object.endDate)
+    },
+    async generateInvoice() {
+      let response = await axios.post(
+        `${process.env.VUE_APP_URL}customers/${this.id}/invoices/drafts`
+      )
+      console.log(response)
+      alert('Invoice Generated') //Temporary alert solution
     },
     async populateOptions() {
       let subResponse = await axios.get(
