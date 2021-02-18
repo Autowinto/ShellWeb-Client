@@ -10,105 +10,108 @@
         <div class="col-3">
           <div class="row mb-3">
             <div class="col">
-              <div class="card shadow">
-                <b-card header="Customer Information">
-                  <div class="row">
-                    <div class="col">
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Name</h4>
-                        <h4 class="small">{{ customerInfo.economic.name }}</h4>
-                      </div>
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Currency</h4>
-                        <h4 class="small">
-                          {{ customerInfo.economic.currency }}
-                        </h4>
-                      </div>
+              <b-card shadow header="Customer Information">
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <h4 class="small font-weight-bold">Name</h4>
+                      <h4 class="small">{{ customerInfo.economic.name }}</h4>
                     </div>
-                    <div class="col">
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Customer Group</h4>
-                        <h4 class="small">{{ customerGroup }}</h4>
-                      </div>
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Payment Terms</h4>
-                        <h4 class="small">{{ paymentTerms }}</h4>
-                      </div>
+                    <div class="mb-3">
+                      <h4 class="small font-weight-bold">Currency</h4>
+                      <h4 class="small">
+                        {{ customerInfo.economic.currency }}
+                      </h4>
+                    </div>
+                    <div class="mb-3">
+                      <h4 class="small font-weight-bold">Sales Person</h4>
+                      <h4 v-if="employee" class="small">{{ employeeName }}</h4>
+                      <h4 v-else class="small">N/A</h4>
                     </div>
                   </div>
-                  <div class="card shadow mb-3"></div>
-                  <div class="row">
-                    <div class="col">
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Phone Number</h4>
-                        <b-link
-                          v-if="customerInfo.economic.telephoneAndFaxNumber"
-                          class="small"
-                          :href="
-                            'tel:' + customerInfo.economic.telephoneAndFaxNumber
-                          "
-                          >{{
-                            customerInfo.economic.telephoneAndFaxNumber
-                          }}</b-link
-                        >
-                        <h4 v-else class="small">N/A</h4>
-                      </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <h4 class="small font-weight-bold">Customer Group</h4>
+                      <h4 class="small">{{ customerGroup }}</h4>
                     </div>
-                    <div class="col">
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">E-mail</h4>
-                        <b-link
-                          v-if="customerInfo.economic.telephoneAndFaxNumber"
-                          class="small"
-                          :href="'mailto:' + customerInfo.economic.email"
-                          >{{ customerInfo.economic.email }}</b-link
-                        >
-                      </div>
+                    <div class="mb-3">
+                      <h4 class="small font-weight-bold">Payment Terms</h4>
+                      <h4 class="small">{{ paymentTerms }}</h4>
                     </div>
                   </div>
-                  <div class="card shadow mb-3"></div>
-                  <div class="row">
-                    <div class="col">
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Address</h4>
-                        <h4 class="small">
-                          {{ customerInfo.economic.address }}
-                        </h4>
-                      </div>
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">ZIP Code</h4>
-                        <h4 class="small">{{ customerInfo.economic.zip }}</h4>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">City</h4>
-                        <h4 class="small">{{ customerInfo.economic.city }}</h4>
-                      </div>
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Country</h4>
-                        <h4 class="small">
-                          {{ customerInfo.economic.country }}
-                        </h4>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card shadow mb-2"></div>
-                  <div class="row mb-2">
-                    <div class="col">
-                      <button
-                        class="btn btn-primary w-100"
-                        v-b-modal.customerEditModal
+                </div>
+                <div class="card shadow mb-3"></div>
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <h4 class="small font-weight-bold">Phone Number</h4>
+                      <b-link
+                        v-if="customerInfo.economic.telephoneAndFaxNumber"
+                        class="small"
+                        :href="
+                          'tel:' + customerInfo.economic.telephoneAndFaxNumber
+                        "
+                        >{{
+                          customerInfo.economic.telephoneAndFaxNumber
+                        }}</b-link
                       >
-                        Edit Customer
-                      </button>
+                      <h4 v-else class="small">N/A</h4>
                     </div>
                   </div>
-                  <button class="btn btn-danger w-100" v-b-modal.deletionModal>
-                    Delete Customer
-                  </button>
-                </b-card>
-              </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <h4 class="small font-weight-bold">E-mail</h4>
+                      <b-link
+                        v-if="customerInfo.economic.telephoneAndFaxNumber"
+                        class="small"
+                        :href="'mailto:' + customerInfo.economic.email"
+                        >{{ customerInfo.economic.email }}</b-link
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="card shadow mb-3"></div>
+                <div class="row">
+                  <div class="col">
+                    <div class="mb-3">
+                      <h4 class="small font-weight-bold">Address</h4>
+                      <h4 class="small">
+                        {{ customerInfo.economic.address }}
+                      </h4>
+                    </div>
+                    <div class="mb-3">
+                      <h4 class="small font-weight-bold">ZIP Code</h4>
+                      <h4 class="small">{{ customerInfo.economic.zip }}</h4>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="mb-3">
+                      <h4 class="small font-weight-bold">City</h4>
+                      <h4 class="small">{{ customerInfo.economic.city }}</h4>
+                    </div>
+                    <div class="mb-3">
+                      <h4 class="small font-weight-bold">Country</h4>
+                      <h4 class="small">
+                        {{ customerInfo.economic.country }}
+                      </h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="card shadow mb-2"></div>
+                <div class="row mb-2">
+                  <div class="col">
+                    <button
+                      class="btn btn-primary w-100"
+                      v-b-modal.customerEditModal
+                    >
+                      Edit Customer
+                    </button>
+                  </div>
+                </div>
+                <button class="btn btn-danger w-100" v-b-modal.deletionModal>
+                  Delete Customer
+                </button>
+              </b-card>
             </div>
           </div>
           <div class="row">
@@ -784,15 +787,24 @@
               label="Disable E-Invoicing:"
               label-align-sm="right"
               label-for="input-invoice"
-              description="Currently not enabled on backend. Will be enabled once implemented"
             >
               <b-form-checkbox
-                disabled
                 id="input-invoice"
                 required
                 v-model="form.eInvoicingDisabledByDefault"
                 :options="dropdownData.eInvoicingDisabledByDefault"
               ></b-form-checkbox>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Sales Person:"
+              label-align-sm="right"
+              label-for="input-salesperson"
+            >
+              <b-select
+                v-model="form.selectedEmployee"
+                :options="dropdownData.employees"
+              ></b-select>
             </b-form-group>
           </b-form-group>
           <b-card class="mb-3" no-body></b-card>
@@ -1049,6 +1061,7 @@ export default {
         customerGroups: [],
         currencies: [],
         vatZones: [],
+        employees: [],
       },
       form: {},
       contactForm: {
@@ -1232,6 +1245,8 @@ export default {
       paymentTerms: {},
       customerGroup: 0,
       ateraid: 0,
+      employeeName: null,
+      employee: null,
     }
   },
   created() {
@@ -1302,6 +1317,15 @@ export default {
           })
         }
       })
+    axios.get(`${process.env.VUE_APP_URL}employees`).then((response) => {
+      for (var item in response.data) {
+        const employee = response.data[item]
+        this.dropdownData.employees.push({
+          value: employee.microsoftId,
+          text: employee.name,
+        })
+      }
+    })
     this.loadInvoices()
   },
   methods: {
@@ -1316,6 +1340,8 @@ export default {
             const customerData = responses[0].data
             this.customerInfo = customerData.customer
             this.customerGroup = customerData.customerGroup
+            this.employeeName = customerData.employeeName
+            this.employee = customerData.employee
             this.ateraid = customerData.apiInfo
             this.paymentTerms = customerData.paymentTerms
 
@@ -1334,30 +1360,6 @@ export default {
       } else {
         return axios.get(process.env.VUE_APP_URL + endpoint)
       }
-    },
-    loadContracts: function () {},
-    dayjs: function () {
-      return dayjs()
-    },
-    loadInvoices(ctx) {
-      // this.$set(this.invoicesUrl)
-      // this.invoicesUrl = ctx
-      console.log(ctx)
-      // const selected = this.pagination.invoices.filterOptions.selected
-      // axios
-      //   .get(
-      //     `${process.env.VUE_APP_URL}customers/${this.id}/invoices/${selected}`,
-      //     {
-      //       params: {
-      //         page: 1,
-      //         results: 20,
-      //       },
-      //     }
-      //   )
-      //   .then((response) => {
-      //     this.items.invoices = response.data.collection
-      //     this.pagination.invoices.totalItems = response.data.collection.length
-      //   })
     },
     downloadInvoice(link) {
       axios
@@ -1426,7 +1428,7 @@ export default {
     },
     submitCustomerEdit() {
       axios
-        .put(`${process.env.VUE_APP_URL}customer/${this.id}`, this.form)
+        .put(`${process.env.VUE_APP_URL}customers/${this.id}`, this.form)
         .then(() => {
           this.$refs['customerEditModal'].hide()
           this.getCustomerInfo()

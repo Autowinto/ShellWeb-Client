@@ -192,6 +192,18 @@
                 :options="dropdownData.eInvoicingDisabledByDefault"
               ></b-form-checkbox>
             </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
+              label="Employee:"
+              label-align-sm="right"
+              label-for="input-salesperson"
+            >
+              <b-select
+                v-model="form.selectedEmployee"
+                required
+                :options="dropdownData.employees"
+              ></b-select>
+            </b-form-group>
           </b-form-group>
           <b-card class="mb-3" no-body></b-card>
           <b-form-group
@@ -267,6 +279,7 @@
 <script>
 import axios from 'axios'
 import PaginatedTable from '../PaginatedTable'
+import * as auth from '../../auth/authHelper'
 
 export default {
   components: {
@@ -281,6 +294,7 @@ export default {
         customerGroups: [],
         currencies: [],
         vatZones: [],
+        employees: [],
       },
       form: {
         name: null,
@@ -296,6 +310,7 @@ export default {
         selectedCurrency: null,
         selectedVatZone: null,
         eInvoicingDisabledByDefault: null,
+        employee: null,
       },
       fields: [
         {
@@ -364,6 +379,17 @@ export default {
           })
         }
       })
+    axios.get(`${process.env.VUE_APP_URL}employees`).then((response) => {
+      for (var item in response.data) {
+        const employee = response.data[item]
+        this.dropdownData.employees.push({
+          value: employee.microsoftId,
+          text: employee.name,
+        })
+      }
+    })
+
+    this.form.selectedEmployee = auth.getAccountId()
   },
   methods: {
     submitCustomer() {

@@ -35,8 +35,9 @@ const app = new msal.PublicClientApplication(msalConfig.authConfig)
 function loginBackend(account) {
   axios
     .post(`${process.env.VUE_APP_URL}login`, {
-      accountID: account.homeAccountId,
+      accountId: account.homeAccountId,
       email: account.username,
+      name: account.name,
     })
     .catch((err) => {
       console.log(err)
@@ -132,8 +133,13 @@ export function checkAuthenticationStatus() {
   })
 }
 
+export function getCurrentAccount() {
+  console.log(app.getAccountByUsername(username))
+  return app.getAccountByUsername(username)
+}
+
 export function getAccountId() {
-  return app.getAccountByUsername(username).homeAccountId
+  return getCurrentAccount().homeAccountId
 }
 
 export function getAccountGraph(accountValue) {
