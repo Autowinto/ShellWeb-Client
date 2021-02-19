@@ -4,7 +4,7 @@
       <div id="content">
         <div class="container-fluid">
           <h3 class="text-dark mb-4">Administration</h3>
-          <b-card no-body class="shadow">
+          <b-card no-body>
             <b-tabs card>
               <b-tab title="Subscriptions">
                 <subscriptions-tab

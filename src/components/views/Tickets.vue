@@ -1,25 +1,8 @@
 <template>
   <div class="container-fluid">
     <h3 class="text-dark mb-4">Tickets</h3>
-    <div class="card shadow">
-      <div class="card-header py-3">
-        <p class="text-primary m-0 font-weight-bold">Tickets</p>
-      </div>
+    <b-card no-body header="Tickets">
       <div class="card-body">
-        <!-- <div class="row"> -->
-        <!-- <div class="col-md-12">
-            <div class="text-md-right dataTables_filter" id="dataTable_filter">
-              <label>
-                <input
-                  type="search"
-                  class="form-control form-control-sm"
-                  aria-controls="dataTable"
-                  placeholder="Search"
-                />
-              </label>
-            </div>
-          </div> -->
-        <!-- </div> -->
         <paginated-table
           :url="url"
           :results="10"
@@ -36,7 +19,7 @@
           </button>
         </div>
       </div>
-    </div>
+    </b-card>
   </div>
 </template>
 

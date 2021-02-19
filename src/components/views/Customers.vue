@@ -1,10 +1,7 @@
 <template>
   <div class="container-fluid">
     <h3 class="text-dark mb-4">Customers</h3>
-    <div class="card shadow">
-      <div class="card-header py-3">
-        <p class="text-primary m-0 font-weight-bold">Customers Info</p>
-      </div>
+    <b-card no-body header="Customers">
       <div class="card-body">
         <b-card bg-variant="light" class="mb-3">
           <div class="row">
@@ -31,7 +28,7 @@
           </paginated-table>
         </div>
       </div>
-    </div>
+    </b-card>
     <b-modal
       body-class="p-0"
       id="customerForm"
