@@ -10,7 +10,7 @@
         <div class="col-3">
           <div class="row mb-3">
             <div class="col">
-              <b-card shadow header="Customer Information">
+              <b-card header="Customer Information">
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
@@ -40,7 +40,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="card shadow mb-3"></div>
+                <div class="card mb-3"></div>
                 <div class="row">
                   <div class="col">
                     <div class="mb-3">
@@ -116,162 +116,7 @@
           </div>
           <div class="row">
             <div class="col">
-              <div class="card shadow">
-                <div class="card-header">
-                  <h6 class="text-primary font-weight-bold">
-                    Customer Call Log
-                  </h6>
-                </div>
-                <div
-                  class="card-body"
-                  style="height: 500px; max-height: 500px; overflow-y: auto"
-                >
-                  <div
-                    class="rounded border w-100 pl-3 py-2 mb-3"
-                    style="background-color: #f9f9f9"
-                  >
-                    <div class="row">
-                      <span class="small">06/05/2020 14:45:26</span>
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Incoming Call from</span>
-                      <span class="mr-1" style="color: limegreen"
-                        >12345678</span
-                      >
-                      <span class="mr-1">to</span>
-                      <span class="mr-1" style="color: limegreen"
-                        >87654321</span
-                      >
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Duration:</span>
-                      <span class="mr-1" style="color: limegreen">0:21:45</span>
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Waited for:</span>
-                      <span class="mr-1" style="color: limegreen">0:05:45</span>
-                    </div>
-                  </div>
-                  <div
-                    class="rounded border w-100 pl-3 py-2 mb-3"
-                    style="background-color: #e2f4d0"
-                  >
-                    <div class="row">
-                      <span class="small">06/05/2020 14:45:26</span>
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Outgoing Call from</span>
-                      <span class="mr-1" style="color: limegreen"
-                        >12345678</span
-                      >
-                      <span class="mr-1">to</span>
-                      <span class="mr-1" style="color: limegreen"
-                        >87654321</span
-                      >
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Duration:</span>
-                      <span class="mr-1" style="color: limegreen">0:21:45</span>
-                    </div>
-                  </div>
-                  <div
-                    class="rounded border w-100 pl-3 py-2 mb-3"
-                    style="background-color: #f9f9f9"
-                  >
-                    <div class="row">
-                      <span class="small">06/05/2020 14:45:26</span>
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Incoming Call from</span>
-                      <span class="mr-1" style="color: limegreen"
-                        >12345678</span
-                      >
-                      <span class="mr-1">to</span>
-                      <span class="mr-1" style="color: limegreen"
-                        >87654321</span
-                      >
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Duration:</span>
-                      <span class="mr-1" style="color: limegreen">0:21:45</span>
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Waited for:</span>
-                      <span class="mr-1" style="color: limegreen">0:05:45</span>
-                    </div>
-                  </div>
-                  <div
-                    class="rounded border w-100 pl-3 py-2 mb-3"
-                    style="background-color: #e2f4d0"
-                  >
-                    <div class="row">
-                      <span class="small">06/05/2020 14:45:26</span>
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Outgoing Call from</span>
-                      <span class="mr-1" style="color: limegreen"
-                        >12345678</span
-                      >
-                      <span class="mr-1">to</span>
-                      <span class="mr-1" style="color: limegreen"
-                        >87654321</span
-                      >
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Duration:</span>
-                      <span class="mr-1" style="color: limegreen">0:21:45</span>
-                    </div>
-                  </div>
-                  <div
-                    class="rounded border w-100 pl-3 py-2 mb-3"
-                    style="background-color: #f9f9f9"
-                  >
-                    <div class="row">
-                      <span class="small">06/05/2020 14:45:26</span>
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Incoming Call from</span>
-                      <span class="mr-1" style="color: limegreen"
-                        >12345678</span
-                      >
-                      <span class="mr-1">to</span>
-                      <span class="mr-1" style="color: limegreen"
-                        >87654321</span
-                      >
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Duration:</span>
-                      <span class="mr-1" style="color: limegreen">0:21:45</span>
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Waited for:</span>
-                      <span class="mr-1" style="color: limegreen">0:05:45</span>
-                    </div>
-                  </div>
-                  <div
-                    class="rounded border w-100 pl-3 py-2 mb-3"
-                    style="background-color: #e2f4d0"
-                  >
-                    <div class="row">
-                      <span class="small">06/05/2020 14:45:26</span>
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Outgoing Call from</span>
-                      <span class="mr-1" style="color: limegreen"
-                        >12345678</span
-                      >
-                      <span class="mr-1">to</span>
-                      <span class="mr-1" style="color: limegreen"
-                        >87654321</span
-                      >
-                    </div>
-                    <div class="row">
-                      <span class="mr-1">Duration:</span>
-                      <span class="mr-1" style="color: limegreen">0:21:45</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <customer-call-log></customer-call-log>
             </div>
           </div>
         </div>
@@ -1045,6 +890,7 @@ import PaginatedTable from '../PaginatedTable'
 import { getToken } from '../../auth/authHelper'
 import SubscriptionsTab from '../Customer/SubscriptionsTab.vue'
 import PasswordsTab from '../Customer/PasswordsTab.vue'
+import CustomerCallLog from '../Customer/CustomerCallLog'
 
 export default {
   data() {
@@ -1534,6 +1380,7 @@ export default {
     PaginatedTable,
     PasswordsTab,
     SubscriptionsTab,
+    CustomerCallLog,
   },
 }
 </script>
