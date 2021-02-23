@@ -340,65 +340,6 @@
                         :fields="fields.tickets"
                         :results="10"
                       ></paginated-table>
-                      <!-- <b-table
-                        show-empty
-                        outlined
-                        hover
-                        :items="items.tickets"
-                        :fields="fields.tickets"
-                        :per-page="0"
-                        :current-page="pagination.tickets.currentPage"
-                      >
-                        <template v-slot:cell(subject)="data">
-                          <b-link
-                            :to="{
-                              path: '/ticket',
-                              query: { ticketID: data.item.ticketId },
-                            }"
-                            >{{ data.item.subject }}</b-link
-                          >
-                        </template>
-                        <template v-slot:cell(created_date)="data">
-                          <p class="m-0 p-0">
-                            {{ data.item.created_date | dayjsDateTime }}
-                          </p>
-                        </template>
-                        <template v-slot:cell(modified_date)="data">
-                          <p class="m-0 p-0">
-                            {{ data.item.modified_date | dayjsDateTime }}
-                          </p>
-                        </template>
-                        <template v-slot:cell(status)="data">
-                          <h5 class="m-0 p-0">
-                            <b-badge
-                              v-if="data.item.status == 'Open'"
-                              variant="success"
-                              >{{ data.item.status }}</b-badge
-                            >
-                            <b-badge
-                              v-else-if="data.item.status == 'Closed'"
-                              variant="danger"
-                              >{{ data.item.status }}</b-badge
-                            >
-                            <b-badge
-                              v-else-if="data.item.status == 'Merged'"
-                              variant="warning"
-                              >{{ data.item.status }}</b-badge
-                            >
-                            <b-badge
-                              v-else-if="data.item.status == 'Resolved'"
-                              variant="primary"
-                              >{{ data.item.status }}</b-badge
-                            >
-                          </h5>
-                        </template>
-                      </b-table>
-                      <b-pagination
-                        size="md"
-                        v-model="pagination.tickets.currentPage"
-                        :total-rows="pagination.tickets.totalItems"
-                        :per-page="pagination.tickets.perPage"
-                      ></b-pagination> -->
                     </div>
                   </b-card-text>
                 </b-tab>
