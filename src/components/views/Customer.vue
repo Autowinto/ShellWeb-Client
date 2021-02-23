@@ -1118,27 +1118,26 @@ export default {
   methods: {
     getCustomerInfo() {
       axios
-        .all([
-          this.fetchData(`customers/${this.id}`),
-          this.fetchData(`customer/contacts/${this.id}`),
-        ])
-        .then(
-          axios.spread((...responses) => {
-            const customerData = responses[0].data
-            this.customerInfo = customerData.customer
-            this.customerGroup = customerData.customerGroup
-            this.employeeName = customerData.employeeName
-            this.employee = customerData.employee
-            this.ateraid = customerData.apiInfo
-            this.paymentTerms = customerData.paymentTerms
+        .get(`${process.env.VUE_APP_URL}customers/${this.id}`)
+        .then((response) => {
+          const data = response.data
 
-            this.populateForm()
-            const contactData = responses[1].data
-            this.items.contacts = contactData
-          })
-        )
-        .catch((error) => {
-          console.log(error)
+          this.customerInfo = data.customer
+          this.customerGroup = data.customerGroup
+          this.employeeName = data.employeeName
+          this.employee = data.employee
+          this.ateraid = data.apiInfo
+          this.paymentTerms = data.paymentTerms
+
+          this.populateForm()
+        })
+
+      axios
+        .get(`${process.env.VUE_APP_URL}customers/${this.id}/contacts`)
+        .then((response) => {
+          console.log(response)
+          const data = response.data
+          this.items.contacts = data
         })
     },
     fetchData(endpoint, params) {
@@ -1285,10 +1284,6 @@ export default {
     },
   },
   filters: {
-    //These need to be made global filters at some point.
-    dayjsDateOnly: function (date) {
-      return dayjs(date).format('MMM D, YYYY')
-    },
     dayjsDateTime: function (date) {
       return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
     },
