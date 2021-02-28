@@ -162,7 +162,7 @@ export default {
         {
           key: 'time',
           label: 'Actual Time',
-          editable: true,
+          editable: false,
           sortable: true,
           typeOptions: {
             type: 'time',
@@ -171,7 +171,7 @@ export default {
         {
           key: 'timeRounded',
           label: 'Rounded Time',
-          editable: true,
+          editable: false,
           sortable: true,
           typeOptions: {
             type: 'time',
