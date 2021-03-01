@@ -13,8 +13,12 @@ import 'vue-file-agent/dist/vue-file-agent.css'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import './config/axiosConfig'
+import { CoolSelectPlugin } from 'vue-cool-select'
+import 'vue-cool-select/dist/themes/bootstrap.css'
 
 Vue.config.productionTip = false
+
+Vue.use(CoolSelectPlugin)
 
 //Extra vue libraries registration
 Vue.use(BootstrapVue)

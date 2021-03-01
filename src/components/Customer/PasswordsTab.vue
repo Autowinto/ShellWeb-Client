@@ -1,99 +1,25 @@
 <template>
-  <div>
+  <b-container>
     <b-card-text>
-      <div>
-        <b-card bg-variant="light" class="mb-3">
-          <b-col class="text-right">
-            <b-btn variant="success" v-b-modal.createPasswordModal>
-              Create Password
-            </b-btn>
-          </b-col>
-        </b-card>
-        <paginated-table
-          ref="passwordsTable"
-          :url="url"
-          :uploadUrl="uploadUrl"
-          :fields="fields"
-          :results="10"
-          :sortColumn="'name'"
-          :sortDirection="'DESC'"
-          :editable="true"
-        ></paginated-table>
-        <!-- <b-table
-          show-empty
-          outlined
-          hover
-          ref="passTable"
-          :items="items"
-          :fields="fields"
-          :per-page="0"
-          :current-page="currentPage"
+      <b-card bg-variant="light" class="mb-3">
+        <b-btn
+          class="float-right"
+          variant="success"
+          v-b-modal.createPasswordModal
         >
-          <template
-            v-for="field in editableFields"
-            v-slot:[`cell(${field.key})`]="scope"
-          >
-            <span v-if="!scope.item.editing" :key="field.key">{{
-              scope.item[field.key]
-            }}</span>
-            <b-input
-              v-else
-              :key="field.key"
-              v-model="scope.item[field.key]"
-            ></b-input>
-          </template>
-          <template #cell(password)="data">
-            <div v-if="!data.item.editing">
-              <span v-if="data.item.password">{{ data.item.password }}</span>
-              <span v-else>********</span>
-            </div>
-            <div v-else>
-              <b-input v-model="data.item.password"> </b-input>
-            </div>
-          </template>
-          <template #cell(accessLevel)="data">
-            <div v-if="!data.item.editing">
-              {{ getOptionText(data.item.accessLevel) }}
-            </div>
-            <div v-else>
-              <b-select
-                v-model="data.item.accessLevel"
-                :options="securityOptions"
-              ></b-select>
-            </div>
-          </template>
-          <template v-slot:cell(togglePass)="data">
-            <div v-if="!data.item.editing">
-              <b-col v-if="role >= data.item.accessLevel">
-                <b-button
-                  class="fas fa-edit mr-2"
-                  variant="primary"
-                  @click="doEdit(data)"
-                ></b-button>
-                <b-button
-                  class="fas fa-eye"
-                  variant="primary"
-                  @click="getPassword(data.item.passwordId)"
-                ></b-button>
-              </b-col>
-              <b-col v-else>
-                <b-button class="fas fa-eye" disabled> </b-button>
-              </b-col>
-            </div>
-            <div v-else>
-              <b-btn @click="sendEdit(data)" variant="success">Save</b-btn>
-              <b-btn @click="cancelEdit(data)" variant="danger">Cancel</b-btn>
-            </div>
-          </template>
-        </b-table>
-        <b-pagination
-          size="md"
-          v-model="currentPage"
-          :total-rows="totalItems"
-          :per-page="results"
-        >
-        </b-pagination> -->
-      </div>
+          Create Password
+        </b-btn>
+      </b-card>
+      <paginated-table
+        ref="passwordsTable"
+        :url="url"
+        :uploadUrl="uploadUrl"
+        :fields="fields"
+        :results="10"
+        :sortColumn="'name'"
+        :sortDirection="'DESC'"
+        :editable="true"
+      ></paginated-table>
     </b-card-text>
     <b-modal
       id="createPasswordModal"
@@ -197,7 +123,7 @@
         </b-form>
       </b-card>
     </b-modal>
-  </div>
+  </b-container>
 </template>
 
 <script>

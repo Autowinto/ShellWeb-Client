@@ -20,6 +20,8 @@
       :sortColumn="'product'"
       :sortDirection="'DESC'"
       :editable="true"
+      deletable
+      deletableRole="4"
     >
     </paginated-table>
     <b-modal

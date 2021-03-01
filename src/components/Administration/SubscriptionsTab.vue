@@ -5,7 +5,9 @@
         <b-btn class="mr-3" variant="success" v-b-modal.createSubscriptionModal
           >Create Subscription</b-btn
         >
-        <b-btn variant="success" v-b-modal.createGroupModal>Create Group</b-btn>
+        <b-btn variant="success" v-b-modal.create-group-modal
+          >Create Group</b-btn
+        >
       </b-col>
     </b-card>
     <b-col class="p-0">
@@ -35,148 +37,6 @@
       :deletable="true"
       :results="10"
     ></paginated-table>
-    <!-- <b-table
-      :items="subscriptions"
-      :fields="subscriptionFields"
-      show-empty
-      outlined
-      hover
-    >
-      <template #cell(product)="data">
-        <div v-if="!data.item.editing">
-          {{ data.item.product }}
-        </div>
-        <div v-if="data.item.editing">
-          <b-select
-            v-model="data.item.product"
-            :options="productOptions"
-          ></b-select>
-        </div>
-      </template>
-      <template #cell(name)="data">
-        <div v-if="!data.item.editing">
-          {{ data.item.name }}
-        </div>
-        <div v-else-if="data.item.editing">
-          <b-input v-model="data.item.name"></b-input>
-        </div>
-      </template>
-      <template #cell(billingEngineId)="data">
-        <div v-if="!data.item.editing">
-          {{ data.item.billingEngineName }}
-        </div>
-        <div v-if="data.item.editing">
-          <b-select
-            required
-            v-model="data.item.billingEngineId"
-            :options="billingEngineOptions"
-          ></b-select>
-        </div>
-      </template>
-      <template #cell(price)="data">
-        <div v-if="!data.item.editing">{{ data.item.price }}DKK</div>
-        <div v-else-if="data.item.editing">
-          <b-input
-            type="number"
-            step="0.01"
-            v-model="data.item.price"
-          ></b-input>
-        </div>
-      </template>
-      <template #cell(groupName)="data">
-        <div v-if="!data.item.editing">
-          {{ data.item.groupName }}
-        </div>
-        <div v-if="data.item.editing">
-          <b-select
-            v-model="data.item.groupId"
-            :options="groupOptions"
-          ></b-select>
-        </div>
-      </template>
-      <template #cell(startDate)="data">
-        <div v-if="!data.item.editing">
-          {{ formatDate(data.item.startDate) }}
-        </div>
-        <div v-else-if="data.item.editing">
-          <b-datepicker
-            size="sm"
-            calendar-width="350px"
-            v-model="data.item.startDate"
-          ></b-datepicker>
-        </div>
-      </template>
-      <template #cell(endDate)="data">
-        <div v-if="!data.item.editing">
-          {{ formatDate(data.item.endDate) }}
-        </div>
-        <div v-else-if="data.item.editing">
-          <b-datepicker
-            size="sm"
-            calendar-width="350px"
-            v-model="data.item.endDate"
-          ></b-datepicker>
-        </div>
-      </template>
-      <template #cell(ticketFrequencyId)="data">
-        <div v-if="!data.item.editing">
-          {{ data.item.ticketFrequencyName }}
-        </div>
-        <div v-else-if="data.item.editing">
-          <b-select
-            v-model="data.item.ticketFrequencyId"
-            :options="frequencyOptions"
-          >
-          </b-select>
-        </div>
-      </template>
-      <template #cell(paymentFrequencyId)="data">
-        <div v-if="!data.item.editing">
-          {{ data.item.paymentFrequencyName }}
-        </div>
-        <div v-if="data.item.editing">
-          <b-select
-            v-model="data.item.paymentFrequencyId"
-            :options="frequencyOptions"
-          ></b-select>
-        </div>
-      </template>
-      <template #cell(deactivated)="data">
-        <div v-if="!data.item.editing">
-          <div v-if="data.item.active == '1'">
-            <b-badge size="sm" variant="success">Active</b-badge>
-          </div>
-          <div v-else>
-            <b-badge size="sm" variant="danger">Inactive</b-badge>
-          </div>
-        </div>
-        <div v-else>
-          <b-checkbox v-model="data.item.active" value="1" unchecked-value="0">
-          </b-checkbox>
-        </div>
-      </template>
-      <template #cell(id)="data">
-        <div v-if="!data.item.editing">
-          <b-btn
-            variant="primary"
-            class="fas fa-edit mr-2"
-            @click="doEdit(data)"
-          ></b-btn>
-        </div>
-        <div v-else-if="data.item.editing">
-          <b-btn variant="success" class="mr-1" @click="sendSubEdit(data)"
-            >Save</b-btn
-          >
-          <b-btn variant="danger" @click="cancelEdit(data)">Cancel</b-btn>
-        </div>
-      </template>
-    </b-table>
-    <b-pagination
-      size="md"
-      v-model="currentPage"
-      :total-rows="totalItems"
-      :per-page="10"
-    ></b-pagination> -->
     <b-modal
       id="createSubscriptionModal"
       centered
@@ -312,6 +172,12 @@
         </b-form>
       </b-card>
     </b-modal>
+    <modal-form
+      :submitUrl="subGroupUrl"
+      modalId="create-group-modal"
+      :fields="groupFormFields"
+      modalTitle="Create Subscription Group"
+    ></modal-form>
     <b-modal
       id="createGroupModal"
       centered
@@ -347,11 +213,13 @@
 <script>
 import axios from 'axios'
 import PaginatedTable from '../PaginatedTable'
+import ModalForm from '../ModalForm'
 import dayjs from 'dayjs'
 
 export default {
   components: {
     PaginatedTable,
+    ModalForm,
   },
   data() {
     return {
@@ -361,6 +229,13 @@ export default {
       groups: [],
       subscriptionCreationForm: {},
       groupCreationForm: {},
+      groupFormFields: [
+        {
+          key: 'name',
+          type: 'string',
+          label: 'Group name',
+        },
+      ],
       groupFields: [
         {
           key: 'name',

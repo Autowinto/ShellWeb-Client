@@ -1,8 +1,16 @@
 <template>
-  <div class="container-fluid">
-    <h3 class="text-dark mb-4">Tickets</h3>
-    <b-card no-body header="Tickets">
-      <div class="card-body">
+  <div id="tickets-wrapper">
+    <div class="container-fluid">
+      <h3 class="text-dark mb-4">Tickets</h3>
+      <b-card header="Tickets">
+        <!-- <b-card bg-variant="light" class="mb-3">
+          <b-btn
+            variant="success"
+            class="float-right"
+            v-b-modal.ticket-creation-modal
+            >Create Ticket</b-btn
+          >
+        </b-card> -->
         <paginated-table
           :url="url"
           :results="10"
@@ -10,25 +18,25 @@
           :sortColumn="'ticketId'"
           :sortDirection="'DESC'"
         ></paginated-table>
-        <div class="row">
-          <button
-            onclick="window.location.href = 'customerform.html';"
-            class="btn btn-primary ml-2 btn-sm"
-          >
-            Add Customer
-          </button>
-        </div>
-      </div>
-    </b-card>
+      </b-card>
+    </div>
+    <modal-form
+      modalTitle="Create Ticket"
+      modalId="ticket-creation-modal"
+      :submitUrl="'Test'"
+      :fields="formFields"
+    ></modal-form>
   </div>
 </template>
 
 <script>
 import PaginatedTable from '../PaginatedTable'
+import ModalForm from '../ModalForm'
 
 export default {
   components: {
     PaginatedTable,
+    ModalForm,
   },
   data() {
     return {
@@ -53,6 +61,35 @@ export default {
             idName: 'ticketId',
             linkText: 'subject',
           },
+        },
+      ],
+      formFields: [
+        {
+          key: 'title',
+          type: 'string',
+          label: 'Title',
+        },
+        {
+          key: 'description',
+          type: 'text',
+          label: 'Description',
+          required: true,
+        },
+        {
+          key: 'customerId',
+          label: 'Customer',
+          textKeys: ['name'],
+          type: 'lookup',
+          lookupEndpoint: 'customers',
+          required: true,
+        },
+        {
+          key: 'contactId',
+          label: 'Contact',
+          textKeys: ['firstName', 'lastName'],
+          type: 'lookup',
+          lookupEndpoint: 'contacts',
+          required: true,
         },
       ],
     }
