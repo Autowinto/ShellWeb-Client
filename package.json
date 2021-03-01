@@ -28,6 +28,7 @@
     "node-forge": "0.10.0",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
+    "vue-cool-select": "^3.5.2",
     "vue-file-agent": "^1.7.3",
     "vue-router": "^3.3.4",
     "vuelendar": "^1.0.15",
