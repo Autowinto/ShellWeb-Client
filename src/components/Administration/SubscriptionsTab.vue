@@ -25,6 +25,7 @@
         :sortDirection="'DESC'"
         :editable="true"
         :deletable="true"
+        deletableRole="0"
       ></paginated-table>
     </b-collapse>
     <paginated-table
@@ -35,6 +36,7 @@
       :sortDirection="'DESC'"
       :editable="true"
       :deletable="true"
+      deletableRole="0"
       :results="10"
     ></paginated-table>
     <b-modal

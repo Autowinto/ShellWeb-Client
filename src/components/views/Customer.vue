@@ -378,6 +378,7 @@
                       :results="12"
                       :editable="true"
                       :deletable="true"
+                      deletableRole="0"
                       :downloadable="true"
                     >
                     </paginated-table>
