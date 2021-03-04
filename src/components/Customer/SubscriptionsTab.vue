@@ -21,100 +21,16 @@
       :sortDirection="'DESC'"
       :editable="true"
       deletable
-      deletableRole="4"
+      :deletableRole="4"
     >
     </paginated-table>
-    <b-modal
-      id="customerSubscriptionModal"
-      ref="customerSubscriptionModal"
-      body-class="p-0"
-      centered
-      title="Create Subscription"
-      size="lg"
-      hide-footer
-    >
-      <b-card bg-variant="light">
-        <b-form @submit="postSubscription" onsubmit="return false;">
-          <b-form-group
-            label-cols-sm="2"
-            label="Subscription:"
-            label-align-sm="right"
-            description="Required"
-          >
-            <b-select
-              @change="pullFormData"
-              :options="subscriptionOptions"
-              v-model="form.subscription"
-            >
-            </b-select>
-          </b-form-group>
-          <b-card no-body class="mb-3"></b-card>
-          <b-form-group
-            label-cols-sm="2"
-            label="Name:"
-            label-align-sm="right"
-            description="Required"
-          >
-            <b-input type="text" required v-model="form.name"></b-input>
-          </b-form-group>
 
-          <b-form-group
-            label-cols-sm="2"
-            label="Unit price:"
-            label-align-sm="right"
-            label-for="input-name"
-            description="Required"
-          >
-            <b-input
-              v-model="form.unitPrice"
-              type="number"
-              step="0.01"
-              required
-            ></b-input>
-          </b-form-group>
-          <b-form-group
-            label-cols-sm="2"
-            label="Units:"
-            label-align-sm="right"
-            description="Required"
-          >
-            <b-input
-              v-model="form.units"
-              type="number"
-              step="1"
-              required
-            ></b-input>
-          </b-form-group>
-          <b-form-group
-            label-cols-sm="2"
-            label="Start Date:"
-            label-align-sm="right"
-            description="Required"
-          >
-            <b-datepicker
-              v-model="form.startDate"
-              id="start-picker"
-              size="sm"
-              calendar-width="100%"
-              required
-            ></b-datepicker>
-          </b-form-group>
-          <b-form-group
-            label-cols-sm="2"
-            label="End Date:"
-            label-align-sm="right"
-          >
-            <b-datepicker
-              v-model="form.endDate"
-              id="end-picker"
-              size="sm"
-              calendar-width="100%"
-            ></b-datepicker>
-          </b-form-group>
-          <b-btn type="submit" variant="success">Create</b-btn>
-        </b-form>
-      </b-card>
-    </b-modal>
+    <modal-form
+      :submitUrl="this.uploadUrl"
+      modalId="customerSubscriptionModal"
+      modalTitle="Create Subscription"
+      :fields="formFields"
+    ></modal-form>
   </div>
 </template>
 
@@ -122,6 +38,7 @@
 import axios from 'axios'
 import dayjs from 'dayjs'
 import PaginatedTable from '../PaginatedTable'
+import ModalForm from '../ModalForm'
 
 export default {
   data() {
@@ -175,6 +92,45 @@ export default {
           typeOptions: {
             type: 'constant', //Change this when adding more billing engine options
           },
+        },
+      ],
+      formFields: [
+        {
+          key: 'subscription',
+          type: 'lookup',
+          label: 'Subscription',
+          lookupEndpoint: 'subscriptions',
+          required: true,
+        },
+        {
+          key: 'name',
+          type: 'string',
+          label: 'Name',
+          required: true,
+        },
+        {
+          key: 'unitPrice',
+          type: 'double',
+          label: 'Unit Price',
+          required: true,
+        },
+        {
+          key: 'units',
+          type: 'integer',
+          label: 'Units',
+          required: true,
+        },
+        {
+          key: 'startDate',
+          label: 'Start Date',
+          type: 'date',
+          required: true,
+        },
+        {
+          key: 'endDate',
+          label: 'End Date',
+          type: 'date',
+          required: true,
         },
       ],
     }
@@ -268,6 +224,7 @@ export default {
   },
   components: {
     PaginatedTable,
+    ModalForm,
   },
 }
 </script>

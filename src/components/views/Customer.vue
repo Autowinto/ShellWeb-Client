@@ -378,7 +378,7 @@
                       :results="12"
                       :editable="true"
                       :deletable="true"
-                      deletableRole="0"
+                      :deletableRole="0"
                       :downloadable="true"
                     >
                     </paginated-table>
@@ -392,7 +392,6 @@
                           <b-select
                             v-model="pagination.invoices.filterOptions.selected"
                             :options="pagination.invoices.filterOptions.options"
-                            @change="loadInvoices"
                           ></b-select>
                         </b-col>
                       </b-row>
@@ -1114,7 +1113,7 @@ export default {
         })
       }
     })
-    this.loadInvoices()
+    // this.loadInvoices()
   },
   methods: {
     getCustomerInfo() {

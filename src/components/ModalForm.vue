@@ -1,35 +1,66 @@
 <template>
   <div id="wrapper">
     <b-modal
-      size="lg"
+      size="md"
       centered
       :ref="this.modalId"
       :id="this.modalId"
       :title="this.modalTitle"
       hide-footer
+      @hidden="cancelForm"
     >
-      <b-alert fade dismissible variant="danger"> </b-alert>
+      <b-alert :show="showErrorAlert" fade dismissible variant="danger">
+        Failed to submit item. Error code: {{ errorCode }}.
+      </b-alert>
       <b-form onsubmit="return false;" @submit="doPost" class="w-100">
         <b-form-group v-for="field in fields" :key="field.key">
-          <label v-if="field.label">{{ field.label }}</label>
-          <div id="input-string" v-if="field.type == 'string'">
-            <b-input v-model="form[field.key]"></b-input>
+          <div v-if="field.show">
+            <label v-if="field.label">{{ field.label }}</label>
+            <div id="input-string" v-if="field.type == 'string'">
+              <b-input
+                :required="field.required"
+                type="text"
+                v-model="form[field.key]"
+              ></b-input>
+            </div>
+            <div id="input-string" v-if="field.type == 'number'">
+              <b-input
+                type="number"
+                step="0.01"
+                v-model="form[field.key]"
+              ></b-input>
+            </div>
+            <div id="input-text" v-if="field.type == 'text'">
+              <b-textarea
+                :required="field.required"
+                v-model="form[field.key]"
+              ></b-textarea>
+            </div>
+            <div id="input-lookup" v-if="field.type == 'lookup'">
+              <lookup-select
+                @selected="lookupValueSelected($event, field.key)"
+                :lookupUrl="`${baseUrl}/${field.lookupEndpoint}`"
+                :textKeys="field.textKeys"
+                :required="Boolean(field.required)"
+                :parentKey="field.parentKey"
+                :filterKey="field.filterKey"
+                :placeholder="field.placeholder"
+                :form="form"
+              ></lookup-select>
+            </div>
+            <div v-if="field.type == 'boolean'">
+              <b-checkbox
+                @change="handleCheckboxChange(field)"
+                v-model="form[field.key]"
+                size="md"
+                >{{ field.checkText }}</b-checkbox
+              >
+            </div>
+            <small v-if="field.required">Required</small>
           </div>
-          <div id="input-text" v-if="field.type == 'text'">
-            <b-textarea v-model="form[field.key]"></b-textarea>
-          </div>
-          <div id="input-lookup" v-if="field.type == 'lookup'">
-            <lookup-select
-              @selected="lookupValueSelected($event, field.key)"
-              :lookupUrl="`${baseUrl}/${field.lookupEndpoint}`"
-              :textKeys="field.textKeys"
-            ></lookup-select>
-          </div>
-          <small v-if="field.required">Required</small>
         </b-form-group>
         <b-container fluid class="p-0">
-          <b-btn type="submit" variant="primary" class="mr-1">Submit</b-btn>
-          <b-btn @click="cancelForm" variant="danger">Cancel</b-btn>
+          <b-btn type="submit" variant="success" class="mr-1">Submit</b-btn>
         </b-container>
       </b-form>
     </b-modal>
@@ -38,7 +69,7 @@
 
 <script>
 import LookupSelect from './LookupSelect'
-import { ref, getCurrentInstance } from '@vue/composition-api'
+import { ref, reactive, getCurrentInstance } from '@vue/composition-api'
 import axios from 'axios'
 
 export default {
@@ -63,9 +94,17 @@ export default {
   setup(props) {
     const instance = getCurrentInstance()
 
+    for (let field of props.fields) {
+      if (field.show == undefined) {
+        field.show = true
+      }
+    }
+
     let baseUrl = `${process.env.VUE_APP_URL}lookups`
-    let form = ref({})
-    let errorMessage = ref('An error occurred')
+    let form = reactive({})
+    let showErrorAlert = ref(false)
+
+    let errorCode = ref(0)
 
     function doPost() {
       axios
@@ -78,31 +117,50 @@ export default {
         })
     }
 
+    function handleCheckboxChange(field) {
+      if (field.triggersKey) {
+        let obj = props.fields.find((obj) => obj.key == field.triggersKey)
+        form[obj.key] = null
+        obj.show = !form[field.key] // A bit hacky, but it's correct
+      } else {
+        console.log('Nothing triggered')
+      }
+    }
+
+    function getFieldObjectByKey(key) {
+      let obj = props.fields.find((obj) => obj.key == key)
+      return obj.key
+    }
+
     function handleResponse() {
       instance.$refs[props.modalId].hide()
-      form = ref({})
+      form = reactive({})
     }
 
     function handleError(error) {
-      console.error(error)
+      instance.errorCode = error.response.status
+      instance.showErrorAlert = true // I don't kn
     }
 
     function cancelForm() {
+      form = reactive({})
       console.log('Cancelling')
     }
 
     function lookupValueSelected(event, key) {
-      this.form[key] = event[key]
-      console.log(this.form)
+      instance.$set(instance.form, key, event[key])
     }
 
     return {
       form,
       baseUrl,
-      errorMessage,
       doPost,
       cancelForm,
       lookupValueSelected,
+      handleCheckboxChange,
+      getFieldObjectByKey,
+      errorCode,
+      showErrorAlert,
     }
   },
 }

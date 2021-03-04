@@ -235,7 +235,7 @@ export default {
         {
           key: 'name',
           type: 'string',
-          label: 'Group name',
+          label: 'Group Name',
         },
       ],
       groupFields: [

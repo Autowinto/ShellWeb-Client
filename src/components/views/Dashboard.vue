@@ -81,7 +81,7 @@
                               aria-valuenow="50"
                               aria-valuemin="0"
                               aria-valuemax="100"
-                              style="width: 50%;"
+                              style="width: 50%"
                             >
                               <span class="sr-only">50%</span>
                             </div>
@@ -241,7 +241,7 @@
                       aria-valuenow="20"
                       aria-valuemin="0"
                       aria-valuemax="100"
-                      style="width: 20%;"
+                      style="width: 20%"
                     >
                       <span class="sr-only">20%</span>
                     </div>
@@ -255,7 +255,7 @@
                       aria-valuenow="40"
                       aria-valuemin="0"
                       aria-valuemax="100"
-                      style="width: 40%;"
+                      style="width: 40%"
                     >
                       <span class="sr-only">40%</span>
                     </div>
@@ -269,7 +269,7 @@
                       aria-valuenow="60"
                       aria-valuemin="0"
                       aria-valuemax="100"
-                      style="width: 60%;"
+                      style="width: 60%"
                     >
                       <span class="sr-only">60%</span>
                     </div>
@@ -283,7 +283,7 @@
                       aria-valuenow="80"
                       aria-valuemin="0"
                       aria-valuemax="100"
-                      style="width: 80%;"
+                      style="width: 80%"
                     >
                       <span class="sr-only">80%</span>
                     </div>
@@ -297,7 +297,7 @@
                       aria-valuenow="100"
                       aria-valuemin="0"
                       aria-valuemax="100"
-                      style="width: 100%;"
+                      style="width: 100%"
                     >
                       <span class="sr-only">100%</span>
                     </div>
@@ -432,11 +432,11 @@
 </template>
 
 <script>
-import LineChart from "../LineChart.vue";
+import LineChart from '../LineChart.vue'
 
 export default {
   components: {
     LineChart,
   },
-};
+}
 </script>
