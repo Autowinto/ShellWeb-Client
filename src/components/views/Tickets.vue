@@ -12,6 +12,7 @@
           >
         </b-card>
         <paginated-table
+          ref="ticketTable"
           :url="url"
           :results="10"
           :fields="fields"
@@ -25,6 +26,7 @@
       modalId="ticket-creation-modal"
       :submitUrl="url"
       :fields="formFields"
+      @postSuccessful="handleTicketPosted"
     ></modal-form>
   </div>
 </template>
@@ -37,6 +39,11 @@ export default {
   components: {
     PaginatedTable,
     ModalForm,
+  },
+  methods: {
+    handleTicketPosted() {
+      this.$refs.ticketTable.loadData()
+    },
   },
   data() {
     return {

@@ -133,6 +133,7 @@ export default {
     }
 
     function handleResponse() {
+      instance.$emit('postSuccessful')
       instance.$refs[props.modalId].hide()
       form = reactive({})
     }
