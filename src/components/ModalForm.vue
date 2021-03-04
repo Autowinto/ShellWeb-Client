@@ -56,6 +56,13 @@
                 >{{ field.checkText }}</b-checkbox
               >
             </div>
+            <div v-if="field.type == 'select'">
+              <b-select
+                v-model="form[field.key]"
+                :options="field.options"
+                :required="field.required"
+              ></b-select>
+            </div>
             <small v-if="field.required">Required</small>
           </div>
         </b-form-group>

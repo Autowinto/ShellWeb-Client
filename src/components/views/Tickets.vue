@@ -78,6 +78,7 @@ export default {
           type: 'lookup',
           lookupEndpoint: 'customers',
           placeholder: 'None picked. All contacts will be shown',
+          required: true,
         },
         {
           key: 'contactId',
@@ -92,13 +93,70 @@ export default {
         {
           key: 'title',
           type: 'string',
-          label: 'Title',
+          label: 'Ticket Title',
           required: true,
         },
         {
           key: 'description',
           type: 'text',
           label: 'Description',
+          required: true,
+        },
+        {
+          key: 'impact',
+          type: 'select',
+          options: [
+            {
+              text: 'No Impact',
+              value: 'NoImpact',
+            },
+            {
+              text: 'Minor',
+              value: 'Minor',
+            },
+            {
+              text: 'Major',
+              value: 'Major',
+            },
+            {
+              text: 'Site Down',
+              value: 'NoImpact',
+            },
+            {
+              text: 'Server Issue',
+              value: 'ServerIssue',
+            },
+            {
+              text: 'Crisis',
+              value: 'Crisis',
+            },
+          ],
+          required: true,
+          label: 'Ticket Impact',
+        },
+        {
+          key: 'type',
+          type: 'select',
+          options: [
+            {
+              text: 'Incident',
+              value: 'Incident',
+            },
+            {
+              text: 'Problem',
+              value: 'Problem',
+            },
+            {
+              text: 'Request',
+              value: 'Request',
+            },
+            {
+              text: 'Change',
+              value: 'Change',
+            },
+          ],
+          required: true,
+          label: 'Ticket Type',
         },
         {
           key: 'isProject',
