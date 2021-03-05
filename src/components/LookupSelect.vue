@@ -15,7 +15,9 @@
           <span v-for="key in textKeys" :key="key.key">{{ item[key] }} </span>
         </template>
         <template slot="selection" slot-scope="{ item }">
-          <div v-for="key in textKeys" :key="key.key">{{ item[key] }}</div>
+          <div v-for="key in textKeys" :key="key.key" class="mr-1">
+            {{ item[key] }}
+          </div>
         </template>
       </cool-select>
     </b-input-group>
