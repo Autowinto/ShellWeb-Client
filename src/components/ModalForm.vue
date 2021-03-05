@@ -76,7 +76,7 @@
 
 <script>
 import LookupSelect from './LookupSelect'
-import { ref, reactive, getCurrentInstance } from '@vue/composition-api'
+import { ref, set, reactive, getCurrentInstance } from '@vue/composition-api'
 import axios from 'axios'
 
 export default {
@@ -140,8 +140,8 @@ export default {
     }
 
     function handleResponse() {
-      instance.$emit('postSuccessful')
-      instance.$refs[props.modalId].hide()
+      this.$emit('postSuccessful')
+      this.$refs[props.modalId].hide()
       form = reactive({})
     }
 
@@ -156,7 +156,7 @@ export default {
     }
 
     function lookupValueSelected(event, key) {
-      instance.$set(instance.form, key, event[key])
+      set(instance.form, key, event[key])
     }
 
     return {
