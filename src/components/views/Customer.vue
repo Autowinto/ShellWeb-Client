@@ -15,7 +15,10 @@
                   <div class="col">
                     <div class="mb-3">
                       <h4 class="small font-weight-bold">Name</h4>
-                      <h4 class="small">{{ customerInfo.economic.name }}</h4>
+                      <h4 class="small" v-if="customerInfo.economic.name">
+                        {{ customerInfo.economic.name }}
+                      </h4>
+                      <h4 v-else class="small">N/A</h4>
                     </div>
                     <div class="mb-3">
                       <h4 class="small font-weight-bold">Currency</h4>
@@ -37,6 +40,15 @@
                     <div class="mb-3">
                       <h4 class="small font-weight-bold">Payment Terms</h4>
                       <h4 class="small">{{ paymentTerms }}</h4>
+                    </div>
+                    <div class="mb-3">
+                      <h4 class="small font-weight-bold">
+                        Invoicing Frequency
+                      </h4>
+                      <h4 v-if="invoiceFrequencyName" class="small">
+                        {{ invoiceFrequencyName }}
+                      </h4>
+                      <h4 v-else class="small">N/A</h4>
                     </div>
                   </div>
                 </div>
@@ -556,6 +568,20 @@
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
+              label="Invoicing Frequency:"
+              label-align-sm="right"
+              label-for="input-terms"
+              description="Required"
+            >
+              <b-form-select
+                id="input-terms"
+                required
+                v-model="form.invoiceFrequency"
+                :options="dropdownData.invoiceFrequencies"
+              ></b-form-select>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
               label="VAT Zone:"
               label-align-sm="right"
               label-for="input-vat"
@@ -849,6 +875,11 @@ export default {
         currencies: [],
         vatZones: [],
         employees: [],
+        invoiceFrequencies: [
+          { text: 'Weekly', value: 2 },
+          { text: 'Biweekly', value: 3 },
+          { text: 'Monthly', value: 4 },
+        ],
       },
       form: {},
       contactForm: {
@@ -1034,6 +1065,8 @@ export default {
       ateraid: 0,
       employeeName: null,
       employee: null,
+      invoiceFrequency: null,
+      invoiceFrequencyName: '',
     }
   },
   created() {
@@ -1128,6 +1161,8 @@ export default {
           this.employee = data.employee
           this.ateraid = data.apiInfo
           this.paymentTerms = data.paymentTerms
+          this.invoiceFrequency = data.invoiceFrequency
+          this.invoiceFrequencyName = data.invoiceFrequencyName
 
           this.populateForm()
         })
@@ -1210,6 +1245,7 @@ export default {
         selectedVatZone: this.customerInfo.economic.vatZone.vatZoneNumber,
         eInvoicingDisabledByDefault: this.customerInfo.economic
           .eInvoicingDisabledByDefault,
+        invoiceFrequency: this.invoiceFrequency,
       }
     },
     submitCustomerEdit() {

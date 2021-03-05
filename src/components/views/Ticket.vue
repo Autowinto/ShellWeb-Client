@@ -2,14 +2,8 @@
   <div id="wrapper">
     <div class="d-flex flex-column" id="content-wrapper">
       <div id="content">
-        <!-- <b-container>
-            <b-card class="mb-3" style="background-color: #36b9cc;">
-              <span style="color: black;" class="">Contact is undefined, please fix this here: </span>
-              <b-link :href="'https://app.atera.com/Admin#/ticket/' + this.ticketID">https://app.atera.com/Admin#/ticket/{{this.ticketID}}</b-link>
-            </b-card>
-        </b-container> -->
-        <div class="container-fluid">
-          <div class="row mb-3">
+        <b-container fluid>
+          <!-- <div class="row mb-3">
             <div class="col-10 m-0 ml-2 p-0">
               <button
                 style="
@@ -36,8 +30,8 @@
                 Add Time Entry
               </button>
             </div>
-          </div>
-          <div class="p-3 card-body shadow collapse mb-3" id="timeEntryForm">
+          </div> -->
+          <!-- <div class="p-3 card-body shadow collapse mb-3" id="timeEntryForm">
             <h4 class="text-dark">Add Time Entry</h4>
             <form>
               <div class="row">
@@ -137,89 +131,88 @@
                 </div>
               </div>
             </form>
-          </div>
+          </div> -->
           <h3 class="text-dark mb-4">Ticket ID: {{ items.TicketID }}</h3>
           <div class="row">
             <b-col cols="3">
-              <div class="card shadow mb-3">
-                <div class="card-header">
-                  <h6 class="text-primary font-weight-bold mb-0">
-                    Ticket Information
-                  </h6>
-                </div>
-                <div class="card-body">
-                  <div class="row mb-3">
-                    <div class="col">
-                      <p class="text-primary m-0 font-weight-bold">
-                        Customer ID
-                      </p>
-                      <p>{{ items.CustomerBusinessNumber || N / A }}</p>
-                    </div>
-                    <div class="col">
-                      <p class="text-primary m-0 font-weight-bold">Employee</p>
-                      <p>
+              <b-card no-body header="Ticket Information">
+                <b-card-body>
+                  <b-row>
+                    <b-col>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Customer</h4>
+                        <h4 class="small">{{ items.CustomerName }}</h4>
+                      </div>
+                    </b-col>
+                    <b-col>
+                      <h4 class="small font-weight-bold">Company Contact</h4>
+                      <h4 class="small">
                         {{ items.EndUserFirstName }} {{ items.EndUserLastName }}
-                      </p>
-                    </div>
-                  </div>
-                  <div class="row mb-3">
-                    <div class="col">
-                      <p class="text-primary m-0 font-weight-bold">Subject</p>
-                      <p class="m-0">{{ items.TicketTitle }}</p>
-                    </div>
-                  </div>
-                  <div class="row mb-3">
-                    <div class="col">
-                      <p class="text-primary m-0 font-weight-bold">
-                        Description
-                      </p>
-                      <p class="m-0">{{ items.FirstComment | stripHTML }}</p>
-                    </div>
-                  </div>
-                  <div class="row mb-3">
-                    <div class="col">
-                      <p class="text-primary m-0 font-weight-bold">
-                        Related Assets
-                      </p>
-                      <p class="m-0" href="customerpage.html">DSAP01</p>
-                    </div>
-                    <div class="col mr-3">
-                      <p></p>
-                      <button class="btn btn-primary btn-sm w-100">
-                        Connect
-                      </button>
-                    </div>
-                  </div>
-                  <div class="row mb-3">
-                    <div class="col">
-                      <p class="text-primary m-0 font-weight-bold">
-                        Date of creation
-                      </p>
-                      <p class="m-0">
-                        {{ items.TicketCreatedDate | dayjsDateOnly }}
-                      </p>
-                    </div>
-                  </div>
-                  <div class="row mb-3" v-if="items.TicketResolvedDate">
-                    <div class="col">
-                      <p class="text-primary m-0 font-weight-bold">
-                        Last updated
-                      </p>
-                      <p class="m-0">
-                        {{ items.TicketResolvedDate | dayjsDateOnly }}
-                      </p>
-                    </div>
-                  </div>
-                  <div class="row mb-3">
-                    <div class="col">
-                      <p class="text-primary m-0 font-weight-bold">
-                        Consultant
-                      </p>
-                      <p class="m-0">{{ items.TechnicianFullName }}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                      </h4>
+                    </b-col>
+                  </b-row>
+                  <b-row>
+                    <b-col>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Title</h4>
+                        <h4 class="small">{{ items.TicketTitle }}</h4>
+                      </div>
+                    </b-col>
+                    <b-col>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">ITC Employee</h4>
+                        <h4 class="small" v-if="items.TechnicianFullName">
+                          {{ items.TechnicianFullName }}
+                        </h4>
+                        <h4 class="small" v-else>N/A</h4>
+                      </div>
+                    </b-col>
+                  </b-row>
+                  <b-row>
+                    <b-col>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Project</h4>
+                        <h4 class="small">{{ items.isProject }}</h4>
+                      </div>
+                    </b-col>
+                    <b-col>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Fixed Price</h4>
+                        <h4 class="small" v-if="items.fixedPrice">
+                          {{ items.fixedPrice }}
+                        </h4>
+                        <h4 class="small" v-else>N/A</h4>
+                      </div>
+                    </b-col>
+                  </b-row>
+                  <b-row>
+                    <b-col>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Date Created</h4>
+                        <h4 class="small">
+                          {{ items.TicketCreatedDate | dayjsDateTime }}
+                        </h4>
+                      </div>
+                    </b-col>
+                    <b-col>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Date Modified</h4>
+                        <h4 class="small">
+                          {{ items.TicketResolvedDate | dayjsDateTime }}
+                        </h4>
+                      </div>
+                    </b-col>
+                  </b-row>
+                  <b-row>
+                    <b-col>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Description</h4>
+                        <h4 class="small">{{ items.FirstComment }}</h4>
+                      </div>
+                    </b-col>
+                  </b-row>
+                </b-card-body>
+              </b-card>
             </b-col>
             <div class="col">
               <div class="card shadow mb-3">
@@ -255,6 +248,7 @@
                 </div>
               </div>
               <!-- TODO: Implement pagination of comments. Not a huge priority right now, as the volume of comments usually isn't very great, but handle the edge case nonetheless -->
+
               <div class="card shadow mb-3">
                 <div class="card-header">
                   <span class="text-primary font-weight-bold mb-0 mr-2"
@@ -309,7 +303,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </b-container>
       </div>
     </div>
   </div>
