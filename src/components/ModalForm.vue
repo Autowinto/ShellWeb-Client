@@ -76,7 +76,7 @@
 
 <script>
 import LookupSelect from './LookupSelect'
-import { ref, set, reactive, getCurrentInstance } from '@vue/composition-api'
+import { ref, reactive, getCurrentInstance } from '@vue/composition-api'
 import axios from 'axios'
 
 export default {
@@ -156,7 +156,8 @@ export default {
     }
 
     function lookupValueSelected(event, key) {
-      set(instance.form, key, event[key])
+      form[key] = event[key]
+      // set(instance.form, key, event[key])
     }
 
     return {
