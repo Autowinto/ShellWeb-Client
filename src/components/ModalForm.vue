@@ -50,7 +50,7 @@
             </div>
             <div v-if="field.type == 'boolean'">
               <b-checkbox
-                @change="handleCheckboxChange(field)"
+                @change="handleCheckboxChange($event, field.triggersKey)"
                 v-model="form[field.key]"
                 size="md"
                 >{{ field.checkText }}</b-checkbox
@@ -124,11 +124,10 @@ export default {
         })
     }
 
-    function handleCheckboxChange(field) {
-      if (field.triggersKey) {
-        let obj = props.fields.find((obj) => obj.key == field.triggersKey)
-        form[obj.key] = null
-        obj.show = !form[field.key] // A bit hacky, but it's correct
+    function handleCheckboxChange(event, key) {
+      if (key) {
+        let obj = props.fields.find((obj) => obj.key == key)
+        obj.show = event
       } else {
         console.log('Nothing triggered')
       }
