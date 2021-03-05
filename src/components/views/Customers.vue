@@ -164,6 +164,20 @@
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
+              label="Invoicing Frequency:"
+              label-align-sm="right"
+              label-for="input-terms"
+              description="Required"
+            >
+              <b-form-select
+                id="input-terms"
+                required
+                v-model="form.invoiceFrequency"
+                :options="dropdownData.invoiceFrequencies"
+              ></b-form-select>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
               label="VAT Zone:"
               label-align-sm="right"
               label-for="input-vat"
@@ -292,6 +306,11 @@ export default {
         currencies: [],
         vatZones: [],
         employees: [],
+        invoiceFrequencies: [
+          { text: 'Weekly', value: 2 },
+          { text: 'Biweekly', value: 3 },
+          { text: 'Monthly', value: 4 },
+        ],
       },
       form: {
         name: null,
