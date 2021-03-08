@@ -10,7 +10,10 @@
       @hidden="cancelForm"
     >
       <b-alert :show="showErrorAlert" fade dismissible variant="danger">
-        Failed to submit item. Error code: {{ errorCode }}.
+        <h5>Error(s) received with code: {{ errorCode }}</h5>
+        <div v-for="error in errors" :key="error">
+          {{ error.param }}: {{ error.msg }}.
+        </div>
       </b-alert>
       <b-form onsubmit="return false;" @submit="doPost" class="w-100">
         <b-form-group v-for="field in fields" :key="field.key">
@@ -66,9 +69,14 @@
             <small v-if="field.required">Required</small>
           </div>
         </b-form-group>
-        <b-container fluid class="p-0">
+        <b-overlay
+          :show="processing"
+          spinner-small
+          rounded="sm"
+          class="d-inline-block"
+        >
           <b-btn type="submit" variant="success" class="mr-1">Submit</b-btn>
-        </b-container>
+        </b-overlay>
       </b-form>
     </b-modal>
   </div>
@@ -112,8 +120,12 @@ export default {
     let showErrorAlert = ref(false)
 
     let errorCode = ref(0)
+    let errors = ref([])
+
+    let processing = ref(false)
 
     function doPost() {
+      processing = true
       axios
         .post(props.submitUrl, this.form)
         .then(() => {
@@ -121,6 +133,9 @@ export default {
         })
         .catch((error) => {
           handleError(error)
+        })
+        .finally(() => {
+          processing = false
         })
     }
 
@@ -145,6 +160,7 @@ export default {
     }
 
     function handleError(error) {
+      instance.errors = error.response.data
       instance.errorCode = error.response.status
       instance.showErrorAlert = true // I don't kn
     }
@@ -161,6 +177,8 @@ export default {
 
     return {
       form,
+      errors,
+      processing,
       baseUrl,
       doPost,
       cancelForm,
