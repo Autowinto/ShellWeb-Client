@@ -12,6 +12,7 @@ import VueFileAgent from 'vue-file-agent'
 import 'vue-file-agent/dist/vue-file-agent.css'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import './config/axiosConfig'
 import { CoolSelectPlugin } from 'vue-cool-select'
 import 'vue-cool-select/dist/themes/bootstrap.css'
@@ -28,6 +29,7 @@ Vue.use(VueFileAgent)
 import store from './auth/store'
 
 dayjs.extend(duration)
+dayjs.extend(relativeTime)
 
 //Initialize authentication before creating the app
 new Vue({

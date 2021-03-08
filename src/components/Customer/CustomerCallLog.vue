@@ -1,45 +1,87 @@
 <template>
   <b-card no-body header="Customer Call Log">
-    <b-card-body class="overflow-auto" style="height: 500px; max-height: 500px">
-      <div
-        class="rounded border w-100 pl-3 py-2 mb-3"
-        style="background-color: #f9f9f9"
-      >
-        <div class="row">
-          <span class="small">06/05/2020 14:45:26</span>
+    <b-card-body
+      class="overflow-auto p-2"
+      style="height: 500px; max-height: 500px"
+    >
+      <div v-if="calls.length">
+        <div v-for="call in calls" :key="call.entryId" class="p-2">
+          <b-card body-class="p-2" class="small" bg-variant="light">
+            <span>{{ formatDateTime(call.deliveredTime) }}</span>
+            <b-card no-body class="shadow"></b-card>
+            <br />
+            <span class="mr-2">
+              Caller:
+              {{ call.callingNumber }}
+            </span>
+            <span>
+              Receiver:
+              {{ call.receivingNumber }}
+            </span>
+            <br />
+            <div v-if="call.establishedTime">
+              <span>
+                Duration:
+                {{ calculateDuration(call.establishedTime, call.clearedTime) }}
+              </span>
+              <span>
+                Waited for:
+                {{
+                  calculateDuration(call.deliveredTime, call.establishedTime)
+                }}
+              </span>
+            </div>
+            <div v-else>
+              <span class="mr-2"> Call not picked up </span>
+              <span>
+                Waited for:
+                {{ calculateDuration(call.deliveredTime, call.clearedTime) }}
+              </span>
+            </div>
+          </b-card>
         </div>
-        <div class="row">
-          <span class="mr-1">Incoming Call from</span>
-          <span class="mr-1" style="color: limegreen">12345678</span>
-          <span class="mr-1">to</span>
-          <span class="mr-1" style="color: limegreen">87654321</span>
-        </div>
-        <div class="row">
-          <span class="mr-1">Duration:</span>
-          <span class="mr-1" style="color: limegreen">0:21:45</span>
-        </div>
-        <div class="row">
-          <span class="mr-1">Waited for:</span>
-          <span class="mr-1" style="color: limegreen">0:05:45</span>
-        </div>
+      </div>
+      <div v-else>
+        <h4>No calls to show</h4>
       </div>
     </b-card-body>
   </b-card>
 </template>
 
 <script>
-// import { ref, getCurrentInstance } from '@vue/composition-api'
-// import axios from 'axios'
+import { ref, getCurrentInstance, onMounted } from '@vue/composition-api'
+import dayjs from 'dayjs'
+import axios from 'axios'
 export default {
   setup() {
-    // const instance = getCurrentInstance()
-    // const customerId = instance.$route.query.id
-    // let calls = ref([])
-    // function getCalls() {
-    //   axios.get(`${process.env.VUE_APP_URL}`).then((response) => {
-    //     this.calls = response
-    //   })
-    // }
+    const instance = getCurrentInstance()
+
+    let calls = ref([])
+
+    function fetchCalls() {
+      axios
+        .get(`${process.env.VUE_APP_URL}calls/${instance.$route.query.id}`)
+        .then((response) => {
+          calls.value = response.data
+        })
+    }
+
+    onMounted(() => {
+      fetchCalls()
+    })
+
+    function calculateDuration(established, cleared) {
+      let seconds = dayjs(cleared).diff(dayjs(established), 'seconds')
+      return dayjs.duration(seconds, 'seconds').format('HH:mm:ss')
+    }
+
+    function formatDateTime(dateTime) {
+      let day = dayjs(dateTime)
+
+      return day.format('DD/MM/YYYY HH:mm:ss')
+    }
+
+    return { calls, formatDateTime, calculateDuration }
   },
 }
 </script>
