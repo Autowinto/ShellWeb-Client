@@ -49,18 +49,22 @@
 </template>
 
 <script>
-import { ref, getCurrentInstance, onMounted } from '@vue/composition-api'
+import { ref, onMounted } from '@vue/composition-api'
 import dayjs from 'dayjs'
 import axios from 'axios'
 export default {
-  setup() {
-    const instance = getCurrentInstance()
-
+  props: {
+    customerId: {
+      type: Number,
+      required: true,
+    },
+  },
+  setup(props) {
     let calls = ref([])
 
     function fetchCalls() {
       axios
-        .get(`${process.env.VUE_APP_URL}calls/${instance.$route.query.id}`)
+        .get(`${process.env.VUE_APP_URL}calls/${props.customerId}`)
         .then((response) => {
           calls.value = response.data
         })

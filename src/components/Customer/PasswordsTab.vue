@@ -1,5 +1,5 @@
 <template>
-  <b-container>
+  <b-container class="p-0">
     <b-card-text>
       <b-card bg-variant="light" class="mb-3">
         <b-btn

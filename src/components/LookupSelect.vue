@@ -10,6 +10,7 @@
         :error-message="errorMessage"
         :succesful="!!(!errorMessage && selected)"
         disable-filtering-by-search
+        :size="size"
       >
         <template slot="item" slot-scope="{ item }">
           <span v-for="key in textKeys" :key="key.key">{{ item[key] }} </span>
@@ -92,6 +93,10 @@ export default {
     required: {
       type: Boolean,
       required: true,
+    },
+    size: {
+      type: String,
+      default: 'md',
     },
     placeholder: String,
     form: Object,

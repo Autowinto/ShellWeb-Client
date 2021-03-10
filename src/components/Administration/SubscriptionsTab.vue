@@ -18,6 +18,7 @@
     <b-collapse id="groupsAccordion" accordion="accordion">
       <paginated-table
         :url="subGroupUrl"
+        ref="subGroupTable"
         :uploadUrl="subGroupUrl"
         :fields="groupFields"
         :results="10"
@@ -25,7 +26,7 @@
         :sortDirection="'DESC'"
         :editable="true"
         :deletable="true"
-        deletableRole="0"
+        :deletableRole="0"
       ></paginated-table>
     </b-collapse>
     <paginated-table
@@ -36,7 +37,7 @@
       :sortDirection="'DESC'"
       :editable="true"
       :deletable="true"
-      deletableRole="0"
+      :deletableRole="0"
       :results="10"
     ></paginated-table>
     <b-modal
@@ -179,8 +180,11 @@
       modalId="create-group-modal"
       :fields="groupFormFields"
       modalTitle="Create Subscription Group"
+      windowSize="lg"
+      fieldSize="sm"
+      @submitted="handleCreated"
     ></modal-form>
-    <b-modal
+    <!-- <b-modal
       id="createGroupModal"
       centered
       body-class="p-0"
@@ -208,7 +212,7 @@
           <b-btn type="submit" variant="success">Create</b-btn>
         </b-form>
       </b-card>
-    </b-modal>
+    </b-modal> -->
   </div>
 </template>
 
@@ -236,6 +240,7 @@ export default {
           key: 'name',
           type: 'string',
           label: 'Group Name',
+          cols: 12,
         },
       ],
       groupFields: [
@@ -336,6 +341,9 @@ export default {
     this.populateOptions()
   },
   methods: {
+    handleCreated() {
+      this.$refs.subGroupTable.loadData()
+    },
     formatDate(date) {
       if (!dayjs(date).isValid()) return ''
       return dayjs(date).format('MMM D, YYYY')
