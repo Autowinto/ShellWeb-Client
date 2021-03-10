@@ -14,7 +14,9 @@
     </b-card>
     <paginated-table
       :url="url"
+      ref="subTable"
       :uploadUrl="uploadUrl"
+      :deleteUrl="deleteUrl"
       :fields="fields"
       :results="10"
       :sortColumn="'product'"
@@ -22,10 +24,11 @@
       :editable="true"
       deletable
       :deletableRole="4"
+      description
     >
     </paginated-table>
 
-    <b-modal
+    <!-- <b-modal
       id="customerSubscriptionModal"
       ref="customerSubscriptionModal"
       body-class="p-0"
@@ -115,13 +118,16 @@
           <b-btn type="submit" variant="success">Create</b-btn>
         </b-form>
       </b-card>
-    </b-modal>
-    <!-- <modal-form
+    </b-modal> -->
+    <modal-form
       :submitUrl="this.uploadUrl"
       modalId="customerSubscriptionModal"
       modalTitle="Create Subscription"
       :fields="formFields"
-    ></modal-form> -->
+      windowSize="lg"
+      fieldSize="sm"
+      @submitted="handleCreated"
+    ></modal-form>
   </div>
 </template>
 
@@ -129,14 +135,15 @@
 import axios from 'axios'
 import dayjs from 'dayjs'
 import PaginatedTable from '../PaginatedTable'
-// import ModalForm from '../ModalForm'
+import ModalForm from '../ModalForm'
 
 export default {
   data() {
     return {
       id: this.$route.query.id,
       url: `${process.env.VUE_APP_URL}subscriptions/instances/${this.$route.query.id}`,
-      uploadUrl: `${process.env.VUE_APP_URL}subscriptions/instances`,
+      uploadUrl: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/subscriptions/instances`,
+      deleteUrl: `${process.env.VUE_APP_URL}subscriptions/instances`,
       form: {},
       subscriptions: [],
       subscriptionInstances: [],
@@ -187,17 +194,19 @@ export default {
       ],
       formFields: [
         {
-          key: 'subscription',
-          type: 'lookup',
+          key: 'subscriptionId',
+          type: 'select',
           label: 'Subscription',
-          lookupEndpoint: 'subscriptions',
+          options: this.subscriptionOptions,
           required: true,
+          cols: 12,
         },
         {
           key: 'name',
           type: 'string',
           label: 'Name',
           required: true,
+          cols: 12,
         },
         {
           key: 'unitPrice',
@@ -231,6 +240,9 @@ export default {
     this.resetForm()
   },
   methods: {
+    handleCreated() {
+      this.$refs.subTable.loadData()
+    },
     resetForm() {
       this.form = {
         customerId: this.$route.query.id,
@@ -302,6 +314,8 @@ export default {
         })
       }
 
+      this.$set(this.formFields[0], 'options', this.subscriptionOptions)
+
       // let engineResponse = await axios.get(
       //   `${process.env.VUE_APP_URL}subscriptions/billingEngines`
       // )
@@ -315,7 +329,7 @@ export default {
   },
   components: {
     PaginatedTable,
-    // ModalForm,
+    ModalForm,
   },
 }
 </script>

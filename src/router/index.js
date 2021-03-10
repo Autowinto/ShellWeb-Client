@@ -1,140 +1,141 @@
-import Vue from "vue";
-import Router from "vue-router";
-import Customers from "../components/views/Customers.vue";
-import Dashboard from "../components/views/Dashboard.vue";
-import Profile from "../components/views/Profile.vue";
-import Customer from "../components/views/Customer.vue";
-import Contact from "../components/views/Contact.vue";
-import Login from "../components/views/Login.vue";
+import Vue from 'vue'
+import Router from 'vue-router'
+import Customers from '../components/views/Customers.vue'
+import Dashboard from '../components/views/Dashboard.vue'
+// import Profile from '../components/views/Profile.vue'
+import Customer from '../components/views/Customer.vue'
+import Contact from '../components/views/Contact.vue'
+import Login from '../components/views/Login.vue'
 // import NotFound from "../components/views/NotFound.vue";
-import Tickets from "../components/views/Tickets.vue";
-import Ticket from "../components/views/Ticket.vue";
-import Invoices from "../components/views/Invoices.vue";
-import TimeOverview from "../components/views/TimeOverview.vue";
-import Administration from "../components/views/Administration.vue";
-import Asset from "../components/views/Asset.vue";
-import Authentication from "../components/views/Authentication.vue";
+import Tickets from '../components/views/Tickets.vue'
+import Ticket from '../components/views/Ticket.vue'
+import Invoices from '../components/views/Invoices.vue'
+import TimeOverview from '../components/views/TimeOverview.vue'
+import Administration from '../components/views/Administration.vue'
+import Asset from '../components/views/Asset.vue'
+import Authentication from '../components/views/Authentication.vue'
+import Changelog from '../components/views/Changelog.vue'
 
-Vue.use(Router);
+Vue.use(Router)
 
 const router = new Router({
-  mode: "history",
+  mode: 'history',
   routes: [
     {
-      path: "/",
-      name: "dashboard",
+      path: '/',
+      name: 'dashboard',
       component: Dashboard,
       meta: {
-        title: "Dashboard",
+        title: 'Dashboard',
         requireAuth: true,
       },
     },
     {
-      path: "/customers",
-      name: "customers",
+      path: '/customers',
+      name: 'customers',
       component: Customers,
       meta: {
-        title: "Customers",
+        title: 'Customers',
         requireAuth: true,
       },
     },
     {
-      path: "/profile",
-      name: "profile",
-      component: Profile,
-      meta: {
-        title: "Profile",
-        requireAuth: true,
-      },
-    },
-    {
-      path: "/customer",
-      name: "customer",
+      path: '/customer',
+      name: 'customer',
       component: Customer,
       meta: {
-        title: "Customer",
+        title: 'Customer',
         requireAuth: true,
       },
     },
     {
-      path: "/contact",
-      name: "contact",
+      path: '/contact',
+      name: 'contact',
       component: Contact,
       meta: {
-        title: "Contact",
+        title: 'Contact',
         requireAuth: true,
       },
     },
     {
-      path: "/tickets",
-      name: "tickets",
+      path: '/tickets',
+      name: 'tickets',
       component: Tickets,
       meta: {
-        title: "Tickets",
+        title: 'Tickets',
         requireAuth: true,
       },
     },
     {
-      path: "/ticket",
-      name: "ticket",
+      path: '/ticket',
+      name: 'ticket',
       component: Ticket,
       meta: {
-        title: "Ticket",
+        title: 'Ticket',
         requireAuth: true,
       },
     },
     {
-      path: "/invoices",
-      name: "invoices",
+      path: '/invoices',
+      name: 'invoices',
       component: Invoices,
       meta: {
-        title: "Invoices",
+        title: 'Invoices',
         requireAuth: true,
       },
     },
     {
-      path: "/timeoverview",
-      name: "timeoverview",
+      path: '/timeoverview',
+      name: 'timeoverview',
       component: TimeOverview,
       meta: {
-        title: "Time Overview",
+        title: 'Time Overview',
         requireAuth: true,
       },
     },
     {
-      path: "/administration",
-      name: "administration",
+      path: '/administration',
+      name: 'administration',
       component: Administration,
       meta: {
-        title: "Administration",
+        title: 'Administration',
         requireAuth: true,
       },
     },
     {
-      path: "/asset",
-      name: "asset",
+      path: '/asset',
+      name: 'asset',
       component: Asset,
       meta: {
-        title: "Asset",
+        title: 'Asset',
         requireAuth: true,
       },
     },
     {
-      path: "/login",
-      name: "login",
+      path: '/login',
+      name: 'login',
       component: Login,
       meta: {
         hideNavBar: true,
-        title: "Login",
+        title: 'Login',
       },
     },
     {
-      path: "/auth",
-      name: "authentication",
+      path: '/auth',
+      name: 'authentication',
       component: Authentication,
       meta: {
         hideNavBar: true,
-        title: "Authentication",
+        title: 'Authentication',
+      },
+    },
+    {
+      path: '/changelog',
+      name: 'changelog',
+      component: Changelog,
+      meta: {
+        title: 'Changelog',
+        requireAuth: false,
       },
     },
     // {
@@ -147,12 +148,11 @@ const router = new Router({
     //   },
     // },
   ],
-});
+})
 
 router.beforeEach((to, from, next) => {
-  document.title =
-  to.meta.title + " - IT-Confidence Shell" || "Something Went Wrong";
-  next();
-});
+  document.title = to.meta.title + ' - IT-Confidence Shell' || 'Something Went Wrong'
+  next()
+})
 
-export default router;
+export default router

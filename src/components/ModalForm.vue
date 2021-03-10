@@ -1,83 +1,125 @@
 <template>
   <div id="wrapper">
     <b-modal
-      size="md"
+      :size="this.windowSize"
       centered
       :ref="this.modalId"
       :id="this.modalId"
       :title="this.modalTitle"
-      hide-footer
       @hidden="cancelForm"
+      body-bg-variant="light"
     >
       <b-alert :show="showErrorAlert" fade dismissible variant="danger">
         <h5>Error(s) received with code: {{ errorCode }}</h5>
-        <div v-for="error in errors" :key="error">
-          {{ error.param }}: {{ error.msg }}.
+        <div v-if="errorCode == 400">
+          <div v-for="error in err" :key="error">
+            {{ error.param }}: {{ error.msg }}.
+          </div>
+        </div>
+        <div v-else>
+          <div>{{ err }}</div>
         </div>
       </b-alert>
-      <b-form onsubmit="return false;" @submit="doPost" class="w-100">
-        <b-form-group v-for="field in fields" :key="field.key">
-          <div v-if="field.show">
-            <label v-if="field.label">{{ field.label }}</label>
-            <div id="input-string" v-if="field.type == 'string'">
-              <b-input
-                :required="field.required"
-                type="text"
-                v-model="form[field.key]"
-              ></b-input>
+      <b-form id="form" onsubmit="return false;" @submit="doPost">
+        <b-row>
+          <!-- If no collumn size is defined, set it to full size -->
+          <b-col
+            :cols="field.cols || 6"
+            v-for="field in fields"
+            :key="field.key"
+            class="mb-3"
+          >
+            <div v-if="field.show">
+              <label class="font-weight-bold" v-if="field.label">{{
+                field.label
+              }}</label>
+              <div id="input-string" v-if="field.type == 'string'">
+                <b-input
+                  :size="field.size || fieldSize"
+                  :required="field.required"
+                  type="text"
+                  v-model="form[field.key]"
+                ></b-input>
+              </div>
+              <div id="input-double" v-if="field.type == 'double'">
+                <b-input
+                  :size="field.size || fieldSize"
+                  type="number"
+                  :required="field.required"
+                  step="0.01"
+                  v-model="form[field.key]"
+                ></b-input>
+              </div>
+              <div id="input-int" v-if="field.type == 'integer'">
+                <b-input
+                  :size="field.size || fieldSize"
+                  :required="field.required"
+                  type="number"
+                  v-model="form[field.key]"
+                ></b-input>
+              </div>
+              <div id="input-text" v-if="field.type == 'text'">
+                <b-textarea
+                  :size="field.size || fieldSize"
+                  :required="field.required"
+                  v-model="form[field.key]"
+                ></b-textarea>
+              </div>
+              <div id="input-lookup" v-if="field.type == 'lookup'">
+                <lookup-select
+                  :size="field.size || fieldSize"
+                  @selected="lookupValueSelected($event, field.key)"
+                  :lookupUrl="`${baseUrl}/${field.lookupEndpoint}`"
+                  :textKeys="field.textKeys"
+                  :required="Boolean(field.required)"
+                  :parentKey="field.parentKey"
+                  :filterKey="field.filterKey"
+                  :placeholder="field.placeholder"
+                  :form="form"
+                ></lookup-select>
+              </div>
+              <div v-if="field.type == 'boolean'">
+                <b-checkbox
+                  @change="handleCheckboxChange($event, field.triggersKey)"
+                  v-model="form[field.key]"
+                  :size="field.size || fieldSize"
+                  >{{ field.checkText }}</b-checkbox
+                >
+              </div>
+              <div v-if="field.type == 'select'">
+                <b-select
+                  :size="field.size || fieldSize"
+                  v-model="form[field.key]"
+                  :options="field.options"
+                  :required="field.required"
+                ></b-select>
+              </div>
+              <div v-if="field.type == 'date'">
+                <b-datepicker
+                  :size="field.size || fieldSize"
+                  :required="field.required"
+                  v-model="form[field.key]"
+                ></b-datepicker>
+              </div>
+              <small v-if="field.required">Required</small>
             </div>
-            <div id="input-string" v-if="field.type == 'number'">
-              <b-input
-                type="number"
-                step="0.01"
-                v-model="form[field.key]"
-              ></b-input>
-            </div>
-            <div id="input-text" v-if="field.type == 'text'">
-              <b-textarea
-                :required="field.required"
-                v-model="form[field.key]"
-              ></b-textarea>
-            </div>
-            <div id="input-lookup" v-if="field.type == 'lookup'">
-              <lookup-select
-                @selected="lookupValueSelected($event, field.key)"
-                :lookupUrl="`${baseUrl}/${field.lookupEndpoint}`"
-                :textKeys="field.textKeys"
-                :required="Boolean(field.required)"
-                :parentKey="field.parentKey"
-                :filterKey="field.filterKey"
-                :placeholder="field.placeholder"
-                :form="form"
-              ></lookup-select>
-            </div>
-            <div v-if="field.type == 'boolean'">
-              <b-checkbox
-                @change="handleCheckboxChange($event, field.triggersKey)"
-                v-model="form[field.key]"
-                size="md"
-                >{{ field.checkText }}</b-checkbox
-              >
-            </div>
-            <div v-if="field.type == 'select'">
-              <b-select
-                v-model="form[field.key]"
-                :options="field.options"
-                :required="field.required"
-              ></b-select>
-            </div>
-            <small v-if="field.required">Required</small>
-          </div>
-        </b-form-group>
-        <b-overlay
-          :show="processing"
-          spinner-small
-          rounded="sm"
-          class="d-inline-block"
-        >
-          <b-btn type="submit" variant="success" class="mr-1">Submit</b-btn>
-        </b-overlay>
+          </b-col>
+          <b-overlay
+            :show="processing"
+            spinner-small
+            rounded="sm"
+            class="d-inline-block w-100"
+          >
+          </b-overlay>
+        </b-row>
       </b-form>
+      <template #modal-footer>
+        <div class="w-100">
+          <b-btn form="form" type="submit" class="float-left" variant="success"
+            >Submit</b-btn
+          >
+        </div>
+      </template>
     </b-modal>
   </div>
 </template>
@@ -105,31 +147,46 @@ export default {
       type: String,
       required: true,
     },
+    windowSize: {
+      type: String,
+      default: 'md',
+    },
+    fieldSize: {
+      type: String,
+      default: 'md',
+    },
   },
-  setup(props) {
+  setup(props, { emit }) {
     const instance = getCurrentInstance()
-
     for (let field of props.fields) {
       if (field.show == undefined) {
         field.show = true
       }
     }
 
+    console.log(props.fields)
+
     let baseUrl = `${process.env.VUE_APP_URL}lookups`
     let form = reactive({})
     let showErrorAlert = ref(false)
 
     let errorCode = ref(0)
-    let errors = ref([])
+    let err = ref([])
 
     let processing = ref(false)
+
+    function triggerSubmit() {
+      this.$refs.form.submit.click()
+    }
 
     function doPost() {
       processing = true
       axios
         .post(props.submitUrl, this.form)
         .then(() => {
-          handleResponse()
+          emit('submitted')
+          this.$refs[props.modalId].hide()
+          form = reactive({})
         })
         .catch((error) => {
           handleError(error)
@@ -153,21 +210,14 @@ export default {
       return obj.key
     }
 
-    function handleResponse() {
-      this.$emit('postSuccessful')
-      this.$refs[props.modalId].hide()
-      form = reactive({})
-    }
-
     function handleError(error) {
-      instance.errors = error.response.data
+      instance.err = error.response.data
       instance.errorCode = error.response.status
       instance.showErrorAlert = true // I don't kn
     }
 
     function cancelForm() {
       form = reactive({})
-      console.log('Cancelling')
     }
 
     function lookupValueSelected(event, key) {
@@ -177,12 +227,13 @@ export default {
 
     return {
       form,
-      errors,
+      err,
       processing,
       baseUrl,
       doPost,
       cancelForm,
       lookupValueSelected,
+      triggerSubmit,
       handleCheckboxChange,
       getFieldObjectByKey,
       errorCode,

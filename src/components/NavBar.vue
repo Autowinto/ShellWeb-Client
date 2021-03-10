@@ -21,8 +21,8 @@
           <b-nav-item to="/">
             <i class="fas fa-tachometer-alt"></i>Dashboard
           </b-nav-item>
-          <b-nav-item to="/profile">
-            <i class="fas fa-table"></i>Profile
+          <b-nav-item to="/changelog">
+            <i class="fas fa-newspaper"></i>Changelog
           </b-nav-item>
           <b-nav-item to="/customers">
             <i class="fas fa-table"></i>Customers
@@ -40,13 +40,6 @@
             <i class="fas fa-table"></i>Administration
           </b-nav-item>
         </b-nav>
-        <!-- <div class="text-center d-none d-md-inline">
-          <button
-            class="btn rounded-circle border-0"
-            id="sidebarToggle"
-            type="button"
-          ></button>
-        </div> -->
       </div>
     </b-navbar>
     <div
@@ -201,7 +194,7 @@
       <footer class="bg-white sticky-footer">
         <div class="container my-auto">
           <div class="text-center my-auto copyright">
-            <span>Copyright © IT Confidence A/S - 2020</span>
+            <span>Copyright © IT Confidence A/S - 2021</span>
           </div>
         </div>
       </footer>

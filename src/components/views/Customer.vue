@@ -128,7 +128,9 @@
           </div>
           <div class="row">
             <div class="col">
-              <customer-call-log></customer-call-log>
+              <customer-call-log
+                :customerId="Number(this.id)"
+              ></customer-call-log>
             </div>
           </div>
         </div>

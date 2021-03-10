@@ -179,6 +179,13 @@
               </div>
             </div>
           </template>
+          <template #row-details="scope">
+            <label for="description-area">Description</label>
+            <b-textarea
+              id="description-area"
+              v-model="scope.item.description"
+            ></b-textarea>
+          </template>
 
           <template v-slot:cell(actions)="scope">
             <div v-if="!scope.item.editing">
@@ -186,7 +193,7 @@
                 v-if="editable"
                 variant="primary"
                 class="fas fa-edit mr-1"
-                @click="doEdit(scope.item)"
+                @click="doEdit(scope)"
               ></b-btn>
               <b-btn
                 v-if="downloadable"
@@ -210,12 +217,6 @@
               >
             </div>
           </template>
-
-          <!-- <template v-if="editable || downloadable || deletable" v-slot:cell(actions)='item'>
-        <b-btn v-if="editable && !item.editing" variant="primary" class="fas fa-edit mr-1" @click="doEdit(item)"></b-btn>
-        <b-btn v-if="downloadable && !item.editing" variant="primary" class="fas fa-download mr-1"></b-btn>
-        <b-btn v-if="deletable && !item.editing" variant="danger" class="fas fa-trash-alt"></b-btn>
-      </template> -->
         </b-table>
         <b-pagination
           v-model="currentPage"
@@ -246,6 +247,9 @@ export default {
     uploadUrl: {
       type: String,
     },
+    deleteUrl: {
+      type: String,
+    },
     downloadUrl: {
       type: String,
     },
@@ -266,6 +270,10 @@ export default {
     downloadable: Boolean,
     deletable: Boolean,
     deletableRole: Number,
+    description: {
+      type: Boolean,
+      default: false,
+    },
     fixed: Boolean,
     size: {
       type: String,
@@ -342,8 +350,11 @@ export default {
 
       this.loadData()
     },
-    doEdit(item) {
-      this.$set(item, 'editing', true)
+    doEdit(scope) {
+      if (this.description) {
+        scope.toggleDetails()
+      }
+      this.$set(scope.item, 'editing', true)
     },
     cancelEdit(item) {
       this.loadData().then(() => {
@@ -397,7 +408,7 @@ export default {
         })
         .then((response) => {
           if (response == true) {
-            axios.delete(`${this.uploadUrl}/${scope.item.id}`).then(() => {
+            axios.delete(`${this.deleteUrl}/${scope.item.id}`).then(() => {
               this.loadData()
             })
           } else {

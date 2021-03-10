@@ -26,7 +26,9 @@
       modalId="ticket-creation-modal"
       :submitUrl="url"
       :fields="formFields"
-      @postSuccessful="handleTicketPosted"
+      @submitted="handleTicketPosted"
+      windowSize="lg"
+      fieldSize="sm"
     ></modal-form>
   </div>
 </template>
@@ -79,6 +81,7 @@ export default {
           lookupEndpoint: 'customers',
           placeholder: 'None picked. All contacts will be shown',
           required: true,
+          cols: 6,
         },
         {
           key: 'contactId',
@@ -89,18 +92,21 @@ export default {
           type: 'lookup',
           lookupEndpoint: 'contacts',
           required: true,
+          cols: 6,
         },
         {
           key: 'title',
           type: 'string',
           label: 'Ticket Title',
           required: true,
+          cols: 12,
         },
         {
           key: 'description',
           type: 'text',
           label: 'Description',
           required: true,
+          cols: 12,
         },
         {
           key: 'impact',
@@ -133,6 +139,7 @@ export default {
           ],
           required: true,
           label: 'Ticket Impact',
+          cols: 6,
         },
         {
           key: 'type',
@@ -157,19 +164,22 @@ export default {
           ],
           required: true,
           label: 'Ticket Type',
+          cols: 6,
         },
         {
           key: 'isProject',
           label: 'Project',
           type: 'boolean',
           triggersKey: 'fixedPrice',
-          checkText: 'Is this ticket a project?',
+          checkText: 'Is this ticket a project e.g a fixed price?',
+          cols: 6,
         },
         {
           key: 'fixedPrice',
           label: 'Fixed Price',
-          type: 'number',
+          type: 'double',
           show: false,
+          cols: 6,
         },
       ],
     }
