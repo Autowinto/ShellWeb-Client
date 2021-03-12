@@ -1229,6 +1229,29 @@
   resolved "https://registry.yarnpkg.com/@vue/web-component-wrapper/-/web-component-wrapper-1.3.0.tgz#b6b40a7625429d2bd7c2281ddba601ed05dc7f1a"
   integrity sha512-Iu8Tbg3f+emIIMmI2ycSI8QcEuAUgPTgHwesDU1eKMLE4YC/c/sFbGc70QgMq31ijRftV0R7vCm9co6rldCeOA==
 
+"@vueuse/core@^4.3.6":
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-4.3.6.tgz#49a90f67d538f0770ab4ce6e2c62302bc7f091a7"
+  integrity sha512-XqfU/OIxHWq5Ii8pYLGyXADvY0Jbs4t9q3Nx5ItYNjtN9kCdZ1q+arwjqCgIyjCA25hfqdinZNtWjVXsheZUzQ==
+  dependencies:
+    "@vueuse/shared" "4.3.6"
+    vue-demi latest
+
+"@vueuse/router@^4.3.6":
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/@vueuse/router/-/router-4.3.6.tgz#bb340a56aa2ad811770676dda3812869ff15ff36"
+  integrity sha512-4Cl9MQwpwvWj0XCnEjF+MYHX/UmGxFwKESj6frepDGMb1fifSxgS4oc1qVzzM6Jt2dzWUu53AOKx6Xe0DENrQw==
+  dependencies:
+    "@vueuse/shared" "4.3.6"
+    vue-demi latest
+
+"@vueuse/shared@4.3.6":
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-4.3.6.tgz#5d38c7eb4dccc2cef012a8b6d2df932c34d4708a"
+  integrity sha512-sGowcpeVxilaV03wD7N7XL+LZBy0e2FGreYyCWWofVN96PSYPw/hyVrxmZiBrfKn6fFllKf+87wi1TTs4C6ZXg==
+  dependencies:
+    vue-demi latest
+
 "@webassemblyjs/ast@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.9.0.tgz#bd850604b4042459a5a41cd7d338cbed695ed964"
@@ -8218,6 +8241,11 @@ vue-cool-select@^3.5.2:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/vue-cool-select/-/vue-cool-select-3.5.2.tgz#d1ad160e6807365d351a2e5d505caefa329dba35"
   integrity sha512-+a5dzyp0RmfiMbW1bnhHFvK2R2nTND6cAO61WkUDCGE29pJ8GbUknBHxJHsA1uZXtGNN/xLEmUQD6wA8aVbKwQ==
+
+vue-demi@latest:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.7.2.tgz#bb450837d8f36b293d3f9fbaec60570bae3c6b0a"
+  integrity sha512-cRaQymWYC3gcj3Y8CGDjPI7r2BIvHNMuoLSlfyo7CeqtFzV6eIlYK7xPnExPl4m3j6y5D1FOqdclEIWeim5EJg==
 
 vue-eslint-parser@^7.0.0:
   version "7.1.0"

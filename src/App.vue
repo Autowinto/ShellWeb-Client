@@ -70,7 +70,4 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-.modal-backdrop {
-  background-color: rgba(0, 0, 0, 0.5) !important;
-}
 </style>
