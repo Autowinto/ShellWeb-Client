@@ -156,6 +156,11 @@ export default {
       default: 'md',
     },
   },
+  data() {
+    return {
+      customerId: this.$route.query.id,
+    }
+  },
   setup(props, { emit }) {
     const instance = getCurrentInstance()
     for (let field of props.fields) {
@@ -180,9 +185,12 @@ export default {
     }
 
     function doPost() {
+      if (this.customerId) {
+        form.customerId = this.customerId
+      }
       processing = true
       axios
-        .post(props.submitUrl, this.form)
+        .post(props.submitUrl, form)
         .then(() => {
           emit('submitted')
           this.$refs[props.modalId].hide()
