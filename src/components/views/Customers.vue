@@ -29,7 +29,7 @@
         </div>
       </div>
     </b-card>
-    <b-modal
+    <!-- <b-modal
       body-class="p-0"
       id="customerForm"
       ref="customerFormModal"
@@ -279,11 +279,18 @@
           </b-form-group>
           <b-button-group>
             <b-button type="submit" variant="success">Create</b-button>
-            <!-- <b-button type="reset" variant="danger">Reset</b-button> -->
           </b-button-group>
         </b-form>
       </b-card>
-    </b-modal>
+    </b-modal> -->
+    <modal-form
+      modalId="customerForm"
+      modalTitle="Create Customer"
+      :submitUrl="url"
+      :fields="formFields"
+      windowSize="lg"
+      fieldSize="sm"
+    ></modal-form>
   </div>
 </template>
 
@@ -291,10 +298,12 @@
 import axios from 'axios'
 import PaginatedTable from '../PaginatedTable'
 import * as auth from '../../auth/authHelper'
+import ModalForm from '../ModalForm'
 
 export default {
   components: {
     PaginatedTable,
+    ModalForm,
   },
   data() {
     return {
@@ -345,6 +354,28 @@ export default {
             path: 'customer',
             idName: 'customerId',
           },
+        },
+      ],
+      formFields: [
+        { key: 'name', type: 'string', label: 'Name', cols: 6 },
+        { key: 'cvr', type: 'integer', label: 'CVR', cols: 6 },
+        { key: 'domain', type: 'string', label: 'Domain', cols: 6 },
+        { key: 'phone', type: 'integer', label: 'Phone', cols: 6 },
+        { key: 'employeeId', type: 'select', label: 'Employee', cols: 4 },
+        { key: 'groupId', type: 'select', label: 'Group', cols: 4 },
+        { key: 'currencyId', type: 'select', label: 'Currency', cols: 4 },
+        {
+          key: 'paymentTermsId',
+          type: 'select',
+          label: 'Payment Terms',
+          cols: 4,
+        },
+        { key: 'vatZone', type: 'select', label: 'VAT Zone', cols: 4 },
+        {
+          key: 'invoiceFrequency',
+          type: 'select',
+          label: 'Invoice Frequency',
+          cols: 4,
         },
       ],
     }

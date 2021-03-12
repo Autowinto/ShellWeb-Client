@@ -21,108 +21,15 @@
         :editable="true"
       ></paginated-table>
     </b-card-text>
-    <b-modal
-      id="createPasswordModal"
-      ref="createPasswordModal"
-      body-class="p-0"
-      centered
-      title="Create Password"
-      hide-footer
-      size="lg"
-    >
-      <b-card bg-variant="light" body-class="p-0">
-        <b-form @submit="submitPassword" onsubmit="return false;" class="p-3">
-          <b-form-group
-            label-cols-lg="3"
-            label="Password Information:"
-            label-size="lg"
-            label-class="font-weight-bold pt-0 p-0 text-dark"
-            class="mb-0"
-          >
-            <b-form-group
-              label-cols-sm="3"
-              label="Name:"
-              label-align-sm="right"
-              label-for="input-name"
-              description="Required"
-            >
-              <b-input
-                v-model="creationForm.name"
-                id="input-name"
-                type="text"
-                required
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Security Level:"
-              label-align-sm="right"
-              label-for="input-security"
-              description="Required"
-            >
-              <b-select
-                v-model="creationForm.securityLevel"
-                :options="securityOptions"
-              >
-              </b-select>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Domain:"
-              label-align-sm="right"
-              label-for="input-domain"
-            >
-              <b-input
-                id="input-domain"
-                type="text"
-                v-model="creationForm.domain"
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Username:"
-              label-align-sm="right"
-              label-for="input-username"
-            >
-              <b-input
-                id="input-username"
-                v-model="creationForm.username"
-                type="text"
-                required
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Password:"
-              label-align-sm="right"
-              label-for="input-password"
-            >
-              <b-input
-                id="input-password"
-                v-model="creationForm.password"
-                type="text"
-                required
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="URL:"
-              label-align-sm="right"
-              label-for="input-url"
-            >
-              <b-input
-                id="input-url"
-                v-model="creationForm.url"
-                type="text"
-              ></b-input>
-            </b-form-group>
-          </b-form-group>
-          <b-btn-group>
-            <b-btn type="submit" variant="success"> Save </b-btn>
-          </b-btn-group>
-        </b-form>
-      </b-card>
-    </b-modal>
+    <modal-form
+      modalId="createPasswordModal"
+      windowSize="lg"
+      fieldSize="sm"
+      :fields="formFields"
+      modalTitle="Create Password"
+      :submitUrl="uploadUrl"
+      @submitted="handleSubmitted"
+    ></modal-form>
   </b-container>
 </template>
 
@@ -131,6 +38,7 @@ import axios from 'axios'
 import * as auth from '../../auth/authHelper'
 import store from '../../auth/store'
 import PaginatedTable from '../PaginatedTable'
+import ModalForm from '../ModalForm'
 
 export default {
   data() {
@@ -182,6 +90,47 @@ export default {
           },
         },
       ],
+      formFields: [
+        {
+          key: 'name',
+          type: 'string',
+          label: 'Name',
+          required: true,
+          cols: 8,
+        },
+        {
+          key: 'securityLevel',
+          type: 'select',
+          label: 'Required Security Level',
+          options: this.securityOptions,
+          required: true,
+          cols: 4,
+        },
+        {
+          key: 'domain',
+          type: 'string',
+          label: 'Domain',
+          required: true,
+        },
+        {
+          key: 'url',
+          type: 'string',
+          label: 'URL',
+          required: true,
+        },
+        {
+          key: 'username',
+          label: 'Username',
+          type: 'string',
+          required: true,
+        },
+        {
+          key: 'password',
+          label: 'Password',
+          type: 'string',
+          required: true,
+        },
+      ],
     }
   },
   async created() {
@@ -193,6 +142,9 @@ export default {
     this.fetchSecurityLevels()
   },
   methods: {
+    handleSubmitted() {
+      this.$refs.passwordsTable.loadData()
+    },
     async fetchPasswords() {
       try {
         let passwordRequest = await axios.get(
@@ -240,6 +192,7 @@ export default {
           value: role.roleId,
           text: role.name,
         })
+        this.formFields[1].options = this.securityOptions
         this.fields[5].typeOptions.options = this.securityOptions
       }
     },
@@ -295,6 +248,7 @@ export default {
   },
   components: {
     PaginatedTable,
+    ModalForm,
   },
 }
 </script>

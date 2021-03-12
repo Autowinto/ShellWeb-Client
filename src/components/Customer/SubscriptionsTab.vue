@@ -15,7 +15,7 @@
     <paginated-table
       :url="url"
       ref="subTable"
-      :uploadUrl="uploadUrl"
+      :uploadUrl="updateUrl"
       :deleteUrl="deleteUrl"
       :fields="fields"
       :results="10"
@@ -52,6 +52,7 @@ export default {
       id: this.$route.query.id,
       url: `${process.env.VUE_APP_URL}subscriptions/instances/${this.$route.query.id}`,
       uploadUrl: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/subscriptions/instances`,
+      updateUrl: `${process.env.VUE_APP_URL}subscriptions/instances`,
       deleteUrl: `${process.env.VUE_APP_URL}subscriptions/instances`,
       form: {},
       subscriptions: [],
