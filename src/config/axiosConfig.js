@@ -12,8 +12,5 @@ axios.interceptors.request.use(async (config) => {
     authorization: `bearer ${token.idToken}`,
   }
 
-  config.withCredentials = true
-  config.crossDomain = true
-
   return config
 })
