@@ -1,62 +1,22 @@
 <template>
-  <div id="wrapper" class="h-100">
-    <b-navbar
-      class="shadow navbar align-items-start sidebar sidebar-white accordion bg-white p-0"
-    >
-      <div class="container-fluid d-flex flex-column p-0">
-        <a
-          class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0"
-          href="#"
-        >
-          <b-navbar-brand to="/">
-            <img
-              src="../assets/img/logo/logo-dark.png"
-              alt="LOGO HERE"
-              width="175"
-            />
-          </b-navbar-brand>
-        </a>
-        <hr class="sidebar-divider my-0" />
-
-        <b-nav pills class="pl-2 pr-2">
-          <b-nav-item :active="$route.name == 'dashboard'" to="/">
-            <b-icon icon="house"></b-icon> Dashboard
-          </b-nav-item>
-          <b-nav-item :active="$route.name == 'changelog'" to="/changelog">
-            <b-icon icon="newspaper"></b-icon> Changelog
-          </b-nav-item>
-          <b-nav-item :active="$route.name == 'customers'" to="/customers">
-            <b-icon icon="people"></b-icon> Customers
-          </b-nav-item>
-          <b-nav-item :active="$route.name == 'tickets'" to="/tickets">
-            <b-icon icon="envelope"></b-icon> Tickets
-          </b-nav-item>
-          <b-nav-item :active="$route.name == 'invoices'" to="/invoices">
-            <b-icon icon="cash-stack"></b-icon> Invoices
-          </b-nav-item>
-          <b-nav-item
-            :active="$route.name == 'timeoverview'"
-            to="/timeoverview"
-          >
-            <b-icon icon="clock"></b-icon> Time Overview
-          </b-nav-item>
-          <b-nav-item
-            :active="$route.name == 'administration'"
-            to="/administration"
-          >
-            <i class="fas fa-table"></i>Administration
-          </b-nav-item>
-        </b-nav>
-      </div>
+  <div>
+    <b-navbar variant="light" class="shadow m-0 p-0">
+      <b-navbar-brand id="logo-brand" class="p-2">
+        <img
+          src="../assets/img/logo/logo-white.png"
+          alt="LOGO HERE"
+          width="175"
+        />
+      </b-navbar-brand>
     </b-navbar>
-    <div
+    <!-- <div
       class="d-flex flex-column"
       id="content-wrapper"
       style="overflow: hidden"
     >
       <div id="content">
         <nav
-          class="navbar navbar-light navbar-expand bg-white shadow mb-3 topbar static-top"
+          class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top"
         >
           <div class="container-fluid">
             <button
@@ -104,7 +64,7 @@
               >
                 <div>
                   <a class="nav-link" v-b-modal.smsModal href="#">
-                    <b-icon icon="chat-dots"></b-icon>
+                    <i class="fas fa-sms fa-fw fa-lg"></i>
                   </a>
                 </div>
               </li>
@@ -196,7 +156,6 @@
             </ul>
           </div>
         </nav>
-        <slot></slot>
       </div>
       <footer class="bg-white sticky-footer">
         <div class="container my-auto">
@@ -205,62 +164,18 @@
           </div>
         </div>
       </footer>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import store from '../auth/store'
 export default {
-  data() {
-    return {
-      user: {
-        displayName: 'Not Logged In', //displayName is just "Not Logged In" per default, so that displays when the user isn't logged in properly
-        role: '',
-      },
-      textMessageForm: {
-        message: null,
-        receiver: null,
-      },
-    }
-  },
-  mounted() {
-    this.user.displayName = store.state.displayName
-  },
-  methods: {
-    submitTextMessage() {
-      console.log('Submitting text message')
-      axios
-        .post(`${process.env.VUE_APP_URL}misc/sms`, {
-          message: this.textMessageForm.message,
-          receiver: this.textMessageForm.receiver,
-        })
-        .then(() => {
-          this.$refs['smsModal'].hide()
-          this.textMessageForm.message = null
-          this.textMessageForm.receiver = null
-        })
-    },
-  },
-  computed: {
-    displayName() {
-      return store.state.displayName
-    },
-    role() {
-      return store.state.role
-    },
-  },
-  watch: {
-    displayName(displayName) {
-      this.user.displayName = displayName
-    },
-    role(role) {
-      this.user.role = role.name
-    },
-  },
+  setup() {},
 }
 </script>
 
-<style>
+<style scoped>
+#logo-brand {
+  background-color: #68a7ec;
+}
 </style>

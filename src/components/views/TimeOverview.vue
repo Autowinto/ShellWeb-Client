@@ -247,6 +247,9 @@ export default {
         this.fetchTimeMonthly()
       }
     },
+    generateConsultantInvoices() {
+      axios.post(`${process.env.VUE_APP_URL}invoices/consultantHours/generate`)
+    },
   },
   components: {
     TimeDisplay,

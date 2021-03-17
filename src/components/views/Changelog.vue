@@ -22,7 +22,7 @@ export default {
   setup() {
     let changelog = ref([])
 
-    axios.get(`${process.env.VUE_APP_URL}changelog`).then((response) => {
+    axios.get(`${process.env.VUE_APP_URL}misc/changelog`).then((response) => {
       changelog.value = response.data
     })
     return { changelog }
