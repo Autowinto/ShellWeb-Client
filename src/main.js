@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import('../src/assets/bootstrap/css/bootstrap.min.css')
 import('../src/assets/fonts/fontawesome-all.min.css')
-import { BootstrapVue } from 'bootstrap-vue'
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import VueCompositionAPI from '@vue/composition-api'
 import VueFileAgent from 'vue-file-agent'
 import 'vue-file-agent/dist/vue-file-agent.css'
@@ -23,6 +23,7 @@ Vue.use(CoolSelectPlugin)
 
 //Extra vue libraries registration
 Vue.use(BootstrapVue)
+Vue.use(BootstrapVueIcons)
 Vue.use(VueCompositionAPI)
 Vue.use(VueFileAgent)
 

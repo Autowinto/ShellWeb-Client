@@ -1,16 +1,15 @@
 <template>
   <div class="container-fluid">
-    <h3 class="text-dark mb-4">Customers</h3>
-    <b-card no-body header="Customers">
+    <b-card no-body>
+      <b-card-header>
+        <h5 class="mb-0">Customers</h5>
+      </b-card-header>
       <div class="card-body">
         <b-card bg-variant="light" class="mb-3">
           <div class="row">
             <div class="col-md-12">
-              <div
-                class="text-md-right dataTables_filter"
-                id="dataTable_filter"
-              >
-                <b-button v-b-modal.customerForm variant="success"
+              <div class="text-md-right">
+                <b-button v-b-modal.customerForm variant="primary"
                   >Create Customer</b-button
                 >
               </div>
@@ -29,260 +28,6 @@
         </div>
       </div>
     </b-card>
-    <!-- <b-modal
-      body-class="p-0"
-      id="customerForm"
-      ref="customerFormModal"
-      centered
-      title="Create Customer"
-      hide-footer
-      size="lg"
-    >
-      <b-card bg-variant="light" body-class="p-0">
-        <b-collapse class="p-0 m-0" v-model="showError">
-          <b-card class="p-0 m-0" bg-variant="danger">
-            <h3 style="color: white">
-              A customer with that business number already exists.
-            </h3>
-          </b-card>
-        </b-collapse>
-        <b-form @submit="submitCustomer" onSubmit="return false;" class="p-3">
-          <b-form-group
-            label-cols-lg="3"
-            label="Basic Information:"
-            label-size="lg"
-            label-class="font-weight-bold pt-0 p-0 text-dark"
-            class="mb-0"
-          >
-            <b-form-group
-              label-cols-sm="3"
-              label="Name:"
-              label-align-sm="right"
-              label-for="input-name"
-              description="Required"
-            >
-              <b-input
-                placeholder="Company Name"
-                v-model="form.name"
-                id="input-name"
-                type="text"
-                required
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="BN/CVR:"
-              label-align-sm="right"
-              label-for="input-cvr"
-              description="Required"
-            >
-              <b-input
-                id="input-cvr"
-                max="999999999"
-                type="number"
-                v-model="form.businessNumber"
-                placeholder="12345678"
-                required
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Domain:"
-              label-align-sm="right"
-              label-for="input-domain"
-            >
-              <b-input
-                id="input-domain"
-                type="text"
-                v-model="form.domain"
-                placeholder="domain.dk"
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Phone:"
-              label-align-sm="right"
-              label-for="input-phone"
-            >
-              <b-input
-                id="input-phone"
-                v-model="form.phone"
-                type="number"
-                placeholder="12345678"
-              ></b-input>
-            </b-form-group>
-          </b-form-group>
-          <b-card no-body class="mb-3"></b-card>
-          <b-form-group
-            label-cols-lg="3"
-            label="Financial Information:"
-            label-size="lg"
-            label-class="font-weight-bold pt-0 p-0 text-dark"
-            class="mb-0"
-          >
-            <b-form-group
-              label-cols-sm="3"
-              label="Customer Group:"
-              label-align-sm="right"
-              label-for="input-group"
-              description="Required"
-            >
-              <b-form-select
-                id="input-group"
-                v-model="form.selectedGroup"
-                :options="dropdownData.customerGroups"
-                required
-              ></b-form-select>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Currency:"
-              label-align-sm="right"
-              label-for="input-currency"
-              description="Required"
-            >
-              <b-form-select
-                id="input-currency"
-                required
-                v-model="form.selectedCurrency"
-                :options="dropdownData.currencies"
-              ></b-form-select>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Payment Terms:"
-              label-align-sm="right"
-              label-for="input-terms"
-              description="Required"
-            >
-              <b-form-select
-                id="input-terms"
-                required
-                v-model="form.selectedPaymentTerms"
-                :options="dropdownData.paymentTerms"
-              ></b-form-select>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Invoicing Frequency:"
-              label-align-sm="right"
-              label-for="input-terms"
-              description="Required"
-            >
-              <b-form-select
-                id="input-terms"
-                required
-                v-model="form.invoiceFrequency"
-                :options="dropdownData.invoiceFrequencies"
-              ></b-form-select>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="VAT Zone:"
-              label-align-sm="right"
-              label-for="input-vat"
-              description="Required"
-            >
-              <b-form-select
-                id="input-vat"
-                required
-                v-model="form.selectedVatZone"
-                :options="dropdownData.vatZones"
-              ></b-form-select>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Disable E-Invoicing:"
-              label-align-sm="right"
-              label-for="input-invoice"
-            >
-              <b-form-checkbox
-                id="input-invoice"
-                required
-                v-model="form.eInvoicingDisabledByDefault"
-                :options="dropdownData.eInvoicingDisabledByDefault"
-              ></b-form-checkbox>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Employee:"
-              label-align-sm="right"
-              label-for="input-salesperson"
-            >
-              <b-select
-                v-model="form.selectedEmployee"
-                required
-                :options="dropdownData.employees"
-              ></b-select>
-            </b-form-group>
-          </b-form-group>
-          <b-card class="mb-3" no-body></b-card>
-          <b-form-group
-            label-cols-lg="3"
-            label="Location:"
-            label-size="lg"
-            label-class="font-weight-bold pt-0 p-0 text-dark"
-            class="mb-0"
-          >
-            <b-form-group
-              label-cols-sm="3"
-              label="Address:"
-              label-align-sm="right"
-              label-for="input-address"
-            >
-              <b-input
-                id="input-address"
-                v-model="form.address"
-                placeholder="Address"
-                type="text"
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="ZIP Code:"
-              label-align-sm="right"
-              label-for="input-zip"
-            >
-              <b-input
-                id="input-zip"
-                v-model="form.zip"
-                placeholder="0000"
-                type="number"
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="City:"
-              label-align-sm="right"
-              label-for="input-city"
-            >
-              <b-input
-                id="input-city"
-                v-model="form.city"
-                placeholder="City"
-                type="text"
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Country:"
-              label-align-sm="right"
-              label-for="input-country"
-            >
-              <b-input
-                id="input-country"
-                v-model="form.country"
-                placeholder="Country"
-                type="text"
-              ></b-input>
-            </b-form-group>
-          </b-form-group>
-          <b-button-group>
-            <b-button type="submit" variant="success">Create</b-button>
-          </b-button-group>
-        </b-form>
-      </b-card>
-    </b-modal> -->
     <modal-form
       modalId="customerForm"
       modalTitle="Create Customer"
@@ -340,7 +85,7 @@ export default {
       fields: [
         {
           key: 'customerId',
-          label: 'Customer ID',
+          label: 'CVR',
           sortable: true,
           thClass: 'idColumn',
         },

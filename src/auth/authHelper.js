@@ -106,7 +106,6 @@ export function checkAuthenticationStatus() {
             })
             .catch(() => {
               console.log('Failed Authenticaton')
-              reject()
             })
         }
       }

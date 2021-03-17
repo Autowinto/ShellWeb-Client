@@ -3,6 +3,7 @@
     <b-container fluid class="p-0">
       <b-overlay :show="loading">
         <b-table
+          :small="small"
           show-empty
           outlined
           hover
@@ -13,7 +14,7 @@
           :items="items"
           :fields="fields"
           :current-page="currentPage"
-          responsive="sm"
+          responsive
         >
           <template
             v-for="field in fields"
@@ -275,9 +276,9 @@ export default {
       default: false,
     },
     fixed: Boolean,
-    size: {
-      type: String,
-      default: '',
+    small: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {

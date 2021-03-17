@@ -31,6 +31,15 @@
                       <h4 v-if="employee" class="small">{{ employeeName }}</h4>
                       <h4 v-else class="small">N/A</h4>
                     </div>
+                    <div class="mb-3">
+                      <h4 class="small font-weight-bold">
+                        Invoice Tickets as Single
+                      </h4>
+                      <h4 v-if="invoiceSingleTickets" class="small">
+                        {{ invoiceSingleTickets }}
+                      </h4>
+                      <h4 v-else class="small">N/A</h4>
+                    </div>
                   </div>
                   <div class="col">
                     <div class="mb-3">
@@ -598,6 +607,18 @@
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
+              label="Invoice Tickets as Single:"
+              label-align-sm="right"
+              label-for="input-ticketsSingle"
+            >
+              <b-form-checkbox
+                id="input-invoice"
+                required
+                v-model="form.invoiceSingleTickets"
+              ></b-form-checkbox>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
               label="Disable E-Invoicing:"
               label-align-sm="right"
               label-for="input-invoice"
@@ -1069,6 +1090,7 @@ export default {
       employee: null,
       invoiceFrequency: null,
       invoiceFrequencyName: '',
+      invoiceSingleTickets: null,
     }
   },
   created() {
@@ -1165,6 +1187,7 @@ export default {
           this.paymentTerms = data.paymentTerms
           this.invoiceFrequency = data.invoiceFrequency
           this.invoiceFrequencyName = data.invoiceFrequencyName
+          this.invoiceSingleTickets = data.invoiceSingleTickets
 
           this.populateForm()
         })
@@ -1248,6 +1271,7 @@ export default {
         eInvoicingDisabledByDefault: this.customerInfo.economic
           .eInvoicingDisabledByDefault,
         invoiceFrequency: this.invoiceFrequency,
+        invoiceSingleTickets: this.invoiceSingleTickets,
       }
     },
     submitCustomerEdit() {

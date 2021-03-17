@@ -1,3 +1,4 @@
+
 <template>
   <NavBar v-if="!$route.meta.hideNavBar">
     <router-view
@@ -61,7 +62,9 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+@import 'assets/scss/custom.scss';
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
