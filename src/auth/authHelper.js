@@ -137,6 +137,10 @@ export function getCurrentAccount() {
   return app.getAccountByUsername(username)
 }
 
+export function getUserAccessLevel() {
+  return this.$store.state.role.role
+}
+
 export function getAccountId() {
   return getCurrentAccount().homeAccountId
 }

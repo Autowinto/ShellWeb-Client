@@ -111,8 +111,8 @@
                           comments[0].Date | dayjsDateTime
                         }}</span>
                       </div>
-                      <div class="mb-3">
-                        {{ comments[0].Comment | stripHTML }}
+                      <div class="mb-3 commentDisplay">
+                        {{ parseHTML(comments[0].Comment) }}
                       </div>
                     </div>
                   </div>
@@ -149,10 +149,9 @@
                           comment.Date | dayjsDateTime
                         }}</span>
                       </div>
-                      <div
-                        class="mb-3"
-                        :inner-html.prop="comment.Comment | stripHTML"
-                      ></div>
+                      <div class="mb-3 commentDisplay">
+                        {{ parseHTML(comment.Comment) }}
+                      </div>
                     </div>
                     <div
                       class="rounded border w-100 p-3"
@@ -167,7 +166,9 @@
                           comment.Date | dayjsDateTime
                         }}</span>
                       </div>
-                      <div class="mb-3">{{ comment.Comment }}</div>
+                      <div class="mb-3 commentDisplay">
+                        {{ parseHTML(comment.Comment) }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -199,12 +200,16 @@ export default {
     this.fetchData(`ticket/ticketComments/${this.ticketID}/1/10`).then(
       (response) => {
         this.comments = response.data.comments.items
+        console.log(this.comments)
       }
     )
   },
   methods: {
     fetchData(endpoint) {
       return axios.get(process.env.VUE_APP_URL + endpoint)
+    },
+    parseHTML(html) {
+      return html.replace(/.*\(#default#VML\);}(\r\n|\r|\n)*/g, '')
     },
   },
   filters: {
@@ -229,3 +234,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.commentDisplay {
+  white-space: pre-wrap;
+}
+</style>
