@@ -1,26 +1,24 @@
 <template>
-  <b-container class="p-0">
-    <b-card-text>
-      <b-card bg-variant="light" class="mb-3">
-        <b-btn
-          class="float-right"
-          variant="success"
-          v-b-modal.createPasswordModal
-        >
-          Create Password
-        </b-btn>
-      </b-card>
-      <paginated-table
-        ref="passwordsTable"
-        :url="url"
-        :uploadUrl="uploadUrl"
-        :fields="fields"
-        :results="10"
-        :sortColumn="'name'"
-        :sortDirection="'DESC'"
-        :editable="true"
-      ></paginated-table>
-    </b-card-text>
+  <b-container fluid>
+    <b-card bg-variant="light" class="mb-3">
+      <b-btn
+        class="float-right"
+        variant="success"
+        v-b-modal.createPasswordModal
+      >
+        Create Password
+      </b-btn>
+    </b-card>
+    <paginated-table
+      ref="passwordsTable"
+      :url="url"
+      :uploadUrl="uploadUrl"
+      :fields="fields"
+      :results="10"
+      :sortColumn="'name'"
+      :sortDirection="'DESC'"
+      :editable="true"
+    ></paginated-table>
     <modal-form
       modalId="createPasswordModal"
       windowSize="lg"
