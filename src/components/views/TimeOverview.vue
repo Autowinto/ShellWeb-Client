@@ -81,6 +81,8 @@
               :fields="fields"
               :results="10"
               :editable="true"
+              sortColumn="startTime"
+              sortDirection="desc"
               :deletable="true"
             ></paginated-table>
           </b-card>

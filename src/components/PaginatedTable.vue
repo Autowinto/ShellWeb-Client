@@ -379,6 +379,7 @@ export default {
       }
     },
     async downloadAttachment(scope) {
+      console.log(scope)
       let url = `${this.downloadUrl}/${scope.item.id}`
 
       let file = await axios.get(url)
