@@ -98,7 +98,7 @@
                 <b-datepicker
                   :size="field.size || fieldSize"
                   :required="field.required"
-                  v-model="form[field.key]"
+                  :v-model="form[field.key]"
                 ></b-datepicker>
               </div>
               <small v-if="field.required">Required</small>

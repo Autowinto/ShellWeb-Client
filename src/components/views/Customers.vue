@@ -53,6 +53,7 @@ export default {
     let currencies = reactive([])
     let vatZones = reactive([])
     let employees = reactive([])
+    let selectedEmployee = auth.getAccountId()
     let invoiceFrequencies = [
       { text: 'Weekly', value: 2 },
       { text: 'Biweekly', value: 3 },
@@ -66,6 +67,7 @@ export default {
       vatZones,
       employees,
       invoiceFrequencies,
+      selectedEmployee,
     }
   },
   data() {
@@ -82,12 +84,7 @@ export default {
         address: null,
         zip: null,
         phone: null,
-        selectedPaymentTerms: null,
-        selectedGroup: null,
-        selectedCurrency: null,
-        selectedVatZone: null,
         eInvoicingDisabledByDefault: null,
-        employee: null,
       },
       fields: [
         {
@@ -109,37 +106,53 @@ export default {
         },
       ],
       formFields: [
-        { key: 'name', type: 'string', label: 'Name', cols: 6 },
-        { key: 'cvr', type: 'integer', label: 'CVR', cols: 6 },
-        { key: 'domain', type: 'string', label: 'Domain', cols: 6 },
-        { key: 'phone', type: 'integer', label: 'Phone', cols: 6 },
+        { key: 'name', type: 'string', label: 'Name', cols: 6, required: true },
+        { key: 'cvr', type: 'integer', label: 'CVR', cols: 6, required: true },
         {
-          key: 'employeeId',
+          key: 'domain',
+          type: 'string',
+          label: 'Domain',
+          cols: 6,
+          required: true,
+        },
+        {
+          key: 'phone',
+          type: 'integer',
+          label: 'Phone',
+          cols: 6,
+          required: true,
+        },
+        {
+          key: 'employee',
           type: 'select',
           options: this.employees,
           label: 'Employee',
           cols: 4,
+          required: true,
         },
         {
-          key: 'groupId',
+          key: 'group',
           type: 'select',
           label: 'Group',
           options: this.customerGroups,
           cols: 4,
+          required: true,
         },
         {
-          key: 'currencyId',
+          key: 'currency',
           type: 'select',
           label: 'Currency',
           options: this.currencies,
           cols: 4,
+          required: true,
         },
         {
-          key: 'paymentTermsId',
+          key: 'paymentTerms',
           type: 'select',
           label: 'Payment Terms',
           options: this.paymentTerms,
           cols: 4,
+          required: true,
         },
         {
           key: 'vatZone',
@@ -147,6 +160,7 @@ export default {
           label: 'VAT Zone',
           options: this.vatZones,
           cols: 4,
+          required: true,
         },
         {
           key: 'invoiceFrequency',
@@ -154,6 +168,7 @@ export default {
           label: 'Invoice Frequency',
           options: this.invoiceFrequencies,
           cols: 4,
+          required: true,
         },
       ],
     }
@@ -209,8 +224,6 @@ export default {
         })
       }
     })
-
-    this.form.selectedEmployee = auth.getAccountId()
   },
   methods: {
     submitCustomer() {
