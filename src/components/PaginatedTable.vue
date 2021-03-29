@@ -189,33 +189,49 @@
           </template>
 
           <template v-slot:cell(actions)="scope">
-            <div v-if="!scope.item.editing">
-              <b-btn
-                v-if="editable"
-                variant="primary"
-                class="fas fa-edit mr-1"
-                @click="doEdit(scope)"
-              ></b-btn>
-              <b-btn
-                v-if="downloadable"
-                variant="primary"
-                class="fas fa-download mr-1"
-                @click="doDownload(scope)"
-              ></b-btn>
-              <b-btn
-                v-if="deletable && deletableRole <= employeeAccessLevel"
-                variant="danger"
-                class="fas fa-trash-alt"
-                @click="doDelete(scope)"
-              ></b-btn>
+            <div
+              v-if="
+                scope.item[editBooleanKey] == 'false' ||
+                editBooleanKey == undefined
+              "
+            >
+              <div v-if="!scope.item.editing">
+                <b-btn
+                  size="sm"
+                  v-if="editable"
+                  variant="primary"
+                  @click="doEdit(scope)"
+                  ><b-icon icon="pencil-square"></b-icon
+                ></b-btn>
+                <b-btn
+                  size="sm"
+                  v-if="downloadable"
+                  variant="primary"
+                  @click="doDownload(scope)"
+                  ><b-icon icon="trash"></b-icon
+                ></b-btn>
+                <b-btn
+                  size="sm"
+                  v-if="deletable && deletableRole <= employeeAccessLevel"
+                  variant="danger"
+                  @click="doDelete(scope)"
+                  ><b-icon icon="trash"></b-icon
+                ></b-btn>
+              </div>
+              <div v-else>
+                <b-btn size="sm" variant="success" @click="sendEdit(scope.item)"
+                  >Save</b-btn
+                >
+                <b-btn
+                  size="sm"
+                  variant="danger"
+                  @click="cancelEdit(scope.item)"
+                  >Cancel</b-btn
+                >
+              </div>
             </div>
             <div v-else>
-              <b-btn variant="success" @click="sendEdit(scope.item)"
-                >Save</b-btn
-              >
-              <b-btn variant="danger" @click="cancelEdit(scope.item)"
-                >Cancel</b-btn
-              >
+              <b-icon icon="lock-fill"></b-icon>
             </div>
           </template>
         </b-table>
@@ -268,6 +284,7 @@ export default {
       default: 'ASC',
     },
     editable: Boolean,
+    editBooleanKey: String,
     downloadable: Boolean,
     deletable: Boolean,
     deletableRole: Number,

@@ -81,6 +81,7 @@
               :fields="fields"
               :results="10"
               :editable="true"
+              editBooleanKey="isInvoiced"
               sortColumn="startTime"
               sortDirection="desc"
               :deletable="true"
