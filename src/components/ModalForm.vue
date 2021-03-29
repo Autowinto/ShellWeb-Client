@@ -169,8 +169,6 @@ export default {
       }
     }
 
-    console.log(props.fields)
-
     let baseUrl = `${process.env.VUE_APP_URL}lookups`
     let form = reactive({})
     let showErrorAlert = ref(false)

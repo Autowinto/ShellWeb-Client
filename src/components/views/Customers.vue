@@ -44,28 +44,35 @@ import axios from 'axios'
 import PaginatedTable from '../PaginatedTable'
 import * as auth from '../../auth/authHelper'
 import ModalForm from '../ModalForm'
+import { reactive } from '@vue/composition-api'
 
 export default {
-  components: {
-    PaginatedTable,
-    ModalForm,
+  setup() {
+    let paymentTerms = reactive([])
+    let customerGroups = reactive([])
+    let currencies = reactive([])
+    let vatZones = reactive([])
+    let employees = reactive([])
+    let invoiceFrequencies = [
+      { text: 'Weekly', value: 2 },
+      { text: 'Biweekly', value: 3 },
+      { text: 'Monthly', value: 4 },
+    ]
+
+    return {
+      paymentTerms,
+      customerGroups,
+      currencies,
+      vatZones,
+      employees,
+      invoiceFrequencies,
+    }
   },
   data() {
+    console.log(this)
     return {
       url: `${process.env.VUE_APP_URL}customers`,
       showError: false,
-      dropdownData: {
-        paymentTerms: [],
-        customerGroups: [],
-        currencies: [],
-        vatZones: [],
-        employees: [],
-        invoiceFrequencies: [
-          { text: 'Weekly', value: 2 },
-          { text: 'Biweekly', value: 3 },
-          { text: 'Monthly', value: 4 },
-        ],
-      },
       form: {
         name: null,
         businessNumber: 0,
@@ -106,33 +113,59 @@ export default {
         { key: 'cvr', type: 'integer', label: 'CVR', cols: 6 },
         { key: 'domain', type: 'string', label: 'Domain', cols: 6 },
         { key: 'phone', type: 'integer', label: 'Phone', cols: 6 },
-        { key: 'employeeId', type: 'select', label: 'Employee', cols: 4 },
-        { key: 'groupId', type: 'select', label: 'Group', cols: 4 },
-        { key: 'currencyId', type: 'select', label: 'Currency', cols: 4 },
+        {
+          key: 'employeeId',
+          type: 'select',
+          options: this.employees,
+          label: 'Employee',
+          cols: 4,
+        },
+        {
+          key: 'groupId',
+          type: 'select',
+          label: 'Group',
+          options: this.customerGroups,
+          cols: 4,
+        },
+        {
+          key: 'currencyId',
+          type: 'select',
+          label: 'Currency',
+          options: this.currencies,
+          cols: 4,
+        },
         {
           key: 'paymentTermsId',
           type: 'select',
           label: 'Payment Terms',
+          options: this.paymentTerms,
           cols: 4,
         },
-        { key: 'vatZone', type: 'select', label: 'VAT Zone', cols: 4 },
+        {
+          key: 'vatZone',
+          type: 'select',
+          label: 'VAT Zone',
+          options: this.vatZones,
+          cols: 4,
+        },
         {
           key: 'invoiceFrequency',
           type: 'select',
           label: 'Invoice Frequency',
+          options: this.invoiceFrequencies,
           cols: 4,
         },
       ],
     }
   },
   created() {
+    console.log(this)
     //Collect these calls in one axios.all call
     axios
       .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
       .then((response) => {
-        for (var item in response.data) {
-          const group = response.data[item]
-          this.dropdownData.customerGroups.push({
+        for (var group of response.data) {
+          this.customerGroups.push({
             value: group.customerGroupNumber,
             text: group.name,
           })
@@ -141,9 +174,8 @@ export default {
     axios
       .get(`${process.env.VUE_APP_URL}invoices/currencies`)
       .then((response) => {
-        for (var item in response.data) {
-          const currency = response.data[item]
-          this.dropdownData.currencies.push({
+        for (var currency of response.data) {
+          this.currencies.push({
             value: currency.code,
             text: currency.name,
           })
@@ -152,9 +184,8 @@ export default {
     axios
       .get(`${process.env.VUE_APP_URL}invoices/paymentTerms`)
       .then((response) => {
-        for (var item in response.data) {
-          const term = response.data[item]
-          this.dropdownData.paymentTerms.push({
+        for (var term of response.data) {
+          this.paymentTerms.push({
             value: term.paymentTermsNumber,
             text: term.name,
           })
@@ -163,18 +194,16 @@ export default {
     axios
       .get(`${process.env.VUE_APP_URL}invoices/vatZones`)
       .then((response) => {
-        for (var item in response.data) {
-          const vatZone = response.data[item]
-          this.dropdownData.vatZones.push({
+        for (var vatZone of response.data) {
+          this.vatZones.push({
             value: vatZone.vatZoneNumber,
             text: vatZone.name,
           })
         }
       })
     axios.get(`${process.env.VUE_APP_URL}employees`).then((response) => {
-      for (var item in response.data) {
-        const employee = response.data[item]
-        this.dropdownData.employees.push({
+      for (var employee of response.data) {
+        this.employees.push({
           value: employee.microsoftId,
           text: employee.name,
         })
@@ -205,6 +234,10 @@ export default {
       var modal = document.getElementById('customerForm')
       modal.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     },
+  },
+  components: {
+    PaginatedTable,
+    ModalForm,
   },
 }
 </script>
