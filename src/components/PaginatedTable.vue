@@ -208,7 +208,7 @@
                   v-if="downloadable"
                   variant="primary"
                   @click="doDownload(scope)"
-                  ><b-icon icon="trash"></b-icon
+                  ><b-icon icon="download"></b-icon
                 ></b-btn>
                 <b-btn
                   size="sm"
