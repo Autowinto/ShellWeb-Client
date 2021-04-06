@@ -47,7 +47,7 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 import PaginatedTable from '../PaginatedTable'
 import ModalForm from '../ModalForm'
-import store from '../../auth/store'
+import store from '../../store'
 
 export default {
   data() {

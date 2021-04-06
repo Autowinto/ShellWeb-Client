@@ -432,7 +432,7 @@
 </template>
 
 <script>
-import LineChart from '../LineChart.vue'
+import LineChart from '../components/LineChart.vue'
 
 export default {
   components: {

@@ -56,7 +56,7 @@ export default {
       this.$emit('selected', this.selected)
     }
 
-    const form = props.form
+    const form = ref(props.form)
 
     function filterData(data) {
       let filteredData

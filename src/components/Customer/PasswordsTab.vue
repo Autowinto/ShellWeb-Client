@@ -34,7 +34,7 @@
 <script>
 import axios from 'axios'
 import * as auth from '../../auth/authHelper'
-import store from '../../auth/store'
+import store from '../../store'
 import PaginatedTable from '../PaginatedTable'
 import ModalForm from '../ModalForm'
 

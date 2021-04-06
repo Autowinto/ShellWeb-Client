@@ -297,8 +297,8 @@
                                 </div>
                                 <div class="row ml-1">
                                   <h5 class="font-weight-bold">
-                                    {{ contract.StartDate | dayjsDateTime }} -
-                                    {{ contract.EndDate | dayjsDateTime }}
+                                    {{ formatDateTime(contract.StartDate) }} -
+                                    {{ formatDateTime(contract.EndDate) }}
                                   </h5>
                                 </div>
                               </div>
@@ -341,8 +341,9 @@
                         <template
                           v-slot:cell(LastPatchManagementReceived)="data"
                           >{{
-                            data.item.LastPatchManagementReceived
-                              | dayjsDateTime
+                            formatDateTime(
+                              data.item.LastPatchManagementReceived
+                            )
                           }}</template
                         >
                       </b-table>
@@ -876,11 +877,11 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 import fileDownload from 'js-file-download'
 import download from 'downloadjs'
-import PaginatedTable from '../PaginatedTable'
-import { getToken } from '../../auth/authHelper'
-import SubscriptionsTab from '../Customer/SubscriptionsTab.vue'
-import PasswordsTab from '../Customer/PasswordsTab.vue'
-import CustomerCallLog from '../Customer/CustomerCallLog'
+import PaginatedTable from '../components/PaginatedTable'
+import { getToken } from '../auth/authHelper'
+import SubscriptionsTab from '../components/Customer/SubscriptionsTab.vue'
+import PasswordsTab from '../components/Customer/PasswordsTab.vue'
+import CustomerCallLog from '../components/Customer/CustomerCallLog'
 
 export default {
   data() {
@@ -1344,10 +1345,8 @@ export default {
     beforeDeleteFileRecord(fileRecord) {
       this.$refs.attachmentFileAgent.deleteFileRecord(fileRecord)
     },
-  },
-  filters: {
-    dayjsDateTime: function (date) {
-      return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
+    formatDateTime(dateString) {
+      return dayjs(dateString).format('MMM D, YYYY, h:mm:ss a')
     },
   },
   computed: {

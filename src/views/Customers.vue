@@ -41,9 +41,9 @@
 
 <script>
 import axios from 'axios'
-import PaginatedTable from '../PaginatedTable'
-import * as auth from '../../auth/authHelper'
-import ModalForm from '../ModalForm'
+import * as auth from '../auth/authHelper'
+import PaginatedTable from '../components/PaginatedTable'
+import ModalForm from '../components/ModalForm'
 import { reactive } from 'vue'
 
 export default {

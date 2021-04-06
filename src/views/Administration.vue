@@ -99,8 +99,8 @@ import duration from 'dayjs/plugin/duration'
 
 //It's necessary to use the utc plugin to account for yearly changes from CET to CEST.
 import utc from 'dayjs/plugin/utc'
-import SubscriptionsTab from '../Administration/SubscriptionsTab.vue'
-import PaginatedTable from '../PaginatedTable'
+import SubscriptionsTab from '../components/Administration/SubscriptionsTab.vue'
+import PaginatedTable from '../components/PaginatedTable'
 
 dayjs.extend(duration)
 dayjs.extend(utc)

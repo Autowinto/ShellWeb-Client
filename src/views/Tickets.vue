@@ -34,8 +34,8 @@
 </template>
 
 <script>
-import PaginatedTable from '../PaginatedTable'
-import ModalForm from '../ModalForm'
+import PaginatedTable from '../components/PaginatedTable'
+import ModalForm from '../components/ModalForm'
 
 export default {
   components: {

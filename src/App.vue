@@ -1,4 +1,3 @@
-
 <template>
   <NavBar v-if="!$route.meta.hideNavBar">
     <router-view
@@ -13,8 +12,7 @@
 import NavBar from './components/NavBar'
 import * as auth from './auth/authHelper'
 import axios from 'axios'
-import store from './auth/store'
-
+import store from './store'
 export default {
   created() {
     auth
@@ -63,8 +61,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import 'assets/scss/custom.scss';
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

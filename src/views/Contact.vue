@@ -198,7 +198,7 @@
 <script>
 import axios from 'axios'
 import dayjs from 'dayjs'
-import PaginatedTable from '../PaginatedTable'
+import PaginatedTable from '../components/PaginatedTable'
 
 export default {
   data() {

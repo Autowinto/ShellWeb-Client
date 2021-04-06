@@ -13,6 +13,7 @@ import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import './config/axiosConfig'
+
 // import { CoolSelectPlugin } from 'vue-cool-select'
 // import 'vue-cool-select/dist/themes/bootstrap.css'
 
@@ -24,7 +25,9 @@ import './config/axiosConfig'
 // Vue.use(VueCompositionAPI)
 // Vue.use(VueFileAgent)
 
-import store from './auth/store'
+// import store from './auth/store'
+
+import store from './store'
 
 dayjs.extend(duration)
 dayjs.extend(relativeTime)

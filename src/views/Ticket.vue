@@ -61,7 +61,7 @@
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Date Created</h4>
                         <h4 class="small">
-                          {{ items.TicketCreatedDate | dayjsDateTime }}
+                          {{ dayjsDateTime(items.TicketCreatedDate) }}
                         </h4>
                       </div>
                     </b-col>
@@ -69,7 +69,7 @@
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Date Modified</h4>
                         <h4 class="small">
-                          {{ items.TicketResolvedDate | dayjsDateTime }}
+                          {{ dayjsDateTime(items.TicketResolvedDate) }}
                         </h4>
                       </div>
                     </b-col>
@@ -108,7 +108,7 @@
                           >{{ comments[0].Email }} |</span
                         >
                         <span class="small">{{
-                          comments[0].Date | dayjsDateTime
+                          dayjsDateTime(comments[0].Date)
                         }}</span>
                       </div>
                       <div class="mb-3 commentDisplay">
@@ -146,7 +146,7 @@
                           >{{ comment.Email }} |</span
                         >
                         <span class="small">{{
-                          comment.Date | dayjsDateTime
+                          dayjsDateTime(comment.Date)
                         }}</span>
                       </div>
                       <div class="mb-3 commentDisplay">
@@ -163,7 +163,7 @@
                           >{{ comment.FirstName }} {{ comment.LastName }}</span
                         >
                         <span class="small">{{
-                          comment.Date | dayjsDateTime
+                          dayjsDateTime(comment.Date)
                         }}</span>
                       </div>
                       <div class="mb-3 commentDisplay">
@@ -211,15 +211,13 @@ export default {
     parseHTML(html) {
       return html.replace(/.*\(#default#VML\);}(\r\n|\r|\n)*/g, '')
     },
-  },
-  filters: {
-    dayjsDateOnly: function (date) {
+    dayjsDateOnly(date) {
       return dayjs(date).format('MMM D, YYYY')
     },
-    dayjsDateTime: function (date) {
+    dayjsDateTime(date) {
       return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
     },
-    stripHTML: function (value) {
+    stripHTML(value) {
       if (value == null) {
         return ''
       }

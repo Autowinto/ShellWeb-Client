@@ -310,6 +310,7 @@ export default {
   },
   created() {
     if (this.editable || this.downloadable || this.deletable) {
+      // eslint-disable-next-line vue/no-mutating-props
       this.fields.push({ key: 'actions' })
     }
 

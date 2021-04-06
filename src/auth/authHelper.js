@@ -1,6 +1,6 @@
 import * as msal from '@azure/msal-browser'
 import axios from 'axios'
-import store from '../auth/store'
+import store from '../store'
 
 const msalConfig = {
   graphEndpoints: {

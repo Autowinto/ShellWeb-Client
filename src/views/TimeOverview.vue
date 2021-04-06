@@ -95,12 +95,12 @@
 </template>
 
 <script>
-import TimeDisplay from '../TimeDisplay'
+import TimeDisplay from '../components/TimeDisplay'
 // import WorkHourTable from '../WorkHourTable'
-import PaginatedTable from '../PaginatedTable'
+import PaginatedTable from '../components/PaginatedTable'
 import dayjs from 'dayjs'
 import axios from 'axios'
-import * as auth from '../../auth/authHelper'
+import * as auth from '../auth/authHelper'
 
 export default {
   data() {
