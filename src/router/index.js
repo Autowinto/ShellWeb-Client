@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import { createRouter } from 'vue-router'
 import Customers from '../components/views/Customers.vue'
 import Dashboard from '../components/views/Dashboard.vue'
 import Customer from '../components/views/Customer.vue'
@@ -14,9 +13,7 @@ import Asset from '../components/views/Asset.vue'
 import Authentication from '../components/views/Authentication.vue'
 import Changelog from '../components/views/Changelog.vue'
 
-Vue.use(Router)
-
-const router = new Router({
+const router = createRouter({
   mode: 'history',
   routes: [
     {

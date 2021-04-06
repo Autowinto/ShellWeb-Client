@@ -44,7 +44,7 @@ import axios from 'axios'
 import PaginatedTable from '../PaginatedTable'
 import * as auth from '../../auth/authHelper'
 import ModalForm from '../ModalForm'
-import { reactive } from '@vue/composition-api'
+import { reactive } from 'vue'
 
 export default {
   setup() {

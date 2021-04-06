@@ -12,10 +12,10 @@
         disable-filtering-by-search
         :size="size"
       >
-        <template slot="item" slot-scope="{ item }">
+        <template v-slot:item="{ item }">
           <span v-for="key in textKeys" :key="key.key">{{ item[key] }} </span>
         </template>
-        <template slot="selection" slot-scope="{ item }">
+        <template v-slot:selection="{ item }">
           <div v-for="key in textKeys" :key="key.key" class="mr-1">
             {{ item[key] }}
           </div>
@@ -30,7 +30,7 @@ import axios from 'axios'
 import { CoolSelect } from 'vue-cool-select'
 
 import 'vue-cool-select/dist/themes/bootstrap.css'
-import { ref } from '@vue/composition-api'
+import { ref } from 'vue'
 
 export default {
   setup(props) {

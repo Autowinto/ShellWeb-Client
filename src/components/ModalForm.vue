@@ -126,7 +126,7 @@
 
 <script>
 import LookupSelect from './LookupSelect'
-import { ref, reactive, getCurrentInstance } from '@vue/composition-api'
+import { ref, reactive, getCurrentInstance } from 'vue'
 import axios from 'axios'
 
 export default {

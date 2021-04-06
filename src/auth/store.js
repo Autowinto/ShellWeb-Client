@@ -1,10 +1,7 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-
-Vue.use(Vuex)
+import { createStore } from 'vuex'
 
 //Initialize global storage with mutation functions. This is used for components to react to authentication
-export default new Vuex.Store({
+export default new createStore({
   state: {
     isAuthenticated: false, //This authentication status doesn't have anything to do with accessing sensitive data. All it does is tell the front-end to render the page. In any case where this fails, no data is leaked.
     account: null,
@@ -16,9 +13,7 @@ export default new Vuex.Store({
       if (typeof status === 'boolean') {
         state.isAuthenticated = status
       } else {
-        console.warn(
-          'setAuthenticationStatus mutation only allows for boolean values'
-        )
+        console.warn('setAuthenticationStatus mutation only allows for boolean values')
       }
     },
     setAccount(state, status) {
