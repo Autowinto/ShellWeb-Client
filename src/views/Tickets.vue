@@ -1,5 +1,21 @@
 <template>
-  <div id="tickets-wrapper">
+  <div id="wrapper">
+    <div class="p-d-flex">
+      <p-card></p-card>
+      <p-panel>
+        <template #header> Tickets </template>
+        <paginated-table
+          ref="ticketTable"
+          :url="url"
+          :results="10"
+          :fields="fields"
+          :sortColumn="'ticketId'"
+          :sortDirection="'DESC'"
+        ></paginated-table>
+      </p-panel>
+    </div>
+  </div>
+  <!-- <div id="tickets-wrapper">
     <div class="container-fluid">
       <h3 class="text-dark mb-4">Tickets</h3>
       <b-card header="Tickets">
@@ -30,17 +46,18 @@
       windowSize="lg"
       fieldSize="sm"
     ></modal-form>
-  </div>
+  </div> -->
 </template>
 
 <script>
-import PaginatedTable from '../components/PaginatedTable'
-import ModalForm from '../components/ModalForm'
+// import ModalForm from '../components/ModalForm'
+
+import PaginatedTable from '../components/PaginatedTable.vue'
 
 export default {
   components: {
     PaginatedTable,
-    ModalForm,
+    // ModalForm,
   },
   methods: {
     handleTicketPosted() {

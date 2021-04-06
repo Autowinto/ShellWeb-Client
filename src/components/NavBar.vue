@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper" class="h-100">
+  <!-- <div id="wrapper" class="h-100">
     <b-navbar
       class="shadow navbar align-items-start sidebar sidebar-white accordion bg-white p-0"
     >
@@ -196,7 +196,6 @@
             </ul>
           </div>
         </nav>
-        <slot></slot>
       </div>
       <footer class="bg-white sticky-footer">
         <div class="container my-auto">
@@ -206,6 +205,9 @@
         </div>
       </footer>
     </div>
+  </div> -->
+  <div>
+    <slot></slot>
   </div>
 </template>
 

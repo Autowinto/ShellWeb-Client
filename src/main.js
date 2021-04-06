@@ -1,6 +1,10 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import 'primevue/resources/themes/saga-blue/theme.css'
+import 'primevue/resources/primevue.min.css'
+import 'primeicons/primeicons.css'
+import 'primeflex/primeflex.css'
 
 // import 'bootstrap/dist/css/bootstrap.css'
 // import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -27,6 +31,16 @@ import './config/axiosConfig'
 
 // import store from './auth/store'
 
+import PrimeVue from 'primevue/config'
+import Card from 'primevue/card'
+import Button from 'primevue/button'
+import MenuBar from 'primevue/menubar'
+import Panel from 'primevue/panel'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import ColumnGroup from 'primevue/columngroup'
+import Paginator from 'primevue/paginator'
+
 import store from './store'
 
 dayjs.extend(duration)
@@ -36,4 +50,13 @@ dayjs.extend(relativeTime)
 createApp(App)
   .use(router)
   .use(store)
+  .use(PrimeVue)
+  .component('p-button', Button)
+  .component('p-card', Card)
+  .component('p-menubar', MenuBar)
+  .component('p-panel', Panel)
+  .component('p-datatable', DataTable)
+  .component('p-column', Column)
+  .component('p-columngroup', ColumnGroup)
+  .component('p-paginator', Paginator)
   .mount('#app')
