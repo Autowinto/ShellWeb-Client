@@ -1,6 +1,6 @@
 <template>
   <div id="wrapper">
-    <b-container fluid class="p-0">
+    <b-container fluid class="p-0 m-0">
       <b-overlay :show="loading">
         <b-table
           :small="small"
@@ -14,14 +14,13 @@
           :items="items"
           :fields="fields"
           :current-page="currentPage"
-          responsive
         >
           <template
             v-for="field in fields"
             v-slot:[`cell(${field.key})`]="scope"
           >
             <div :key="field.key" v-if="field.typeOptions == undefined">
-              <span v-if="!scope.item.editing">
+              <span class="text-break" v-if="!scope.item.editing">
                 {{ scope.item[field.key] }}
               </span>
               <b-input
@@ -144,12 +143,14 @@
                 <div v-if="!scope.item.editing">
                   <b-btn
                     variant="primary"
+                    size="sm"
                     v-if="
                       scope.item[field.key] === undefined &&
                       employeeAccessLevel >= scope.item.accessLevel
                     "
-                    class="fas fa-eye"
                     @click="getPassword(scope)"
+                  >
+                    <b-icon icon="eye"></b-icon
                   ></b-btn>
                   <span v-else>{{ scope.item[field.key] }}</span>
                 </div>
@@ -157,12 +158,14 @@
                   <div v-if="employeeAccessLevel >= scope.item.accessLevel">
                     <b-btn
                       variant="primary"
+                      size="sm"
                       v-if="
                         scope.item[field.key] === undefined &&
                         employeeAccessLevel >= scope.item.accessLevel
                       "
-                      class="fas fa-eye"
                       @click="getPassword(scope)"
+                    >
+                      <b-icon icon="eye"></b-icon
                     ></b-btn>
                     <b-input v-else v-model="scope.item[field.key]"></b-input>
                   </div>

@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid>
+  <div>
     <b-card bg-variant="light" class="mb-3">
       <b-btn
         class="float-right"
@@ -28,7 +28,7 @@
       :submitUrl="uploadUrl"
       @submitted="handleSubmitted"
     ></modal-form>
-  </b-container>
+  </div>
 </template>
 
 <script>

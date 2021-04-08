@@ -143,7 +143,7 @@
             </div>
           </div>
         </div>
-        <b-col style="position: relative">
+        <b-col cols="9">
           <div style="height: 100%">
             <b-card no-body shadow style="height: 100%">
               <b-tabs card fill>
