@@ -92,6 +92,7 @@
                   v-model="form[field.key]"
                   :options="field.options"
                   :required="field.required"
+                  @change="handleSelectChange($event, field.formOptions)"
                 ></b-select>
               </div>
               <div v-if="field.type == 'date'">
@@ -126,7 +127,7 @@
 
 <script>
 import LookupSelect from './LookupSelect'
-import { ref, reactive, getCurrentInstance } from '@vue/composition-api'
+import { ref, reactive, getCurrentInstance, set } from '@vue/composition-api'
 import axios from 'axios'
 
 export default {
@@ -163,14 +164,16 @@ export default {
   },
   setup(props, { emit }) {
     const instance = getCurrentInstance()
+    let form = reactive({})
     for (let field of props.fields) {
       if (field.show == undefined) {
         field.show = true
       }
+      set(form, field.key, '')
     }
 
     let baseUrl = `${process.env.VUE_APP_URL}lookups`
-    let form = reactive({})
+
     let showErrorAlert = ref(false)
 
     let errorCode = ref(0)
@@ -211,6 +214,13 @@ export default {
       }
     }
 
+    async function handleSelectChange(event, field) {
+      const response = await axios.get(`${field.baseUrl}/${event}`)
+      for (const [key, value] of Object.entries(field.keys)) {
+        set(form, key, response.data[value])
+      }
+    }
+
     function getFieldObjectByKey(key) {
       let obj = props.fields.find((obj) => obj.key == key)
       return obj.key
@@ -244,6 +254,7 @@ export default {
       getFieldObjectByKey,
       errorCode,
       showErrorAlert,
+      handleSelectChange,
     }
   },
 }

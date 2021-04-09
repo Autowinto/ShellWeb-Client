@@ -113,6 +113,15 @@ export default {
           options: this.subscriptionOptions,
           required: true,
           cols: 12,
+          formOptions: {
+            baseUrl: `${process.env.VUE_APP_URL}subscriptions`,
+            keys: {
+              name: 'name',
+              unitPrice: 'price',
+              startDate: 'startDate',
+              endDate: 'endDate',
+            },
+          },
         },
         {
           key: 'name',
