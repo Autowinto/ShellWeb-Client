@@ -353,14 +353,6 @@ export default {
         `${process.env.VUE_APP_URL}products/1/1000`
       )
 
-      let engines = await axios.get(`
-        ${process.env.VUE_APP_URL}subscriptions/billingEngines
-      `)
-
-      let frequencies = await axios.get(
-        `${process.env.VUE_APP_URL}subscriptions/paymentFrequencies`
-      )
-
       for (let product of products.data.products.collection) {
         this.productOptions.push({
           value: product.productNumber,
@@ -370,6 +362,10 @@ export default {
 
       this.subscriptionFields[0].typeOptions.options = this.productOptions //This is a bit hacky. Might be a better solution
 
+      let engines = await axios.get(`
+        ${process.env.VUE_APP_URL}subscriptions/info/billingEngines
+      `)
+
       for (let engine of engines.data) {
         this.billingEngineOptions.push({
           value: engine.id,
@@ -377,6 +373,10 @@ export default {
         })
       }
       this.subscriptionFields[2].typeOptions.options = this.billingEngineOptions //This is a bit hacky. Might be a better solution
+
+      let frequencies = await axios.get(
+        `${process.env.VUE_APP_URL}subscriptions/info/paymentFrequencies`
+      )
 
       for (let frequency of frequencies.data) {
         this.frequencyOptions.push({

@@ -243,15 +243,15 @@ export default {
 
       this.$set(this.formFields[0], 'options', this.subscriptionOptions)
 
-      // let engineResponse = await axios.get(
-      //   `${process.env.VUE_APP_URL}subscriptions/billingEngines`
-      // )
-      // for (let engine of engineResponse.data) {
-      //   this.billingEngineOptions.push({
-      //     value: engine.id,
-      //     text: engine.name,
-      //   })
-      // }
+      let engineResponse = await axios.get(
+        `${process.env.VUE_APP_URL}subscriptions/info/billingEngines`
+      )
+      for (let engine of engineResponse.data) {
+        this.billingEngineOptions.push({
+          value: engine.id,
+          text: engine.name,
+        })
+      }
     },
   },
   components: {

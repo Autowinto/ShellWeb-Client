@@ -2,20 +2,20 @@
   <div class="container-fluid">
     <b-card no-body>
       <b-card-header>
-        <h5 class="mb-0">Customers</h5>
+        <b-row align-v="center">
+          <b-col>
+            <h6 class="mb-0">Customers</h6>
+          </b-col>
+          <b-col>
+            <div class="text-md-right">
+              <b-button size="sm" v-b-modal.customerForm variant="primary"
+                >Create Customer</b-button
+              >
+            </div>
+          </b-col>
+        </b-row>
       </b-card-header>
       <div class="card-body">
-        <b-card bg-variant="light" class="mb-3">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="text-md-right">
-                <b-button v-b-modal.customerForm variant="primary"
-                  >Create Customer</b-button
-                >
-              </div>
-            </div>
-          </div>
-        </b-card>
         <paginated-table
           ref="customersTable"
           :url="url"
