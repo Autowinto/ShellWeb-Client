@@ -16,16 +16,15 @@
             </div>
           </div>
         </b-card>
-        <div>
-          <paginated-table
-            ref="customersTable"
-            :url="url"
-            :results="10"
-            :fields="fields"
-            :sortColumn="'name'"
-          >
-          </paginated-table>
-        </div>
+        <paginated-table
+          ref="customersTable"
+          :url="url"
+          :results="10"
+          :fields="fields"
+          :sortColumn="'name'"
+          :searchableColumn="searchableColumn"
+        >
+        </paginated-table>
       </div>
     </b-card>
     <modal-form
@@ -171,6 +170,7 @@ export default {
           required: true,
         },
       ],
+      searchableColumn: 'name',
     }
   },
   created() {

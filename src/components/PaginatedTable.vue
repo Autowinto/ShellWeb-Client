@@ -2,6 +2,19 @@
   <div id="wrapper">
     <b-container fluid class="p-0 m-0">
       <b-overlay :show="loading">
+        <div v-if="searchableColumn" class="mb-3">
+          <b-row>
+            <b-col class="w-100">
+              <b-input
+                size="sm"
+                id="search-input"
+                v-model="searchTerm"
+                @input="loadData"
+                placeholder="Search"
+              ></b-input>
+            </b-col>
+          </b-row>
+        </div>
         <b-table
           :small="small"
           show-empty
@@ -246,9 +259,6 @@
         </b-pagination>
       </b-overlay>
     </b-container>
-    <!-- <b-modal ref="tableDeletionModal" id="tableDeletionModal">
-      Are you sure you want to delete this item?
-    </b-modal> -->
   </div>
 </template>
 
@@ -286,6 +296,9 @@ export default {
       type: String,
       default: 'ASC',
     },
+    searchableColumn: {
+      type: String,
+    },
     editable: Boolean,
     editBooleanKey: String,
     downloadable: Boolean,
@@ -309,6 +322,7 @@ export default {
       sortedColumn: this.sortColumn,
       sortedDirection: this.sortDirection,
       loading: false,
+      searchTerm: '',
     }
   },
   created() {
@@ -342,6 +356,8 @@ export default {
             results: this.results,
             sortColumn: this.sortedColumn,
             sortDirection: this.sortedDirection,
+            searchColumn: this.searchableColumn,
+            searchValue: this.searchTerm,
           },
         })
         let data = response.data
