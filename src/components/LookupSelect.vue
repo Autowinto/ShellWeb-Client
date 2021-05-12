@@ -30,11 +30,10 @@ import axios from 'axios'
 import { CoolSelect } from 'vue-cool-select'
 
 import 'vue-cool-select/dist/themes/bootstrap.css'
-import { onMounted, getCurrentInstance, ref } from '@vue/composition-api'
+import { onMounted, ref } from '@vue/composition-api'
 
 export default {
   setup(props) {
-    const instance = getCurrentInstance()
     let options = ref([])
     let selected = ref('')
     let errorMessage = ref(null)
@@ -48,7 +47,7 @@ export default {
           },
         })
         .then((response) => {
-          instance.options = filterData(response.data)
+          options.value = filterData(response.data)
         })
     }
 
