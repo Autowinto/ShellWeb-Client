@@ -9,7 +9,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@azure/msal-browser": "^2.0.0",
+    "@azure/msal-browser": "^2.14.1",
     "@popperjs/core": "^2.6.0",
     "@vue/composition-api": "^1.0.0-beta.14",
     "@vueuse/core": "^4.3.6",

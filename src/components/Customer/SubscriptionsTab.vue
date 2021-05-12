@@ -108,11 +108,12 @@ export default {
       formFields: [
         {
           key: 'subscriptionId',
-          type: 'select',
           label: 'Subscription',
-          options: this.subscriptionOptions,
+          type: 'lookup',
+          textKeys: ['name'],
+          lookupEndpoint: 'subscriptions',
+          placeholder: 'Test',
           required: true,
-          cols: 12,
           formOptions: {
             baseUrl: `${process.env.VUE_APP_URL}subscriptions`,
             keys: {
@@ -122,6 +123,7 @@ export default {
               endDate: 'endDate',
             },
           },
+          cols: 12,
         },
         {
           key: 'name',
@@ -152,7 +154,7 @@ export default {
           key: 'endDate',
           label: 'End Date',
           type: 'date',
-          required: true,
+          required: false,
         },
       ],
     }

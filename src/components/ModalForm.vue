@@ -68,7 +68,7 @@
               <div id="input-lookup" v-if="field.type == 'lookup'">
                 <lookup-select
                   :size="field.size || fieldSize"
-                  @selected="lookupValueSelected($event, field.key)"
+                  @selected="lookupValueSelected($event, field)"
                   :lookupUrl="`${baseUrl}/${field.lookupEndpoint}`"
                   :textKeys="field.textKeys"
                   :required="Boolean(field.required)"
@@ -236,9 +236,16 @@ export default {
       form = reactive({})
     }
 
-    function lookupValueSelected(event, key) {
-      form[key] = event[key]
-      // set(instance.form, key, event[key])
+    async function lookupValueSelected(event, field) {
+      form[field.key] = event[field.key]
+      if (field.formOptions) {
+        const response = await axios.get(
+          `${field.formOptions.baseUrl}/${event[field.key]}`
+        )
+        for (const [key, value] of Object.entries(field.formOptions.keys)) {
+          set(form, key, response.data[value])
+        }
+      }
     }
 
     return {

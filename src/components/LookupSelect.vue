@@ -30,28 +30,28 @@ import axios from 'axios'
 import { CoolSelect } from 'vue-cool-select'
 
 import 'vue-cool-select/dist/themes/bootstrap.css'
-import { ref } from '@vue/composition-api'
+import { onMounted, getCurrentInstance, ref } from '@vue/composition-api'
 
 export default {
   setup(props) {
+    const instance = getCurrentInstance()
     let options = ref([])
     let selected = ref('')
     let errorMessage = ref(null)
 
     function lookup(searchTerm) {
       // Only search if one or more characters have been typed to reduce large api calls
-      if (searchTerm.length >= 1) {
-        axios
-          .get(this.lookupUrl, {
-            params: {
-              query: searchTerm,
-            },
-          })
-          .then((response) => {
-            this.options = filterData(response.data)
-          })
-      }
+      axios
+        .get(props.lookupUrl, {
+          params: {
+            query: searchTerm,
+          },
+        })
+        .then((response) => {
+          instance.options = filterData(response.data)
+        })
     }
+
     function emitSelected() {
       this.$emit('selected', this.selected)
     }
@@ -69,6 +69,9 @@ export default {
       }
       return filteredData
     }
+    onMounted(() => {
+      lookup('')
+    })
 
     return {
       options,
