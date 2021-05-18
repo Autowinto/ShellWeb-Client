@@ -10,7 +10,7 @@
                 id="search-input"
                 v-model="searchTerm"
                 @input="loadData"
-                placeholder="Search"
+                :placeholder="searchPrompt"
               ></b-input>
             </b-col>
           </b-row>
@@ -252,6 +252,7 @@
           </template>
         </b-table>
         <b-pagination
+          v-if="paginated"
           v-model="currentPage"
           :total-rows="totalItems"
           :per-page="results"
@@ -288,7 +289,10 @@ export default {
       type: Array,
       required: false,
     },
-    results: Number,
+    results: {
+      type: Number,
+      default: 10000,
+    },
     sortColumn: {
       type: String,
     },
@@ -299,7 +303,15 @@ export default {
     searchableColumn: {
       type: String,
     },
+    searchPrompt: {
+      type: String,
+      default: 'Search',
+    },
     editable: Boolean,
+    paginated: {
+      type: Boolean,
+      default: true,
+    },
     editBooleanKey: String,
     downloadable: Boolean,
     deletable: Boolean,

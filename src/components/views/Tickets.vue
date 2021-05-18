@@ -26,6 +26,7 @@
             :results="10"
             :fields="fields"
             searchableColumn="name"
+            searchPrompt="Search here for ticket ID or name"
             :sortColumn="'ticketId'"
             :sortDirection="'DESC'"
           ></paginated-table>

@@ -14,10 +14,10 @@
       :url="url"
       :uploadUrl="uploadUrl"
       :fields="fields"
-      :results="10"
       :sortColumn="'name'"
       :sortDirection="'DESC'"
       :editable="true"
+      :paginated="false"
     ></paginated-table>
     <modal-form
       modalId="createPasswordModal"

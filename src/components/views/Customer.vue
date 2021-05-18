@@ -1,137 +1,147 @@
 <template>
   <div id="wrapper">
     <div class="container-fluid">
-      <h3 class="text-dark mb-4">
-        {{ customerInfo.economic.name }} ({{
-          customerInfo.economic.customerNumber
-        }})
-      </h3>
       <div class="row mb-3">
         <div class="col-3">
           <div class="row mb-3">
             <div class="col">
-              <b-card header="Customer Information">
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <h4 class="small font-weight-bold">Name</h4>
-                      <h4 class="small" v-if="customerInfo.economic.name">
-                        {{ customerInfo.economic.name }}
-                      </h4>
-                      <h4 v-else class="small">N/A</h4>
+              <b-card no-body>
+                <b-card-header>
+                  <b-row align-v="center">
+                    <b-col>
+                      <h6 v-if="customerInfo.economic.name" class="mb-0">
+                        {{ customerInfo.economic.name }} ({{
+                          customerInfo.economic.customerNumber
+                        }})
+                      </h6>
+                      <b-skeleton width="100%" v-else></b-skeleton>
+                    </b-col> </b-row
+                ></b-card-header>
+                <b-card-body>
+                  <div class="row">
+                    <div class="col">
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Name</h4>
+                        <h4 class="small" v-if="customerInfo.economic.name">
+                          {{ customerInfo.economic.name }}
+                        </h4>
+                        <h4 v-else class="small">N/A</h4>
+                      </div>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Currency</h4>
+                        <h4 class="small">
+                          {{ customerInfo.economic.currency }}
+                        </h4>
+                      </div>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Sales Person</h4>
+                        <h4 v-if="employee" class="small">
+                          {{ employeeName }}
+                        </h4>
+                        <h4 v-else class="small">N/A</h4>
+                      </div>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">
+                          Invoice Tickets as Single
+                        </h4>
+                        <h4 v-if="invoiceSingleTickets" class="small">
+                          {{ invoiceSingleTickets }}
+                        </h4>
+                        <h4 v-else class="small">N/A</h4>
+                      </div>
                     </div>
-                    <div class="mb-3">
-                      <h4 class="small font-weight-bold">Currency</h4>
-                      <h4 class="small">
-                        {{ customerInfo.economic.currency }}
-                      </h4>
-                    </div>
-                    <div class="mb-3">
-                      <h4 class="small font-weight-bold">Sales Person</h4>
-                      <h4 v-if="employee" class="small">{{ employeeName }}</h4>
-                      <h4 v-else class="small">N/A</h4>
-                    </div>
-                    <div class="mb-3">
-                      <h4 class="small font-weight-bold">
-                        Invoice Tickets as Single
-                      </h4>
-                      <h4 v-if="invoiceSingleTickets" class="small">
-                        {{ invoiceSingleTickets }}
-                      </h4>
-                      <h4 v-else class="small">N/A</h4>
+                    <div class="col">
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Customer Group</h4>
+                        <h4 class="small">{{ customerGroup }}</h4>
+                      </div>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Payment Terms</h4>
+                        <h4 class="small">{{ paymentTerms }}</h4>
+                      </div>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">
+                          Invoicing Frequency
+                        </h4>
+                        <h4 v-if="invoiceFrequencyName" class="small">
+                          {{ invoiceFrequencyName }}
+                        </h4>
+                        <h4 v-else class="small">N/A</h4>
+                      </div>
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <h4 class="small font-weight-bold">Customer Group</h4>
-                      <h4 class="small">{{ customerGroup }}</h4>
+                  <div class="card mb-3"></div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Phone Number</h4>
+                        <b-link
+                          v-if="customerInfo.economic.telephoneAndFaxNumber"
+                          class="small"
+                          :href="
+                            'tel:' + customerInfo.economic.telephoneAndFaxNumber
+                          "
+                          >{{
+                            customerInfo.economic.telephoneAndFaxNumber
+                          }}</b-link
+                        >
+                        <h4 v-else class="small">N/A</h4>
+                      </div>
                     </div>
-                    <div class="mb-3">
-                      <h4 class="small font-weight-bold">Payment Terms</h4>
-                      <h4 class="small">{{ paymentTerms }}</h4>
-                    </div>
-                    <div class="mb-3">
-                      <h4 class="small font-weight-bold">
-                        Invoicing Frequency
-                      </h4>
-                      <h4 v-if="invoiceFrequencyName" class="small">
-                        {{ invoiceFrequencyName }}
-                      </h4>
-                      <h4 v-else class="small">N/A</h4>
+                    <div class="col">
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">E-mail</h4>
+                        <b-link
+                          v-if="customerInfo.economic.telephoneAndFaxNumber"
+                          class="small"
+                          :href="'mailto:' + customerInfo.economic.email"
+                          >{{ customerInfo.economic.email }}</b-link
+                        >
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="card mb-3"></div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <h4 class="small font-weight-bold">Phone Number</h4>
-                      <b-link
-                        v-if="customerInfo.economic.telephoneAndFaxNumber"
-                        class="small"
-                        :href="
-                          'tel:' + customerInfo.economic.telephoneAndFaxNumber
-                        "
-                        >{{
-                          customerInfo.economic.telephoneAndFaxNumber
-                        }}</b-link
+                  <div class="card shadow mb-3"></div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Address</h4>
+                        <h4 class="small">
+                          {{ customerInfo.economic.address }}
+                        </h4>
+                      </div>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">ZIP Code</h4>
+                        <h4 class="small">{{ customerInfo.economic.zip }}</h4>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">City</h4>
+                        <h4 class="small">{{ customerInfo.economic.city }}</h4>
+                      </div>
+                      <div class="mb-3">
+                        <h4 class="small font-weight-bold">Country</h4>
+                        <h4 class="small">
+                          {{ customerInfo.economic.country }}
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card shadow mb-2"></div>
+                  <div class="row mb-2">
+                    <div class="col">
+                      <button
+                        class="btn btn-primary w-100"
+                        v-b-modal.customerEditModal
                       >
-                      <h4 v-else class="small">N/A</h4>
+                        Edit Customer
+                      </button>
                     </div>
                   </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <h4 class="small font-weight-bold">E-mail</h4>
-                      <b-link
-                        v-if="customerInfo.economic.telephoneAndFaxNumber"
-                        class="small"
-                        :href="'mailto:' + customerInfo.economic.email"
-                        >{{ customerInfo.economic.email }}</b-link
-                      >
-                    </div>
-                  </div>
-                </div>
-                <div class="card shadow mb-3"></div>
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <h4 class="small font-weight-bold">Address</h4>
-                      <h4 class="small">
-                        {{ customerInfo.economic.address }}
-                      </h4>
-                    </div>
-                    <div class="mb-3">
-                      <h4 class="small font-weight-bold">ZIP Code</h4>
-                      <h4 class="small">{{ customerInfo.economic.zip }}</h4>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="mb-3">
-                      <h4 class="small font-weight-bold">City</h4>
-                      <h4 class="small">{{ customerInfo.economic.city }}</h4>
-                    </div>
-                    <div class="mb-3">
-                      <h4 class="small font-weight-bold">Country</h4>
-                      <h4 class="small">
-                        {{ customerInfo.economic.country }}
-                      </h4>
-                    </div>
-                  </div>
-                </div>
-                <div class="card shadow mb-2"></div>
-                <div class="row mb-2">
-                  <div class="col">
-                    <button
-                      class="btn btn-primary w-100"
-                      v-b-modal.customerEditModal
-                    >
-                      Edit Customer
-                    </button>
-                  </div>
-                </div>
-                <button class="btn btn-danger w-100" v-b-modal.deletionModal>
-                  Delete Customer
-                </button>
+                  <button class="btn btn-danger w-100" v-b-modal.deletionModal>
+                    Delete Customer
+                  </button>
+                </b-card-body>
               </b-card>
             </div>
           </div>
@@ -361,7 +371,7 @@
                       <paginated-table
                         :url="ticketsUrl"
                         :fields="fields.tickets"
-                        :results="10"
+                        :paginated="false"
                       ></paginated-table>
                     </div>
                   </b-card-text>

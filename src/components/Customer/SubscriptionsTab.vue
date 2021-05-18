@@ -24,11 +24,11 @@
       :uploadUrl="updateUrl"
       :deleteUrl="deleteUrl"
       :fields="fields"
-      :results="10"
       :sortColumn="'product'"
       :sortDirection="'DESC'"
       :editable="true"
       deletable
+      :paginated="false"
       :deletableRole="4"
       description
     >
