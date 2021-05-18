@@ -16,6 +16,7 @@
           :url="url"
           :results="10"
           :fields="fields"
+          searchableColumn="name"
           :sortColumn="'ticketId'"
           :sortDirection="'DESC'"
         ></paginated-table>
