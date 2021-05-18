@@ -2,13 +2,16 @@
   <div>
     <b-card class="text-right mb-3" bg-variant="light">
       <b-row>
-        <b-col cols="8"><b-select></b-select></b-col>
+        <!-- <b-col cols="8"><b-select></b-select></b-col> -->
         <b-col>
-          <b-btn v-if="role >= 4" @click="generateInvoice" variant="primary">
+          <b-btn
+            class="mr-2"
+            v-if="role >= 4"
+            @click="generateInvoice"
+            variant="primary"
+          >
             Generate Invoice
           </b-btn>
-        </b-col>
-        <b-col>
           <b-btn v-b-modal.customerSubscriptionModal variant="primary">
             Create Subscription
           </b-btn>
