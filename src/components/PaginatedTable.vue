@@ -294,7 +294,7 @@ export default {
     },
     sortDirection: {
       type: String,
-      default: 'ASC',
+      default: 'DESC',
     },
     searchableColumn: {
       type: String,
