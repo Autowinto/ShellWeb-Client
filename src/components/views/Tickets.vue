@@ -1,25 +1,35 @@
 <template>
   <div id="tickets-wrapper">
     <div class="container-fluid">
-      <h3 class="text-dark mb-4">Tickets</h3>
-      <b-card header="Tickets">
-        <b-card bg-variant="light" class="mb-3">
-          <b-btn
-            variant="success"
-            class="float-right"
-            v-b-modal.ticket-creation-modal
-            >Create Ticket</b-btn
-          >
-        </b-card>
-        <paginated-table
-          ref="ticketTable"
-          :url="url"
-          :results="10"
-          :fields="fields"
-          searchableColumn="name"
-          :sortColumn="'ticketId'"
-          :sortDirection="'DESC'"
-        ></paginated-table>
+      <b-card no-body>
+        <b-card-header>
+          <b-row align-v="center">
+            <b-col>
+              <h6 class="mb-0">Tickets</h6>
+            </b-col>
+            <b-col>
+              <div class="text-md-right">
+                <b-button
+                  size="sm"
+                  v-b-modal.ticket-creation-modal
+                  variant="primary"
+                  >Create Ticket</b-button
+                >
+              </div>
+            </b-col>
+          </b-row>
+        </b-card-header>
+        <b-card-body>
+          <paginated-table
+            ref="ticketTable"
+            :url="url"
+            :results="10"
+            :fields="fields"
+            searchableColumn="name"
+            :sortColumn="'ticketId'"
+            :sortDirection="'DESC'"
+          ></paginated-table>
+        </b-card-body>
       </b-card>
     </div>
     <modal-form
@@ -53,12 +63,13 @@ export default {
       url: `${process.env.VUE_APP_URL}tickets`,
       fields: [
         {
-          key: 'customerName',
+          key: 'ticketId',
+          label: 'Ticket ID',
           sortable: true,
         },
         {
-          key: 'ticketId',
-          label: 'Ticket ID',
+          key: 'customerName',
+          label: 'Customer',
           sortable: true,
         },
         {
