@@ -138,12 +138,12 @@
                       </button>
                     </div>
                   </div>
-                  <button
+                  <!-- <button
                     class="btn btn-sm btn-danger w-100"
                     v-b-modal.deletionModal
                   >
                     Delete Customer
-                  </button>
+                  </button> -->
                 </b-card-body>
               </b-card>
             </div>
