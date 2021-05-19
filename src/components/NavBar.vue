@@ -31,9 +31,9 @@
           <b-nav-item :active="$route.name == 'tickets'" to="/tickets">
             <b-icon icon="envelope"></b-icon> Tickets
           </b-nav-item>
-          <b-nav-item :active="$route.name == 'invoices'" to="/invoices">
+          <!-- <b-nav-item :active="$route.name == 'invoices'" to="/invoices">
             <b-icon icon="cash-stack"></b-icon> Invoices
-          </b-nav-item>
+          </b-nav-item> -->
           <b-nav-item
             :active="$route.name == 'timeoverview'"
             to="/timeoverview"
