@@ -372,13 +372,12 @@
                         :url="ticketsUrl"
                         :fields="fields.tickets"
                         :paginated="false"
+                        searchableColumn="ticketId"
                       ></paginated-table>
                     </div>
                   </b-card-text>
                 </b-tab>
-                <b-tab title="Passwords">
-                  <passwords-tab></passwords-tab>
-                </b-tab>
+                <passwords-tab></passwords-tab>
                 <b-tab title="Attachments">
                   <b-card-text>
                     <b-card bg-variant="light" class="mb-3">

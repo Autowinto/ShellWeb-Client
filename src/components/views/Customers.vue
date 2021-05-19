@@ -21,7 +21,8 @@
           :url="url"
           :results="10"
           :fields="fields"
-          :sortColumn="'name'"
+          sortColumn="name"
+          sortDirection="ASC"
           :searchableColumn="searchableColumn"
         >
         </paginated-table>

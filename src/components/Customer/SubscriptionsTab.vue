@@ -26,6 +26,7 @@
       :fields="fields"
       :sortColumn="'product'"
       :sortDirection="'DESC'"
+      searchableColumn="2"
       :editable="true"
       deletable
       :paginated="false"
