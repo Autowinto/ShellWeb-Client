@@ -131,14 +131,17 @@
                   <div class="row mb-2">
                     <div class="col">
                       <button
-                        class="btn btn-primary w-100"
+                        class="btn btn-sm btn-primary w-100"
                         v-b-modal.customerEditModal
                       >
                         Edit Customer
                       </button>
                     </div>
                   </div>
-                  <button class="btn btn-danger w-100" v-b-modal.deletionModal>
+                  <button
+                    class="btn btn-sm btn-danger w-100"
+                    v-b-modal.deletionModal
+                  >
                     Delete Customer
                   </button>
                 </b-card-body>
