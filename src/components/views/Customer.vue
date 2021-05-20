@@ -1212,7 +1212,7 @@ export default {
           this.invoiceFrequency = data.invoiceFrequency
           this.invoiceFrequencyName = data.invoiceFrequencyName
           this.invoiceSingleTickets = data.invoiceSingleTickets
-          this.accessToOperationsCenter = Boolean(data.accessToOperationsCenter)
+          this.accessToOperationsCenter = data.accessToOperationsCenter
 
           this.populateForm()
         })
