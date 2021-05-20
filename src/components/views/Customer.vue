@@ -1291,6 +1291,7 @@ export default {
           .paymentTermsNumber,
         selectedGroup: this.customerInfo.economic.customerGroup
           .customerGroupNumber,
+        selectedEmployee: this.employee,
         selectedCurrency: this.customerInfo.economic.currency,
         selectedVatZone: this.customerInfo.economic.vatZone.vatZoneNumber,
         eInvoicingDisabledByDefault: this.customerInfo.economic
