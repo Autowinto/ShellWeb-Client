@@ -644,6 +644,16 @@
             </b-form-group>
             <b-form-group
               label-cols-sm="3"
+              label="Access To Operations Center"
+              label-align-sm="right"
+            >
+              <b-checkbox
+                required
+                v-model="form.accessToOperationsCenter"
+              ></b-checkbox>
+            </b-form-group>
+            <b-form-group
+              label-cols-sm="3"
               label="Sales Person:"
               label-align-sm="right"
               label-for="input-salesperson"
@@ -893,6 +903,7 @@ import { getToken } from '../../auth/authHelper'
 import SubscriptionsTab from '../Customer/SubscriptionsTab.vue'
 import PasswordsTab from '../Customer/PasswordsTab.vue'
 import CustomerCallLog from '../Customer/CustomerCallLog'
+// import ModalForm from '../ModalForm'
 
 export default {
   data() {
@@ -1103,6 +1114,7 @@ export default {
       invoiceFrequency: null,
       invoiceFrequencyName: '',
       invoiceSingleTickets: null,
+      accessToOperationsCenter: false,
     }
   },
   created() {
@@ -1200,6 +1212,7 @@ export default {
           this.invoiceFrequency = data.invoiceFrequency
           this.invoiceFrequencyName = data.invoiceFrequencyName
           this.invoiceSingleTickets = data.invoiceSingleTickets
+          this.accessToOperationsCenter = Boolean(data.accessToOperationsCenter)
 
           this.populateForm()
         })
@@ -1284,6 +1297,7 @@ export default {
           .eInvoicingDisabledByDefault,
         invoiceFrequency: this.invoiceFrequency,
         invoiceSingleTickets: this.invoiceSingleTickets,
+        accessToOperationsCenter: this.accessToOperationsCenter,
       }
     },
     submitCustomerEdit() {
@@ -1391,6 +1405,7 @@ export default {
     PasswordsTab,
     SubscriptionsTab,
     CustomerCallLog,
+    // ModalForm,
   },
 }
 </script>
