@@ -149,11 +149,6 @@
         default: 'md',
       },
     },
-    data() {
-      return {
-        id: this.$route.query.id,
-      }
-    },
     setup(props, { emit }) {
       const instance = getCurrentInstance()
 

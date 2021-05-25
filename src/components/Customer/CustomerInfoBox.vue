@@ -133,7 +133,7 @@
 <script lang="ts">
   import ModalForm from '../ModalForm.vue'
   import axios from 'axios'
-  import { ref, reactive, getCurrentInstance } from '@vue/composition-api'
+  import { ref, reactive } from '@vue/composition-api'
   export default {
     props: {
       customer: {
@@ -142,8 +142,7 @@
       },
     },
 
-    setup(_props, { emit }) {
-      const instance = getCurrentInstance()
+    setup(props, { emit }) {
       let groupOptions = reactive([])
       let currencyOptions = reactive([])
       let paymentTermOptions = reactive([])
@@ -328,7 +327,7 @@
       }
 
       let editForm = ref({})
-      const customerEditUrl = `${process.env.VUE_APP_URL}customers/${instance.id}`
+      const customerEditUrl = `${process.env.VUE_APP_URL}customers/${props.customer.customerNumber}`
       return { editForm, customerEditUrl, formFields, submitted }
     },
     data() {
