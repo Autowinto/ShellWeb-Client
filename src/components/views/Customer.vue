@@ -5,147 +5,7 @@
         <div class="col-3">
           <div class="row mb-3">
             <div class="col">
-              <b-card no-body>
-                <b-card-header>
-                  <b-row align-v="center">
-                    <b-col>
-                      <h6 v-if="customerInfo.economic.name" class="mb-0">
-                        {{ customerInfo.economic.name }} ({{
-                          customerInfo.economic.customerNumber
-                        }})
-                      </h6>
-                      <b-skeleton width="100%" v-else></b-skeleton>
-                    </b-col> </b-row
-                ></b-card-header>
-                <b-card-body>
-                  <div class="row">
-                    <div class="col">
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Name</h4>
-                        <h4 class="small" v-if="customerInfo.economic.name">
-                          {{ customerInfo.economic.name }}
-                        </h4>
-                        <h4 v-else class="small">N/A</h4>
-                      </div>
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Currency</h4>
-                        <h4 class="small">
-                          {{ customerInfo.economic.currency }}
-                        </h4>
-                      </div>
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Sales Person</h4>
-                        <h4 v-if="employee" class="small">
-                          {{ employeeName }}
-                        </h4>
-                        <h4 v-else class="small">N/A</h4>
-                      </div>
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">
-                          Invoice Tickets as Single
-                        </h4>
-                        <h4 v-if="invoiceSingleTickets" class="small">
-                          {{ invoiceSingleTickets }}
-                        </h4>
-                        <h4 v-else class="small">N/A</h4>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Customer Group</h4>
-                        <h4 class="small">{{ customerGroup }}</h4>
-                      </div>
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Payment Terms</h4>
-                        <h4 class="small">{{ paymentTerms }}</h4>
-                      </div>
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">
-                          Invoicing Frequency
-                        </h4>
-                        <h4 v-if="invoiceFrequencyName" class="small">
-                          {{ invoiceFrequencyName }}
-                        </h4>
-                        <h4 v-else class="small">N/A</h4>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card mb-3"></div>
-                  <div class="row">
-                    <div class="col">
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Phone Number</h4>
-                        <b-link
-                          v-if="customerInfo.economic.telephoneAndFaxNumber"
-                          class="small"
-                          :href="
-                            'tel:' + customerInfo.economic.telephoneAndFaxNumber
-                          "
-                          >{{
-                            customerInfo.economic.telephoneAndFaxNumber
-                          }}</b-link
-                        >
-                        <h4 v-else class="small">N/A</h4>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">E-mail</h4>
-                        <b-link
-                          v-if="customerInfo.economic.telephoneAndFaxNumber"
-                          class="small"
-                          :href="'mailto:' + customerInfo.economic.email"
-                          >{{ customerInfo.economic.email }}</b-link
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card shadow mb-3"></div>
-                  <div class="row">
-                    <div class="col">
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Address</h4>
-                        <h4 class="small">
-                          {{ customerInfo.economic.address }}
-                        </h4>
-                      </div>
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">ZIP Code</h4>
-                        <h4 class="small">{{ customerInfo.economic.zip }}</h4>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">City</h4>
-                        <h4 class="small">{{ customerInfo.economic.city }}</h4>
-                      </div>
-                      <div class="mb-3">
-                        <h4 class="small font-weight-bold">Country</h4>
-                        <h4 class="small">
-                          {{ customerInfo.economic.country }}
-                        </h4>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card shadow mb-2"></div>
-                  <div class="row mb-2">
-                    <div class="col">
-                      <button
-                        class="btn btn-sm btn-primary w-100"
-                        v-b-modal.customerEditModal
-                      >
-                        Edit Customer
-                      </button>
-                    </div>
-                  </div>
-                  <!-- <button
-                    class="btn btn-sm btn-danger w-100"
-                    v-b-modal.deletionModal
-                  >
-                    Delete Customer
-                  </button> -->
-                </b-card-body>
-              </b-card>
+              <customer-info-box :customer="customerInfo"></customer-info-box>
             </div>
           </div>
           <div class="row">
@@ -244,22 +104,14 @@
                         class="inline"
                       >
                         <div role="group" class="mx-auto py-0">
-                          <label
-                            >Driving ({{
-                              customerInfo.economic.currency
-                            }}):</label
-                          >
+                          <label>Driving ({{ customerInfo.currency }}):</label>
                           <b-form-input
                             type="number"
                             v-model="items.contractRates.drivingRate"
                           ></b-form-input>
                         </div>
                         <div role="group" class="mx-auto py-0">
-                          <label
-                            >Support ({{
-                              customerInfo.economic.currency
-                            }}):</label
-                          >
+                          <label>Support ({{ customerInfo.currency }}):</label>
                           <b-form-input
                             type="number"
                             v-model="items.contractRates.supportRate"
@@ -267,9 +119,7 @@
                         </div>
                         <div role="group" class="mx-auto py-0">
                           <label
-                            >Consultant ({{
-                              customerInfo.economic.currency
-                            }}):</label
+                            >Consultant ({{ customerInfo.currency }}):</label
                           >
                           <b-form-input
                             type="number"
@@ -472,265 +322,10 @@
     >
       <h5>
         Are you sure you want to delete the customer
-        {{ customerInfo.economic.name }}
+        {{ customerInfo.name }}
       </h5>
     </b-modal>
-    <b-modal
-      body-class="p-0"
-      id="customerEditModal"
-      ref="customerEditModal"
-      centered
-      title="Edit Customer"
-      hide-footer
-      size="lg"
-    >
-      <b-card bg-variant="light" body-class="p-0">
-        <b-form
-          @submit="submitCustomerEdit"
-          onsubmit="return false;"
-          class="p-3"
-        >
-          <b-form-group
-            label-cols-lg="3"
-            label="Basic Information:"
-            label-size="lg"
-            label-class="font-weight-bold pt-0 p-0 text-dark"
-            class="mb-0"
-          >
-            <b-form-group
-              label-cols-sm="3"
-              label="Name:"
-              label-align-sm="right"
-              label-for="input-name"
-              description="Required"
-            >
-              <b-input
-                placeholder="Company Name"
-                v-model="form.name"
-                id="input-name"
-                type="text"
-                required
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Domain:"
-              label-align-sm="right"
-              label-for="input-domain"
-            >
-              <b-input
-                id="input-domain"
-                type="text"
-                v-model="form.domain"
-                placeholder="domain.dk"
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Phone:"
-              label-align-sm="right"
-              label-for="input-phone"
-            >
-              <b-input
-                id="input-phone"
-                v-model="form.phone"
-                type="number"
-                placeholder="12345678"
-              ></b-input>
-            </b-form-group>
-          </b-form-group>
-          <b-card no-body class="mb-3"></b-card>
-          <b-form-group
-            label-cols-lg="3"
-            label="Financial Information:"
-            label-size="lg"
-            label-class="font-weight-bold pt-0 p-0 text-dark"
-            class="mb-0"
-          >
-            <b-form-group
-              label-cols-sm="3"
-              label="Customer Group:"
-              label-align-sm="right"
-              label-for="input-group"
-              description="Required"
-            >
-              <b-form-select
-                id="input-group"
-                v-model="form.selectedGroup"
-                :options="dropdownData.customerGroups"
-                required
-              ></b-form-select>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Currency:"
-              label-align-sm="right"
-              label-for="input-currency"
-              description="Required"
-            >
-              <b-form-select
-                id="input-currency"
-                required
-                v-model="form.selectedCurrency"
-                :options="dropdownData.currencies"
-              ></b-form-select>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Payment Terms:"
-              label-align-sm="right"
-              label-for="input-terms"
-              description="Required"
-            >
-              <b-form-select
-                id="input-terms"
-                required
-                v-model="form.selectedPaymentTerms"
-                :options="dropdownData.paymentTerms"
-              ></b-form-select>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Invoicing Frequency:"
-              label-align-sm="right"
-              label-for="input-terms"
-              description="Required"
-            >
-              <b-form-select
-                id="input-terms"
-                required
-                v-model="form.invoiceFrequency"
-                :options="dropdownData.invoiceFrequencies"
-              ></b-form-select>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="VAT Zone:"
-              label-align-sm="right"
-              label-for="input-vat"
-              description="Required"
-            >
-              <b-form-select
-                id="input-vat"
-                required
-                v-model="form.selectedVatZone"
-                :options="dropdownData.vatZones"
-              ></b-form-select>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Invoice Tickets as Single:"
-              label-align-sm="right"
-              label-for="input-ticketsSingle"
-            >
-              <b-form-checkbox
-                id="input-invoice"
-                required
-                v-model="form.invoiceSingleTickets"
-              ></b-form-checkbox>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Disable E-Invoicing:"
-              label-align-sm="right"
-              label-for="input-invoice"
-            >
-              <b-form-checkbox
-                id="input-invoice"
-                required
-                v-model="form.eInvoicingDisabledByDefault"
-                :options="dropdownData.eInvoicingDisabledByDefault"
-              ></b-form-checkbox>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Access To Operations Center"
-              label-align-sm="right"
-            >
-              <b-checkbox
-                required
-                v-model="form.accessToOperationsCenter"
-              ></b-checkbox>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Sales Person:"
-              label-align-sm="right"
-              label-for="input-salesperson"
-            >
-              <b-select
-                v-model="form.selectedEmployee"
-                :options="dropdownData.employees"
-              ></b-select>
-            </b-form-group>
-          </b-form-group>
-          <b-card class="mb-3" no-body></b-card>
-          <b-form-group
-            label-cols-lg="3"
-            label="Location:"
-            label-size="lg"
-            label-class="font-weight-bold pt-0 p-0 text-dark"
-            class="mb-0"
-          >
-            <b-form-group
-              label-cols-sm="3"
-              label="Address:"
-              label-align-sm="right"
-              label-for="input-address"
-            >
-              <b-input
-                id="input-address"
-                v-model="form.address"
-                placeholder="Address"
-                type="text"
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="ZIP Code:"
-              label-align-sm="right"
-              label-for="input-zip"
-            >
-              <b-input
-                id="input-zip"
-                v-model="form.zip"
-                placeholder="0000"
-                type="number"
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="City:"
-              label-align-sm="right"
-              label-for="input-city"
-            >
-              <b-input
-                id="input-city"
-                v-model="form.city"
-                placeholder="City"
-                type="text"
-              ></b-input>
-            </b-form-group>
-            <b-form-group
-              label-cols-sm="3"
-              label="Country:"
-              label-align-sm="right"
-              label-for="input-country"
-            >
-              <b-input
-                id="input-country"
-                v-model="form.country"
-                placeholder="Country"
-                type="text"
-              ></b-input>
-            </b-form-group>
-          </b-form-group>
-          <b-button-group>
-            <b-button type="submit" variant="success">Save</b-button>
-          </b-button-group>
-        </b-form>
-      </b-card>
-    </b-modal>
+
     <b-modal
       centered
       id="createContactModal"
@@ -903,7 +498,7 @@ import { getToken } from '../../auth/authHelper'
 import SubscriptionsTab from '../Customer/SubscriptionsTab.vue'
 import PasswordsTab from '../Customer/PasswordsTab.vue'
 import CustomerCallLog from '../Customer/CustomerCallLog'
-// import ModalForm from '../ModalForm'
+import CustomerInfoBox from '../Customer/CustomerInfoBox'
 
 export default {
   data() {
@@ -913,6 +508,7 @@ export default {
       uploadHeaders: {},
       apiUrl: `${process.env.VUE_APP_URL}`,
       ticketsUrl: null,
+      customerEditUrl: '',
       uploadUrl: `${process.env.VUE_APP_URL}attachments/customers/${this.$route.query.id}`,
       invoicesUrl: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/booked`,
       dropdownData: {
@@ -1102,10 +698,7 @@ export default {
           totalItems: 0,
         },
       },
-      customerInfo: {
-        atera: {},
-        economic: {},
-      },
+      customerInfo: {},
       paymentTerms: {},
       customerGroup: 0,
       ateraid: 0,
@@ -1119,6 +712,7 @@ export default {
   },
   created() {
     this.ticketsUrl = `${process.env.VUE_APP_URL}customers/${this.id}/tickets`
+    this.customerEditUrl = `${process.env.VUE_APP_URL}customers/${this.id}`
 
     this.getCustomerInfo()
     this.fetchData(
@@ -1127,14 +721,6 @@ export default {
       this.items.assets = response.data.assets.items
       this.pagination.assets.totalItems = response.data.assets.totalItemCount
     })
-    // this.fetchData(`customers/${this.id}/tickets`, {
-    //   params: {
-    //     page: this.pagination.tickets.currentPage,
-    //     results: this.pagination.tickets.perPage,
-    //   },
-    // }).then((response) => {
-    //   this.items.tickets = response.data
-    // })
     this.fetchData(`customer/contracts/${this.id}`).then((response) => {
       this.items.contracts = response.data.contracts
     })
@@ -1197,25 +783,29 @@ export default {
     // this.loadInvoices()
   },
   methods: {
-    getCustomerInfo() {
-      axios
-        .get(`${process.env.VUE_APP_URL}customers/${this.id}`)
-        .then((response) => {
-          const data = response.data
+    async getCustomerInfo() {
+      try {
+        await axios
+          .get(`${process.env.VUE_APP_URL}customers/${this.id}`)
+          .then((response) => {
+            this.customerInfo = response.data
+            // const data = response.data
+            // this.customerInfo = data.customer
+            // this.customerGroup = data.customerGroup
+            // this.employeeName = data.employeeName
+            // this.employee = data.employee
+            // this.ateraid = data.apiInfo
+            // this.paymentTerms = data.paymentTerms
+            // this.invoiceFrequency = data.invoiceFrequency
+            // this.invoiceFrequencyName = data.invoiceFrequencyName
+            // this.invoiceSingleTickets = data.invoiceSingleTickets
+            // this.accessToOperationsCenter = data.accessToOperationsCenter
 
-          this.customerInfo = data.customer
-          this.customerGroup = data.customerGroup
-          this.employeeName = data.employeeName
-          this.employee = data.employee
-          this.ateraid = data.apiInfo
-          this.paymentTerms = data.paymentTerms
-          this.invoiceFrequency = data.invoiceFrequency
-          this.invoiceFrequencyName = data.invoiceFrequencyName
-          this.invoiceSingleTickets = data.invoiceSingleTickets
-          this.accessToOperationsCenter = data.accessToOperationsCenter
-
-          this.populateForm()
-        })
+            // this.populateForm()
+          })
+      } catch (err) {
+        console.error(err)
+      }
 
       axios
         .get(`${process.env.VUE_APP_URL}customers/${this.id}/contacts`)
@@ -1278,23 +868,20 @@ export default {
 
     populateForm() {
       this.form = {
-        name: this.customerInfo.economic.name,
-        businessNumber: this.customerInfo.economic
-          .corporateIdentificationNumber,
-        domain: this.customerInfo.atera.Domain,
-        country: this.customerInfo.economic.country,
-        city: this.customerInfo.economic.city,
-        address: this.customerInfo.economic.address,
-        zip: this.customerInfo.economic.zip,
-        phone: this.customerInfo.economic.telephoneAndFaxNumber,
-        selectedPaymentTerms: this.customerInfo.economic.paymentTerms
-          .paymentTermsNumber,
-        selectedGroup: this.customerInfo.economic.customerGroup
-          .customerGroupNumber,
+        name: this.customerInfo.name,
+        businessNumber: this.customerInfo.corporateIdentificationNumber,
+        domain: this.customerInfo.domain,
+        country: this.customerInfo.country,
+        city: this.customerInfo.city,
+        address: this.customerInfo.address,
+        zip: this.customerInfo.zip,
+        phone: this.customerInfo.telephoneAndFaxNumber,
+        selectedPaymentTerms: this.customerInfo.paymentTerms.paymentTermsNumber,
+        selectedGroup: this.customerInfo.customerGroup.customerGroupNumber,
         selectedEmployee: this.employee,
-        selectedCurrency: this.customerInfo.economic.currency,
-        selectedVatZone: this.customerInfo.economic.vatZone.vatZoneNumber,
-        eInvoicingDisabledByDefault: this.customerInfo.economic
+        selectedCurrency: this.customerInfo.currency,
+        selectedVatZone: this.customerInfo.vatZone.vatZoneNumber,
+        eInvoicingDisabledByDefault: this.customerInfo
           .eInvoicingDisabledByDefault,
         invoiceFrequency: this.invoiceFrequency,
         invoiceSingleTickets: this.invoiceSingleTickets,
@@ -1406,7 +993,7 @@ export default {
     PasswordsTab,
     SubscriptionsTab,
     CustomerCallLog,
-    // ModalForm,
+    CustomerInfoBox,
   },
 }
 </script>
