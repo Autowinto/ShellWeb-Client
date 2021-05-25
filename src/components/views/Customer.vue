@@ -5,14 +5,16 @@
         <div class="col-3">
           <div class="row mb-3">
             <div class="col">
-              <customer-info-box :customer="customerInfo"></customer-info-box>
+              <customer-info-box
+                v-if="customerInfo.customerNumber"
+                :customer="customerInfo"
+                @edited="getCustomerInfo"
+              ></customer-info-box>
             </div>
           </div>
           <div class="row">
             <div class="col">
-              <customer-call-log
-                :customerId="Number(this.id)"
-              ></customer-call-log>
+              <customer-call-log :customerId="Number(this.id)"></customer-call-log>
             </div>
           </div>
         </div>
@@ -24,20 +26,13 @@
                   <b-card-text>
                     <b-card bg-variant="light" class="mb-3">
                       <b-col>
-                        <b-button
-                          v-b-modal.createContactModal
-                          class="float-right"
-                          variant="success"
+                        <b-button v-b-modal.createContactModal class="float-right" variant="success"
                           >Create Contact</b-button
                         >
                       </b-col>
                     </b-card>
                     <b-row v-if="items.contacts.length">
-                      <div
-                        v-for="(contact, idx) in items.contacts"
-                        :key="idx"
-                        class="col-4"
-                      >
+                      <div v-for="(contact, idx) in items.contacts" :key="idx" class="col-4">
                         <div class="card mb-3 p-3" style="height: 140px">
                           <div class="row ml-3">
                             <b-link
@@ -47,40 +42,19 @@
                                 path: '/contact/',
                                 query: { contactid: contact.contactId },
                               }"
-                              >{{ contact.firstName }}
-                              {{ contact.lastName }}</b-link
+                              >{{ contact.firstName }} {{ contact.lastName }}</b-link
                             >
                           </div>
-                          <div
-                            class="row ml-3"
-                            v-if="contact.jobTitle !== 'null'"
-                          >
+                          <div class="row ml-3" v-if="contact.jobTitle !== 'null'">
                             <h6 class="small">{{ contact.jobTitle }}</h6>
                           </div>
-                          <div
-                            v-if="contact.email && contact.email !== 'null'"
-                            class="row ml-3"
-                          >
-                            <span
-                              style="color: black"
-                              class="fa fa-at fa-fw mr-1"
-                            ></span>
-                            <b-link :href="'mailto:' + contact.email">{{
-                              contact.email
-                            }}</b-link>
+                          <div v-if="contact.email && contact.email !== 'null'" class="row ml-3">
+                            <span style="color: black" class="fa fa-at fa-fw mr-1"></span>
+                            <b-link :href="'mailto:' + contact.email">{{ contact.email }}</b-link>
                           </div>
-                          <div
-                            v-if="contact.phones && contact.phones !== 'null'"
-                            class="row ml-3"
-                          >
-                            <div
-                              v-for="phone in contact.phones"
-                              :key="phone.phone"
-                            >
-                              <span
-                                style="color: black"
-                                class="fa fa-phone fa-fw mr-1"
-                              ></span>
+                          <div v-if="contact.phones && contact.phones !== 'null'" class="row ml-3">
+                            <div v-for="phone in contact.phones" :key="phone.phone">
+                              <span style="color: black" class="fa fa-phone fa-fw mr-1"></span>
                               <b-link :href="'tel:' + phone.phone"
                                 >{{ phone.name }}: {{ phone.phone }}</b-link
                               >
@@ -118,38 +92,24 @@
                           ></b-form-input>
                         </div>
                         <div role="group" class="mx-auto py-0">
-                          <label
-                            >Consultant ({{ customerInfo.currency }}):</label
-                          >
+                          <label>Consultant ({{ customerInfo.currency }}):</label>
                           <b-form-input
                             type="number"
                             v-model="items.contractRates.consultantRate"
                           ></b-form-input>
                         </div>
-                        <b-button
-                          type="submit"
-                          variant="success"
-                          class="mx-auto"
-                          >Apply</b-button
-                        >
+                        <b-button type="submit" variant="success" class="mx-auto">Apply</b-button>
                       </b-form>
                     </b-card>
                     <b-row v-if="items.contracts">
-                      <div
-                        v-for="(contract, idx) in items.contracts"
-                        :key="idx"
-                        class="pl-4 col-6"
-                      >
+                      <div v-for="(contract, idx) in items.contracts" :key="idx" class="pl-4 col-6">
                         <div class="card mb-3" style="color: black">
                           <div class="container h-100 pl-0">
                             <div class="row">
                               <div
                                 class="col-2 bg-success d-flex align-items-center justify-content-center"
                               >
-                                <i
-                                  class="fa rel fa-bookmark"
-                                  style="font-size: 30px"
-                                ></i>
+                                <i class="fa rel fa-bookmark" style="font-size: 30px"></i>
                               </div>
                               <div class="col py-3">
                                 <div class="row ml-1">
@@ -195,19 +155,13 @@
                         </template>
                         <template v-slot:cell(Online)="data">
                           <h5 class="m-0 p-0">
-                            <b-badge v-if="data.item.Online" variant="success"
-                              >Online</b-badge
-                            >
+                            <b-badge v-if="data.item.Online" variant="success">Online</b-badge>
                             <b-badge v-else variant="danger">Offline</b-badge>
                           </h5>
                         </template>
-                        <template
-                          v-slot:cell(LastPatchManagementReceived)="data"
-                          >{{
-                            data.item.LastPatchManagementReceived
-                              | dayjsDateTime
-                          }}</template
-                        >
+                        <template v-slot:cell(LastPatchManagementReceived)="data">{{
+                          data.item.LastPatchManagementReceived | dayjsDateTime
+                        }}</template>
                       </b-table>
                       <b-pagination
                         size="md"
@@ -489,247 +443,245 @@
 </template>
 
 <script>
-import axios from 'axios'
-import dayjs from 'dayjs'
-import fileDownload from 'js-file-download'
-import download from 'downloadjs'
-import PaginatedTable from '../PaginatedTable'
-import { getToken } from '../../auth/authHelper'
-import SubscriptionsTab from '../Customer/SubscriptionsTab.vue'
-import PasswordsTab from '../Customer/PasswordsTab.vue'
-import CustomerCallLog from '../Customer/CustomerCallLog'
-import CustomerInfoBox from '../Customer/CustomerInfoBox'
+  import axios from 'axios'
+  import dayjs from 'dayjs'
+  import fileDownload from 'js-file-download'
+  import download from 'downloadjs'
+  import PaginatedTable from '../PaginatedTable'
+  import { getToken } from '../../auth/authHelper'
+  import SubscriptionsTab from '../Customer/SubscriptionsTab.vue'
+  import PasswordsTab from '../Customer/PasswordsTab.vue'
+  import CustomerCallLog from '../Customer/CustomerCallLog'
+  import CustomerInfoBox from '../Customer/CustomerInfoBox'
 
-export default {
-  data() {
-    return {
-      id: this.$route.query.id,
-      fileRecords: [],
-      uploadHeaders: {},
-      apiUrl: `${process.env.VUE_APP_URL}`,
-      ticketsUrl: null,
-      customerEditUrl: '',
-      uploadUrl: `${process.env.VUE_APP_URL}attachments/customers/${this.$route.query.id}`,
-      invoicesUrl: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/booked`,
-      dropdownData: {
-        paymentTerms: [],
-        customerGroups: [],
-        currencies: [],
-        vatZones: [],
-        employees: [],
-        invoiceFrequencies: [
-          { text: 'Weekly', value: 2 },
-          { text: 'Biweekly', value: 3 },
-          { text: 'Monthly', value: 4 },
-        ],
-      },
-      form: {},
-      contactForm: {
-        notify: [],
-      },
-      fields: {
-        assets: [
-          {
-            key: 'AgentID',
-            label: 'Asset ID',
-          },
-          {
-            key: 'AgentName',
-            label: 'Asset Name',
-          },
-          {
-            key: 'Online',
-            label: 'Status',
-          },
-          {
-            key: 'LastPatchManagementReceived',
-            label: 'Last Patched',
-          },
-        ],
-        tickets: [
-          {
-            key: 'ticketId',
-            label: 'Ticket ID',
-            sortable: true,
-          },
-          {
-            key: 'subject',
-            label: 'Subject',
-            sortable: true,
-            typeOptions: {
-              type: 'link',
-              path: '/ticket',
-              idName: 'ticketId',
-              linkText: 'subject',
-            },
-          },
-          {
-            key: 'createdDate',
-            label: 'Date of Creation',
-            sortable: true,
-            typeOptions: {
-              type: 'datetime',
-            },
-          },
-          {
-            key: 'modifiedDate',
-            label: 'Last Updated',
-            sortable: true,
-            typeOptions: {
-              type: 'datetime',
-            },
-          },
-          {
-            key: 'status',
-            sortable: true,
-          },
-          {
-            key: 'replyStatus',
-            sortable: true,
-          },
-        ],
-        invoices: [
-          {
-            key: 'bookedInvoiceNumber', //Fix this so it fits all invoices and not just the booked ones
-            label: 'Invoice Number',
-            sortable: true,
-          },
-          {
-            key: 'date',
-            label: 'Date Created',
-            typeOptions: {
-              type: 'date',
-            },
-          },
-          {
-            key: 'dueDate',
-            label: 'Due On',
-            typeOptions: {
-              type: 'date',
-            },
-          },
-          {
-            key: 'netAmount',
-            typeOptions: {
-              type: 'rate',
-            },
-          },
-          {
-            key: 'remainder',
-            label: 'Payment',
-            sortable: true,
-            typeOptions: {
-              type: 'paid',
-            },
-          },
-        ],
-        attachments: [
-          {
-            key: 'fileName',
-            label: 'Name',
-            sortable: true,
-          },
-          {
-            key: 'fileSize',
-            label: 'Size (WIP)',
-            sortable: true,
-            typeOptions: {
-              type: 'constant',
-            },
-          },
-          {
-            key: 'visibleToCustomer',
-            label: 'Visible',
-            sortable: true,
-            typeOptions: {
-              type: 'constant',
-            },
-          },
-        ],
-      },
-      items: {
-        tickets: [],
-        contacts: [],
-        contracts: [],
-        contractRates: {},
-        assets: [],
-        invoices: [],
-        attachments: [],
-      },
-      pagination: {
-        assets: {
-          perPage: 18,
-          currentPage: 1,
-          totalItems: 0,
+  export default {
+    data() {
+      return {
+        id: this.$route.query.id,
+        fileRecords: [],
+        uploadHeaders: {},
+        apiUrl: `${process.env.VUE_APP_URL}`,
+        ticketsUrl: null,
+        customerEditUrl: '',
+        uploadUrl: `${process.env.VUE_APP_URL}attachments/customers/${this.$route.query.id}`,
+        invoicesUrl: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/booked`,
+        dropdownData: {
+          paymentTerms: [],
+          customerGroups: [],
+          currencies: [],
+          vatZones: [],
+          employees: [],
+          invoiceFrequencies: [
+            { text: 'Weekly', value: 2 },
+            { text: 'Biweekly', value: 3 },
+            { text: 'Monthly', value: 4 },
+          ],
         },
-        invoices: {
-          perPage: 10,
-          currentPage: 1,
-          totalItems: 0,
-          filterOptions: {
-            options: [
-              {
-                text: 'Booked',
-                value: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/booked`,
+        form: {},
+        contactForm: {
+          notify: [],
+        },
+        fields: {
+          assets: [
+            {
+              key: 'AgentID',
+              label: 'Asset ID',
+            },
+            {
+              key: 'AgentName',
+              label: 'Asset Name',
+            },
+            {
+              key: 'Online',
+              label: 'Status',
+            },
+            {
+              key: 'LastPatchManagementReceived',
+              label: 'Last Patched',
+            },
+          ],
+          tickets: [
+            {
+              key: 'ticketId',
+              label: 'Ticket ID',
+              sortable: true,
+            },
+            {
+              key: 'subject',
+              label: 'Subject',
+              sortable: true,
+              typeOptions: {
+                type: 'link',
+                path: '/ticket',
+                idName: 'ticketId',
+                linkText: 'subject',
               },
-              {
-                text: 'Drafts',
-                value: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/drafts`,
+            },
+            {
+              key: 'createdDate',
+              label: 'Date of Creation',
+              sortable: true,
+              typeOptions: {
+                type: 'datetime',
               },
-              // { text: 'Unpaid', value: 'unpaid'},
-              // { text: 'Paid', value: 'paid'},
-              // { text: 'Overdue', value: 'overdue'},
-              // { text: 'Not Due', value: 'not-due'},
-            ],
-            allSelected: true,
-            selected: 'booked',
-            indeterminate: false,
+            },
+            {
+              key: 'modifiedDate',
+              label: 'Last Updated',
+              sortable: true,
+              typeOptions: {
+                type: 'datetime',
+              },
+            },
+            {
+              key: 'status',
+              sortable: true,
+            },
+            {
+              key: 'replyStatus',
+              sortable: true,
+            },
+          ],
+          invoices: [
+            {
+              key: 'bookedInvoiceNumber', //Fix this so it fits all invoices and not just the booked ones
+              label: 'Invoice Number',
+              sortable: true,
+            },
+            {
+              key: 'date',
+              label: 'Date Created',
+              typeOptions: {
+                type: 'date',
+              },
+            },
+            {
+              key: 'dueDate',
+              label: 'Due On',
+              typeOptions: {
+                type: 'date',
+              },
+            },
+            {
+              key: 'netAmount',
+              typeOptions: {
+                type: 'rate',
+              },
+            },
+            {
+              key: 'remainder',
+              label: 'Payment',
+              sortable: true,
+              typeOptions: {
+                type: 'paid',
+              },
+            },
+          ],
+          attachments: [
+            {
+              key: 'fileName',
+              label: 'Name',
+              sortable: true,
+            },
+            {
+              key: 'fileSize',
+              label: 'Size (WIP)',
+              sortable: true,
+              typeOptions: {
+                type: 'constant',
+              },
+            },
+            {
+              key: 'visibleToCustomer',
+              label: 'Visible',
+              sortable: true,
+              typeOptions: {
+                type: 'constant',
+              },
+            },
+          ],
+        },
+        items: {
+          tickets: [],
+          contacts: [],
+          contracts: [],
+          contractRates: {},
+          assets: [],
+          invoices: [],
+          attachments: [],
+        },
+        pagination: {
+          assets: {
+            perPage: 18,
+            currentPage: 1,
+            totalItems: 0,
+          },
+          invoices: {
+            perPage: 10,
+            currentPage: 1,
+            totalItems: 0,
+            filterOptions: {
+              options: [
+                {
+                  text: 'Booked',
+                  value: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/booked`,
+                },
+                {
+                  text: 'Drafts',
+                  value: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/drafts`,
+                },
+                // { text: 'Unpaid', value: 'unpaid'},
+                // { text: 'Paid', value: 'paid'},
+                // { text: 'Overdue', value: 'overdue'},
+                // { text: 'Not Due', value: 'not-due'},
+              ],
+              allSelected: true,
+              selected: 'booked',
+              indeterminate: false,
+            },
+          },
+          tickets: {
+            perPage: 10,
+            currentPage: 1,
+            totalItems: 0,
+          },
+          passwords: {},
+          attachments: {
+            perPage: 13,
+            currentPage: 1,
+            totalItems: 0,
           },
         },
-        tickets: {
-          perPage: 10,
-          currentPage: 1,
-          totalItems: 0,
-        },
-        passwords: {},
-        attachments: {
-          perPage: 13,
-          currentPage: 1,
-          totalItems: 0,
-        },
-      },
-      customerInfo: {},
-      paymentTerms: {},
-      customerGroup: 0,
-      ateraid: 0,
-      employeeName: null,
-      employee: null,
-      invoiceFrequency: null,
-      invoiceFrequencyName: '',
-      invoiceSingleTickets: null,
-      accessToOperationsCenter: false,
-    }
-  },
-  created() {
-    this.ticketsUrl = `${process.env.VUE_APP_URL}customers/${this.id}/tickets`
-    this.customerEditUrl = `${process.env.VUE_APP_URL}customers/${this.id}`
+        customerInfo: {},
+        paymentTerms: {},
+        customerGroup: 0,
+        ateraid: 0,
+        employeeName: null,
+        employee: null,
+        invoiceFrequency: null,
+        invoiceFrequencyName: '',
+        invoiceSingleTickets: null,
+        accessToOperationsCenter: false,
+      }
+    },
+    created() {
+      this.ticketsUrl = `${process.env.VUE_APP_URL}customers/${this.id}/tickets`
+      this.customerEditUrl = `${process.env.VUE_APP_URL}customers/${this.id}`
 
-    this.getCustomerInfo()
-    this.fetchData(
-      `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
-    ).then((response) => {
-      this.items.assets = response.data.assets.items
-      this.pagination.assets.totalItems = response.data.assets.totalItemCount
-    })
-    this.fetchData(`customer/contracts/${this.id}`).then((response) => {
-      this.items.contracts = response.data.contracts
-    })
-    this.fetchData(`customers/${this.id}/rates`).then((response) => {
-      this.items.contractRates = response.data
-    })
-    axios
-      .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
-      .then((response) => {
+      this.getCustomerInfo()
+      this.fetchData(
+        `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
+      ).then((response) => {
+        this.items.assets = response.data.assets.items
+        this.pagination.assets.totalItems = response.data.assets.totalItemCount
+      })
+      this.fetchData(`customer/contracts/${this.id}`).then((response) => {
+        this.items.contracts = response.data.contracts
+      })
+      this.fetchData(`customers/${this.id}/rates`).then((response) => {
+        this.items.contractRates = response.data
+      })
+      axios.get(`${process.env.VUE_APP_URL}invoices/customerGroups`).then((response) => {
         for (var item in response.data) {
           const group = response.data[item]
           this.dropdownData.customerGroups.push({
@@ -738,9 +690,7 @@ export default {
           })
         }
       })
-    axios
-      .get(`${process.env.VUE_APP_URL}invoices/currencies`)
-      .then((response) => {
+      axios.get(`${process.env.VUE_APP_URL}invoices/currencies`).then((response) => {
         for (var item in response.data) {
           const currency = response.data[item]
           this.dropdownData.currencies.push({
@@ -749,9 +699,7 @@ export default {
           })
         }
       })
-    axios
-      .get(`${process.env.VUE_APP_URL}invoices/paymentTerms`)
-      .then((response) => {
+      axios.get(`${process.env.VUE_APP_URL}invoices/paymentTerms`).then((response) => {
         for (var item in response.data) {
           const term = response.data[item]
           this.dropdownData.paymentTerms.push({
@@ -760,9 +708,7 @@ export default {
           })
         }
       })
-    axios
-      .get(`${process.env.VUE_APP_URL}invoices/vatZones`)
-      .then((response) => {
+      axios.get(`${process.env.VUE_APP_URL}invoices/vatZones`).then((response) => {
         for (var item in response.data) {
           const vatZone = response.data[item]
           this.dropdownData.vatZones.push({
@@ -771,229 +717,215 @@ export default {
           })
         }
       })
-    axios.get(`${process.env.VUE_APP_URL}employees`).then((response) => {
-      for (var item in response.data) {
-        const employee = response.data[item]
-        this.dropdownData.employees.push({
-          value: employee.microsoftId,
-          text: employee.name,
-        })
-      }
-    })
-    // this.loadInvoices()
-  },
-  methods: {
-    async getCustomerInfo() {
-      try {
-        await axios
-          .get(`${process.env.VUE_APP_URL}customers/${this.id}`)
-          .then((response) => {
-            this.customerInfo = response.data
-            // const data = response.data
-            // this.customerInfo = data.customer
-            // this.customerGroup = data.customerGroup
-            // this.employeeName = data.employeeName
-            // this.employee = data.employee
-            // this.ateraid = data.apiInfo
-            // this.paymentTerms = data.paymentTerms
-            // this.invoiceFrequency = data.invoiceFrequency
-            // this.invoiceFrequencyName = data.invoiceFrequencyName
-            // this.invoiceSingleTickets = data.invoiceSingleTickets
-            // this.accessToOperationsCenter = data.accessToOperationsCenter
-
-            // this.populateForm()
+      axios.get(`${process.env.VUE_APP_URL}employees`).then((response) => {
+        for (var item in response.data) {
+          const employee = response.data[item]
+          this.dropdownData.employees.push({
+            value: employee.microsoftId,
+            text: employee.name,
           })
-      } catch (err) {
-        console.error(err)
-      }
+        }
+      })
+      // this.loadInvoices()
+    },
+    methods: {
+      async getCustomerInfo() {
+        try {
+          const response = await axios.get(`${process.env.VUE_APP_URL}customers/${this.id}`)
+          this.customerInfo = Object.assign({}, this.customerInfo, response.data)
+          // const data = response.data
+          // this.customerInfo = data.customer
+          // this.customerGroup = data.customerGroup
+          // this.employeeName = data.employeeName
+          // this.employee = data.employee
+          // this.ateraid = data.apiInfo
+          // this.paymentTerms = data.paymentTerms
+          // this.invoiceFrequency = data.invoiceFrequency
+          // this.invoiceFrequencyName = data.invoiceFrequencyName
+          // this.invoiceSingleTickets = data.invoiceSingleTickets
+          // this.accessToOperationsCenter = data.accessToOperationsCenter
 
-      axios
-        .get(`${process.env.VUE_APP_URL}customers/${this.id}/contacts`)
-        .then((response) => {
-          console.log(response)
+          // this.populateForm()
+        } catch (err) {
+          console.error(err)
+        }
+
+        axios.get(`${process.env.VUE_APP_URL}customers/${this.id}/contacts`).then((response) => {
           const data = response.data
           this.items.contacts = data
         })
-    },
-    fetchData(endpoint, params) {
-      if (params) {
-        return axios.get(process.env.VUE_APP_URL + endpoint, params)
-      } else {
-        return axios.get(process.env.VUE_APP_URL + endpoint)
-      }
-    },
-    downloadInvoice(link) {
-      axios
-        .get(`${process.env.VUE_APP_URL}invoices/pdf`, {
-          params: {
-            url: link,
-          },
-          responseType: 'arraybuffer',
-        })
-        .then((response) => {
-          fileDownload(response.data, 'invoice.pdf')
-        })
-    },
-    getInvoiceStatus(date, remainder) {
-      const today = new Date()
-      const dueDate = dayjs(date)
-
-      if (remainder === 0) {
-        return 'paid' //If the remaining payment required is 0, return the status as paid.
-      } else {
-        if (dueDate.isAfter(today)) {
-          return 'unpaid' //If the invoice is due after the current time, return the status as unpaid.
+      },
+      fetchData(endpoint, params) {
+        if (params) {
+          return axios.get(process.env.VUE_APP_URL + endpoint, params)
         } else {
-          return 'overdue' //If the invoice is overdue, return the status as overdue.
+          return axios.get(process.env.VUE_APP_URL + endpoint)
         }
-      }
-    },
-    invoiceOverdue(date) {
-      const today = new Date()
-      const dueDate = dayjs(date)
+      },
+      downloadInvoice(link) {
+        axios
+          .get(`${process.env.VUE_APP_URL}invoices/pdf`, {
+            params: {
+              url: link,
+            },
+            responseType: 'arraybuffer',
+          })
+          .then((response) => {
+            fileDownload(response.data, 'invoice.pdf')
+          })
+      },
+      getInvoiceStatus(date, remainder) {
+        const today = new Date()
+        const dueDate = dayjs(date)
 
-      if (dueDate.isBefore(today)) {
-        return 'overdue'
-      } else {
-        return 'notDue'
-      }
-    },
-    invoicePaid(remainder) {
-      if (remainder === 0) {
-        return 'paid'
-      } else {
-        return 'unpaid'
-      }
-    },
+        if (remainder === 0) {
+          return 'paid' //If the remaining payment required is 0, return the status as paid.
+        } else {
+          if (dueDate.isAfter(today)) {
+            return 'unpaid' //If the invoice is due after the current time, return the status as unpaid.
+          } else {
+            return 'overdue' //If the invoice is overdue, return the status as overdue.
+          }
+        }
+      },
+      invoiceOverdue(date) {
+        const today = new Date()
+        const dueDate = dayjs(date)
 
-    populateForm() {
-      this.form = {
-        name: this.customerInfo.name,
-        businessNumber: this.customerInfo.corporateIdentificationNumber,
-        domain: this.customerInfo.domain,
-        country: this.customerInfo.country,
-        city: this.customerInfo.city,
-        address: this.customerInfo.address,
-        zip: this.customerInfo.zip,
-        phone: this.customerInfo.telephoneAndFaxNumber,
-        selectedPaymentTerms: this.customerInfo.paymentTerms.paymentTermsNumber,
-        selectedGroup: this.customerInfo.customerGroup.customerGroupNumber,
-        selectedEmployee: this.employee,
-        selectedCurrency: this.customerInfo.currency,
-        selectedVatZone: this.customerInfo.vatZone.vatZoneNumber,
-        eInvoicingDisabledByDefault: this.customerInfo
-          .eInvoicingDisabledByDefault,
-        invoiceFrequency: this.invoiceFrequency,
-        invoiceSingleTickets: this.invoiceSingleTickets,
-        accessToOperationsCenter: this.accessToOperationsCenter,
-      }
-    },
-    submitCustomerEdit() {
-      axios
-        .put(`${process.env.VUE_APP_URL}customers/${this.id}`, this.form)
-        .then(() => {
+        if (dueDate.isBefore(today)) {
+          return 'overdue'
+        } else {
+          return 'notDue'
+        }
+      },
+      invoicePaid(remainder) {
+        if (remainder === 0) {
+          return 'paid'
+        } else {
+          return 'unpaid'
+        }
+      },
+
+      populateForm() {
+        this.form = {
+          name: this.customerInfo.name,
+          businessNumber: this.customerInfo.corporateIdentificationNumber,
+          domain: this.customerInfo.domain,
+          country: this.customerInfo.country,
+          city: this.customerInfo.city,
+          address: this.customerInfo.address,
+          zip: this.customerInfo.zip,
+          phone: this.customerInfo.telephoneAndFaxNumber,
+          selectedPaymentTerms: this.customerInfo.paymentTerms.paymentTermsNumber,
+          selectedGroup: this.customerInfo.customerGroup.customerGroupNumber,
+          selectedEmployee: this.employee,
+          selectedCurrency: this.customerInfo.currency,
+          selectedVatZone: this.customerInfo.vatZone.vatZoneNumber,
+          eInvoicingDisabledByDefault: this.customerInfo.eInvoicingDisabledByDefault,
+          invoiceFrequency: this.invoiceFrequency,
+          invoiceSingleTickets: this.invoiceSingleTickets,
+          accessToOperationsCenter: this.accessToOperationsCenter,
+        }
+      },
+      submitCustomerEdit() {
+        axios.put(`${process.env.VUE_APP_URL}customers/${this.id}`, this.form).then(() => {
           this.$refs['customerEditModal'].hide()
           this.getCustomerInfo()
         })
-    },
-    submitContact() {
-      var requestBody = this.contactForm
-      requestBody.businessNumber = this.id
+      },
+      submitContact() {
+        var requestBody = this.contactForm
+        requestBody.businessNumber = this.id
 
-      axios.post(`${process.env.VUE_APP_URL}contacts`, requestBody).then(() => {
-        this.$refs['createContactModal'].hide()
-        this.getCustomerInfo()
-      })
-    },
-    async submitContractRates() {
-      axios
-        .put(
-          `${process.env.VUE_APP_URL}customers/${this.id}/rates`,
-          this.items.contractRates
-        )
-        .then(() => {})
-    },
-    async downloadAttachment(id, name, type) {
-      let attachment = await axios.get(
-        `${process.env.VUE_APP_URL}attachments/${id}`
-      )
+        axios.post(`${process.env.VUE_APP_URL}contacts`, requestBody).then(() => {
+          this.$refs['createContactModal'].hide()
+          this.getCustomerInfo()
+        })
+      },
+      async submitContractRates() {
+        axios
+          .put(`${process.env.VUE_APP_URL}customers/${this.id}/rates`, this.items.contractRates)
+          .then(() => {})
+      },
+      async downloadAttachment(id, name, type) {
+        let attachment = await axios.get(`${process.env.VUE_APP_URL}attachments/${id}`)
 
-      download(`data:${type};base64,${attachment.data}`, name, type)
-    },
-    deleteAttachment(id) {
-      axios.delete(`${process.env.VUE_APP_URL}attachments/${id}`).then(() => {
-        this.loadAttachments()
-      })
-    },
-    async loadAttachments() {
-      let page = this.pagination.attachments.currentPage
-      let resultsPerPage = this.pagination.attachments.perPage
-
-      let attachments = await axios.get(
-        `${process.env.VUE_APP_URL}attachments/customers/${this.id}`,
-        {
-          params: {
-            page: page,
-            results: resultsPerPage,
-          },
-        }
-      )
-      this.$set(this.items.attachments, '', attachments.data.attachments)
-      this.items.attachments = attachments.data.attachments
-      this.pagination.attachments.totalItems = attachments.data.entryCount
-    },
-    async uploadAttachments() {
-      let token = await getToken()
-      this.uploadHeaders = {
-        authorization: `bearer ${token.idToken}`,
-      }
-
-      this.$refs.attachmentFileAgent
-        .upload(this.uploadUrl, this.uploadHeaders, this.fileRecords)
-        .then(() => {
+        download(`data:${type};base64,${attachment.data}`, name, type)
+      },
+      deleteAttachment(id) {
+        axios.delete(`${process.env.VUE_APP_URL}attachments/${id}`).then(() => {
           this.loadAttachments()
         })
-      this.fileRecords = []
+      },
+      async loadAttachments() {
+        let page = this.pagination.attachments.currentPage
+        let resultsPerPage = this.pagination.attachments.perPage
+
+        let attachments = await axios.get(
+          `${process.env.VUE_APP_URL}attachments/customers/${this.id}`,
+          {
+            params: {
+              page: page,
+              results: resultsPerPage,
+            },
+          }
+        )
+        this.$set(this.items.attachments, '', attachments.data.attachments)
+        this.items.attachments = attachments.data.attachments
+        this.pagination.attachments.totalItems = attachments.data.entryCount
+      },
+      async uploadAttachments() {
+        let token = await getToken()
+        this.uploadHeaders = {
+          authorization: `bearer ${token.idToken}`,
+        }
+
+        this.$refs.attachmentFileAgent
+          .upload(this.uploadUrl, this.uploadHeaders, this.fileRecords)
+          .then(() => {
+            this.loadAttachments()
+          })
+        this.fileRecords = []
+      },
+      beforeDeleteFileRecord(fileRecord) {
+        this.$refs.attachmentFileAgent.deleteFileRecord(fileRecord)
+      },
     },
-    beforeDeleteFileRecord(fileRecord) {
-      this.$refs.attachmentFileAgent.deleteFileRecord(fileRecord)
+    filters: {
+      dayjsDateTime: function(date) {
+        return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
+      },
     },
-  },
-  filters: {
-    dayjsDateTime: function (date) {
-      return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
+    computed: {
+      assetsCurrentPage() {
+        return this.pagination.assets.currentPage
+      },
+      ticketsCurrentPage() {
+        return this.pagination.tickets.currentPage
+      },
+      attachmentsCurrentPage() {
+        return this.pagination.attachments.currentPage
+      },
     },
-  },
-  computed: {
-    assetsCurrentPage() {
-      return this.pagination.assets.currentPage
+    watch: {
+      assetsCurrentPage() {
+        this.fetchData(
+          `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
+        ).then((response) => {
+          this.items.assets = response.data.assets.items
+          this.pagination.assets.totalItems = response.data.assets.totalItemCount
+        })
+      },
+      async attachmentsCurrentPage() {
+        this.loadAttachments()
+      },
     },
-    ticketsCurrentPage() {
-      return this.pagination.tickets.currentPage
+    components: {
+      PaginatedTable,
+      PasswordsTab,
+      SubscriptionsTab,
+      CustomerCallLog,
+      CustomerInfoBox,
     },
-    attachmentsCurrentPage() {
-      return this.pagination.attachments.currentPage
-    },
-  },
-  watch: {
-    assetsCurrentPage() {
-      this.fetchData(
-        `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
-      ).then((response) => {
-        this.items.assets = response.data.assets.items
-        this.pagination.assets.totalItems = response.data.assets.totalItemCount
-      })
-    },
-    async attachmentsCurrentPage() {
-      this.loadAttachments()
-    },
-  },
-  components: {
-    PaginatedTable,
-    PasswordsTab,
-    SubscriptionsTab,
-    CustomerCallLog,
-    CustomerInfoBox,
-  },
-}
+  }
 </script>

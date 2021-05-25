@@ -71,7 +71,6 @@ export default {
     }
   },
   data() {
-    console.log(this)
     return {
       url: `${process.env.VUE_APP_URL}customers`,
       showError: false,

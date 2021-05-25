@@ -64,24 +64,18 @@
           <div class="col">
             <div class="mb-3">
               <h4 class="small font-weight-bold">Phone Number</h4>
-              <b-link
-                v-if="customer.telephoneAndFaxNumber"
-                class="small"
-                :href="'tel:' + customer.telephoneAndFaxNumber"
-                >{{ customer.telephoneAndFaxNumber }}</b-link
-              >
+              <b-link v-if="customer.phone" class="small" :href="'tel:' + customer.phone">{{
+                customer.phone
+              }}</b-link>
               <h4 v-else class="small">N/A</h4>
             </div>
           </div>
           <div class="col">
             <div class="mb-3">
               <h4 class="small font-weight-bold">E-mail</h4>
-              <b-link
-                v-if="customer.telephoneAndFaxNumber"
-                class="small"
-                :href="'mailto:' + customer.email"
-                >{{ customer.email }}</b-link
-              >
+              <b-link v-if="customer.phone" class="small" :href="'mailto:' + customer.email">{{
+                customer.email
+              }}</b-link>
             </div>
           </div>
         </div>
@@ -115,44 +109,230 @@
         <div class="card shadow mb-2"></div>
         <div class="row mb-2">
           <div class="col">
-            <button
-              class="btn btn-sm btn-primary w-100"
-              v-b-modal.customerEditModal
-            >
+            <button class="btn btn-sm btn-primary w-100" v-b-modal.customerEditModal>
               Edit Customer
             </button>
           </div>
         </div>
       </b-card-body>
     </b-card>
-    <!-- <modal-form
+    <modal-form
       modalId="customerEditModal"
+      modalTitle="Edit Customer"
       :submitUrl="customerEditUrl"
-    ></modal-form> -->
+      :fields="formFields"
+      fieldSize="sm"
+      windowSize="xl"
+      :baseData="customer"
+      submitType="PUT"
+      @submitted="submitted"
+    ></modal-form>
   </div>
 </template>
 
 <script lang="ts">
-// import ModalForm from '../ModalForm'
-import { ref } from '@vue/composition-api'
-export default {
-  props: {
-    customer: {
-      required: true,
-      type: Object,
+  import ModalForm from '../ModalForm.vue'
+  import axios from 'axios'
+  import { ref, reactive, getCurrentInstance } from '@vue/composition-api'
+  export default {
+    props: {
+      customer: {
+        type: Object,
+        required: true,
+      },
     },
-  },
-  setup(props) {
-    // const data = props.customerData
-    let editForm = ref({})
 
-    function initializeForm() {
-      editForm.value = props.customerData
-    }
-    return { editForm, initializeForm }
-  },
-  components: {
-    // ModalForm,
-  },
-}
+    setup(_props, { emit }) {
+      const instance = getCurrentInstance()
+      let groupOptions = reactive([])
+      let currencyOptions = reactive([])
+      let paymentTermOptions = reactive([])
+      let vatZoneOptions = reactive([])
+      let employeeOptions = reactive([])
+      const invoiceFrequencies = [
+        { text: 'Weekly', value: 2 },
+        { text: 'Biweekly', value: 3 },
+        { text: 'Monthly', value: 4 },
+      ]
+
+      axios.get(`${process.env.VUE_APP_URL}invoices/customerGroups`).then((response) => {
+        for (var item in response.data) {
+          const group = response.data[item]
+          groupOptions.push({
+            value: group.customerGroupNumber,
+            text: group.name,
+          })
+        }
+      })
+
+      axios.get(`${process.env.VUE_APP_URL}invoices/currencies`).then((response) => {
+        for (var item in response.data) {
+          const currency = response.data[item]
+          currencyOptions.push({
+            value: currency.code,
+            text: currency.name,
+          })
+        }
+      })
+      axios.get(`${process.env.VUE_APP_URL}invoices/paymentTerms`).then((response) => {
+        for (var item in response.data) {
+          const term = response.data[item]
+          paymentTermOptions.push({
+            value: term.paymentTermsNumber,
+            text: term.name,
+          })
+        }
+      })
+      axios.get(`${process.env.VUE_APP_URL}invoices/vatZones`).then((response) => {
+        for (var item in response.data) {
+          const vatZone = response.data[item]
+          vatZoneOptions.push({
+            value: vatZone.vatZoneNumber,
+            text: vatZone.name,
+          })
+        }
+      })
+      axios.get(`${process.env.VUE_APP_URL}employees`).then((response) => {
+        for (var item in response.data) {
+          const employee = response.data[item]
+          employeeOptions.push({
+            value: employee.microsoftId,
+            text: employee.name,
+          })
+        }
+      })
+
+      const formFields = reactive([
+        {
+          key: 'name',
+          type: 'string',
+          label: 'Name',
+          required: true,
+          cols: 6,
+        },
+        {
+          key: 'domain',
+          type: 'string',
+          label: 'Domain',
+          required: true,
+          cols: 6,
+        },
+        {
+          key: 'phone',
+          type: 'string',
+          label: 'Phone',
+          cols: 3,
+        },
+        {
+          key: 'employee',
+          type: 'select',
+          label: 'Employee',
+          options: employeeOptions,
+          required: true,
+          cols: 3,
+        },
+        {
+          key: 'customerGroupNumber',
+          type: 'select',
+          label: 'Customer Group',
+          options: groupOptions,
+          required: true,
+          cols: 3,
+        },
+        {
+          key: 'paymentTermsNumber',
+          type: 'select',
+          label: 'Payment Terms',
+          options: paymentTermOptions,
+          required: true,
+          cols: 3,
+        },
+
+        {
+          key: 'invoiceFrequency',
+          type: 'select',
+          label: 'Invoice Frequency',
+          options: invoiceFrequencies,
+          required: true,
+          cols: 4,
+        },
+        {
+          key: 'vatZoneNumber',
+          type: 'select',
+          label: 'VAT Zone',
+          options: vatZoneOptions,
+          required: true,
+          cols: 4,
+        },
+        {
+          key: 'currency',
+          type: 'select',
+          label: 'Currency',
+          options: currencyOptions,
+          required: true,
+          cols: 4,
+        },
+        {
+          key: 'address',
+          type: 'string',
+          label: 'Address',
+          required: true,
+          cols: 4,
+        },
+        {
+          key: 'city',
+          type: 'string',
+          label: 'City',
+          required: true,
+          cols: 3,
+        },
+        {
+          key: 'country',
+          type: 'string',
+          label: 'Country',
+          required: true,
+          cols: 3,
+        },
+        {
+          key: 'zip',
+          type: 'integer',
+          label: 'Zip Code',
+          required: true,
+          cols: 2,
+        },
+        {
+          key: 'invoiceSingleTickets',
+          type: 'boolean',
+          label: 'Invoice Tickets As Single',
+          required: true,
+          cols: 4,
+        },
+        {
+          key: 'eInvoicingDisabledByDefault',
+          type: 'boolean',
+          label: 'Disable E-Invoicing',
+          required: true,
+          cols: 4,
+        },
+        {
+          key: 'accessToOperationsCenter',
+          type: 'boolean',
+          label: 'Access To Operations Center',
+          required: true,
+          cols: 4,
+        },
+      ])
+
+      function submitted() {
+        emit('edited')
+      }
+
+      let editForm = ref({})
+      const customerEditUrl = `${process.env.VUE_APP_URL}customers/${instance.$route.query.id}`
+      return { editForm, customerEditUrl, formFields, submitted }
+    },
+    components: {
+      ModalForm,
+    },
+  }
 </script>

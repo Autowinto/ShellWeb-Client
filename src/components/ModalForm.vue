@@ -12,27 +12,18 @@
       <b-alert :show="showErrorAlert" fade dismissible variant="danger">
         <h5>Error(s) received with code: {{ errorCode }}</h5>
         <div v-if="errorCode == 400">
-          <div v-for="error in err" :key="error">
-            {{ error.param }}: {{ error.msg }}.
-          </div>
+          <div v-for="error in err" :key="error">{{ error.param }}: {{ error.msg }}.</div>
         </div>
         <div v-else>
           <div>{{ err }}</div>
         </div>
       </b-alert>
-      <b-form id="form" onsubmit="return false;" @submit="doPost">
+      <b-form id="form" onsubmit="return false;" @submit="doSubmit">
         <b-row>
           <!-- If no collumn size is defined, set it to full size -->
-          <b-col
-            :cols="field.cols || 6"
-            v-for="field in fields"
-            :key="field.key"
-            class="mb-3"
-          >
+          <b-col :cols="field.cols || 6" v-for="field in fields" :key="field.key" class="mb-3">
             <div v-if="field.show">
-              <label class="font-weight-bold" v-if="field.label">{{
-                field.label
-              }}</label>
+              <label class="font-weight-bold" v-if="field.label">{{ field.label }}</label>
               <div id="input-string" v-if="field.type == 'string'">
                 <b-input
                   :size="field.size || fieldSize"
@@ -105,20 +96,13 @@
               <small v-if="field.required">Required</small>
             </div>
           </b-col>
-          <b-overlay
-            :show="processing"
-            spinner-small
-            rounded="sm"
-            class="d-inline-block w-100"
-          >
+          <b-overlay :show="processing" spinner-small rounded="sm" class="d-inline-block w-100">
           </b-overlay>
         </b-row>
       </b-form>
       <template #modal-footer>
         <div class="w-100">
-          <b-btn form="form" type="submit" class="float-left" variant="success"
-            >Submit</b-btn
-          >
+          <b-btn form="form" type="submit" class="float-left" variant="success">Submit</b-btn>
         </div>
       </template>
     </b-modal>
@@ -126,143 +110,180 @@
 </template>
 
 <script>
-import LookupSelect from './LookupSelect'
-import { ref, reactive, getCurrentInstance, set } from '@vue/composition-api'
-import axios from 'axios'
+  import LookupSelect from './LookupSelect'
+  import { ref, reactive, getCurrentInstance, set, toRefs } from '@vue/composition-api'
+  import axios from 'axios'
 
-export default {
-  components: {
-    LookupSelect,
-  },
-  props: {
-    submitUrl: {
-      type: String,
-      required: true,
+  export default {
+    components: {
+      LookupSelect,
     },
-    fields: {
-      type: Array,
-      required: true,
+    props: {
+      submitUrl: {
+        type: String,
+        required: true,
+      },
+      submitType: {
+        type: String,
+        required: false,
+        default: 'POST',
+      },
+      fields: {
+        type: Array,
+        required: true,
+      },
+      baseData: {
+        type: Object,
+      },
+      modalTitle: String,
+      modalId: {
+        type: String,
+        required: true,
+      },
+      windowSize: {
+        type: String,
+        default: 'md',
+      },
+      fieldSize: {
+        type: String,
+        default: 'md',
+      },
     },
-    modalTitle: String,
-    modalId: {
-      type: String,
-      required: true,
-    },
-    windowSize: {
-      type: String,
-      default: 'md',
-    },
-    fieldSize: {
-      type: String,
-      default: 'md',
-    },
-  },
-  data() {
-    return {
-      customerId: this.$route.query.id,
-    }
-  },
-  setup(props, { emit }) {
-    const instance = getCurrentInstance()
-    let form = reactive({})
-    for (let field of props.fields) {
-      if (field.show == undefined) {
-        field.show = true
+    setup(props, { emit }) {
+      const instance = getCurrentInstance()
+      const customerId = instance.$route.query.id
+
+      let form = reactive({})
+
+      const { baseData } = toRefs(props)
+
+      for (let field of props.fields) {
+        if (field.show == undefined) {
+          field.show = true
+        }
+        set(form, field.key, '')
       }
-      set(form, field.key, '')
-    }
+      resetForm()
 
-    let baseUrl = `${process.env.VUE_APP_URL}lookups`
-
-    let showErrorAlert = ref(false)
-
-    let errorCode = ref(0)
-    let err = ref([])
-
-    let processing = ref(false)
-
-    function triggerSubmit() {
-      this.$refs.form.submit.click()
-    }
-
-    function doPost() {
-      if (this.customerId) {
-        form.customerId = this.customerId
-      }
-      processing = true
-      axios
-        .post(props.submitUrl, form)
-        .then(() => {
-          emit('submitted')
-          this.$refs[props.modalId].hide()
+      function resetForm() {
+        if (baseData.value) {
+          form = baseData.value
+          // for (const { key, value } in Object.entries(baseData.value)) {
+          //   set(form, key, value)
+          // }
+        } else {
           form = reactive({})
-        })
-        .catch((error) => {
-          handleError(error)
-        })
-        .finally(() => {
-          processing = false
-        })
-    }
-
-    function handleCheckboxChange(event, key) {
-      if (key) {
-        let obj = props.fields.find((obj) => obj.key == key)
-        obj.show = event
-      } else {
-        console.log('Nothing triggered')
-      }
-    }
-
-    async function handleSelectChange(event, field) {
-      const response = await axios.get(`${field.baseUrl}/${event}`)
-      for (const [key, value] of Object.entries(field.keys)) {
-        set(form, key, response.data[value])
-      }
-    }
-
-    function getFieldObjectByKey(key) {
-      let obj = props.fields.find((obj) => obj.key == key)
-      return obj.key
-    }
-
-    function handleError(error) {
-      instance.err = error.response.data
-      instance.errorCode = error.response.status
-      instance.showErrorAlert = true // I don't kn
-    }
-
-    function cancelForm() {
-      form = reactive({})
-    }
-
-    async function lookupValueSelected(event, field) {
-      form[field.key] = event[field.key]
-      if (field.formOptions) {
-        const response = await axios.get(
-          `${field.formOptions.baseUrl}/${event[field.key]}`
-        )
-        for (const [key, value] of Object.entries(field.formOptions.keys)) {
-          set(form, key, response.data[value])
         }
       }
-    }
 
-    return {
-      form,
-      err,
-      processing,
-      baseUrl,
-      doPost,
-      cancelForm,
-      lookupValueSelected,
-      triggerSubmit,
-      handleCheckboxChange,
-      getFieldObjectByKey,
-      errorCode,
-      showErrorAlert,
-      handleSelectChange,
-    }
-  },
-}
+      let baseUrl = `${process.env.VUE_APP_URL}lookups`
+
+      let showErrorAlert = ref(false)
+
+      let errorCode = ref(0)
+      let err = ref([])
+
+      let processing = ref(false)
+
+      function triggerSubmit() {
+        this.$refs.form.submit.click()
+      }
+
+      function doSubmit() {
+        if (customerId) {
+          set(form, 'customerId', customerId)
+        }
+        processing = true
+        if (props.submitType == 'POST') {
+          axios
+            .post(props.submitUrl, form)
+            .then(() => {
+              emit('submitted')
+              this.$refs[props.modalId].hide()
+            })
+            .catch((error) => {
+              handleError(error)
+            })
+            .finally(() => {
+              processing = false
+              resetForm()
+            })
+        } else if (props.submitType == 'PUT') {
+          axios
+            .put(props.submitUrl, form)
+            .then(() => {
+              emit('submitted')
+              this.$refs[props.modalId].hide()
+            })
+            .catch((error) => {
+              handleError(error)
+            })
+            .finally(() => {
+              processing = false
+              resetForm()
+            })
+        }
+      }
+
+      function handleCheckboxChange(event, key) {
+        if (key) {
+          let obj = props.fields.find((obj) => obj.key == key)
+          obj.show = event
+        } else {
+          console.log('Nothing triggered')
+        }
+      }
+
+      async function handleSelectChange(event, field) {
+        if (field) {
+          const response = await axios.get(`${field.baseUrl}/${event}`)
+          for (const [key, value] of Object.entries(field.keys)) {
+            set(form, key, response.data[value])
+          }
+        }
+      }
+
+      function getFieldObjectByKey(key) {
+        let obj = props.fields.find((obj) => obj.key == key)
+        return obj.key
+      }
+
+      function handleError(error) {
+        instance.err = error.response.data
+        instance.errorCode = error.response.status
+        instance.showErrorAlert = true // I don't kn
+      }
+
+      function cancelForm() {
+        resetForm()
+      }
+
+      async function lookupValueSelected(event, field) {
+        form[field.key] = event[field.key]
+        if (field.formOptions) {
+          const response = await axios.get(`${field.formOptions.baseUrl}/${event[field.key]}`)
+          for (const [key, value] of Object.entries(field.formOptions.keys)) {
+            set(form, key, response.data[value])
+          }
+        }
+      }
+
+      return {
+        form,
+        err,
+        processing,
+        baseUrl,
+        doSubmit,
+        cancelForm,
+        lookupValueSelected,
+        triggerSubmit,
+        handleCheckboxChange,
+        getFieldObjectByKey,
+        errorCode,
+        showErrorAlert,
+        handleSelectChange,
+        customerId,
+      }
+    },
+  }
 </script>
