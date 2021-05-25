@@ -328,8 +328,13 @@
       }
 
       let editForm = ref({})
-      const customerEditUrl = `${process.env.VUE_APP_URL}customers/${instance.$route.query.id}`
+      const customerEditUrl = `${process.env.VUE_APP_URL}customers/${instance.id}`
       return { editForm, customerEditUrl, formFields, submitted }
+    },
+    data() {
+      return {
+        id: this.$route.query.id,
+      }
     },
     components: {
       ModalForm,

@@ -1,20 +1,24 @@
 <template>
   <div id="wrapper">
-    <div class="d-flex flex-column" id="content-wrapper">
+    <b-container fluid>
+      <b-row>
+        <b-col>
+          <b-card border-variant="dark"></b-card>
+        </b-col>
+        <b-col>
+          <b-card border-variant="dark"></b-card>
+        </b-col>
+        <b-col>
+          <b-card border-variant="dark"></b-card>
+        </b-col>
+        <b-col>
+          <b-card border-variant="dark"></b-card>
+        </b-col>
+      </b-row>
+    </b-container>
+    <!-- <div class="d-flex flex-column" id="content-wrapper">
       <div id="content">
         <div class="container-fluid">
-          <div
-            class="d-sm-flex justify-content-between align-items-center mb-4"
-          >
-            <h3 class="text-dark mb-0">Dashboard</h3>
-            <a
-              class="btn btn-primary btn-sm d-none d-sm-inline-block"
-              role="button"
-              href="#"
-              ><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate
-              Report</a
-            >
-          </div>
           <div class="row">
             <div class="col-md-6 col-xl-3 mb-4">
               <div class="card shadow border-left-primary py-2">
@@ -118,7 +122,6 @@
               </div>
             </div>
           </div>
-          <!-- Start: Chart -->
           <div class="row">
             <div class="col-lg-7 col-xl-8">
               <div class="card shadow mb-4">
@@ -223,7 +226,6 @@
               </div>
             </div>
           </div>
-          <!-- End: Chart -->
           <div class="row">
             <div class="col-lg-6 mb-4">
               <div class="card shadow mb-4">
@@ -426,7 +428,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

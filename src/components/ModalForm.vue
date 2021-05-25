@@ -149,9 +149,13 @@
         default: 'md',
       },
     },
+    data() {
+      return {
+        id: this.$route.query.id,
+      }
+    },
     setup(props, { emit }) {
       const instance = getCurrentInstance()
-      const customerId = instance.$route.query.id
 
       let form = reactive({})
 
@@ -190,8 +194,8 @@
       }
 
       function doSubmit() {
-        if (customerId) {
-          set(form, 'customerId', customerId)
+        if (instance.id) {
+          set(form, 'customerId', instance.id)
         }
         processing = true
         if (props.submitType == 'POST') {
@@ -282,7 +286,6 @@
         errorCode,
         showErrorAlert,
         handleSelectChange,
-        customerId,
       }
     },
   }
