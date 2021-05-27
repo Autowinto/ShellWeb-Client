@@ -12,7 +12,7 @@
       <b-alert :show="showErrorAlert" fade dismissible variant="danger">
         <h5>Error(s) received with code: {{ errorCode }}</h5>
         <div v-if="errorCode == 400">
-          <div v-for="error in err" :key="error">{{ error.param }}: {{ error.msg }}.</div>
+          <div v-for="(error, idx) in err" :key="idx">{{ error.param }}: {{ error.msg }}.</div>
         </div>
         <div v-else>
           <div>{{ err }}</div>
@@ -109,7 +109,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import LookupSelect from './LookupSelect'
   import { ref, reactive, getCurrentInstance, set, toRefs } from '@vue/composition-api'
   import axios from 'axios'
@@ -149,7 +149,7 @@
         default: 'md',
       },
     },
-    setup(props, { emit }) {
+    setup(props, { emit, root }) {
       const instance = getCurrentInstance()
 
       let form = reactive({})
@@ -189,9 +189,11 @@
       }
 
       function doSubmit() {
-        if (instance.id) {
-          set(form, 'customerId', instance.id)
+        if (root.$route.query.id) {
+          console.log('Aooga')
+          set(form, 'customerId', root.$route.query.id)
         }
+        console.log(form)
         processing = true
         if (props.submitType == 'POST') {
           axios
