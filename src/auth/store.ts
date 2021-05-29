@@ -16,9 +16,7 @@ export default new Vuex.Store({
       if (typeof status === 'boolean') {
         state.isAuthenticated = status
       } else {
-        console.warn(
-          'setAuthenticationStatus mutation only allows for boolean values'
-        )
+        console.warn('setAuthenticationStatus mutation only allows for boolean values')
       }
     },
     setAccount(state, status) {

@@ -3,12 +3,21 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: ['plugin:vue/essential', 'eslint:recommended'],
-  parserOptions: {
-    ecmaVersion: 2020,
-    parser: 'babel-eslint',
-  },
-  rules: {
-    semi: 0,
-  },
+  extends: [
+    'plugin:vue/essential',
+    'eslint:recommended',
+    '@vue/typescript',
+    // '@vue/prettier',
+    '@vue/prettier/@typescript-eslint',
+  ],
+  // rules: {
+  //   'prettier/prettier': [
+  //     'warn',
+  //     {
+  //       semi: false,
+  //       singleQuote: true,
+  //       trailingComma: 'none',
+  //     },
+  //   ],
+  // },
 }

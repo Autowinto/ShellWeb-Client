@@ -12,7 +12,9 @@
       <b-alert :show="showErrorAlert" fade dismissible variant="danger">
         <h5>Error(s) received with code: {{ errorCode }}</h5>
         <div v-if="errorCode == 400">
-          <div v-for="(error, idx) in err" :key="idx">{{ error.param }}: {{ error.msg }}.</div>
+          <div v-for="(error, idx) in err" :key="idx">
+            {{ error.param }}: {{ error.msg }}.
+          </div>
         </div>
         <div v-else>
           <div>{{ err }}</div>
@@ -21,9 +23,16 @@
       <b-form id="form" onsubmit="return false;" @submit="doSubmit">
         <b-row>
           <!-- If no collumn size is defined, set it to full size -->
-          <b-col :cols="field.cols || 6" v-for="field in fields" :key="field.key" class="mb-3">
+          <b-col
+            :cols="field.cols || 6"
+            v-for="field in fields"
+            :key="field.key"
+            class="mb-3"
+          >
             <div v-if="field.show">
-              <label class="font-weight-bold" v-if="field.label">{{ field.label }}</label>
+              <label class="font-weight-bold" v-if="field.label">{{
+                field.label
+              }}</label>
               <div id="input-string" v-if="field.type == 'string'">
                 <b-input
                   :size="field.size || fieldSize"
@@ -83,7 +92,7 @@
                   v-model="form[field.key]"
                   :options="field.options"
                   :required="field.required"
-                  @change="handleSelectChange($event, field.formOptions)"
+                  @change="handleSelectChange($event, field)"
                 ></b-select>
               </div>
               <div v-if="field.type == 'date'">
@@ -96,13 +105,20 @@
               <small v-if="field.required">Required</small>
             </div>
           </b-col>
-          <b-overlay :show="processing" spinner-small rounded="sm" class="d-inline-block w-100">
+          <b-overlay
+            :show="processing"
+            spinner-small
+            rounded="sm"
+            class="d-inline-block w-100"
+          >
           </b-overlay>
         </b-row>
       </b-form>
       <template #modal-footer>
         <div class="w-100">
-          <b-btn form="form" type="submit" class="float-left" variant="success">Submit</b-btn>
+          <b-btn form="form" type="submit" class="float-left" variant="success"
+            >Submit</b-btn
+          >
         </div>
       </template>
     </b-modal>
@@ -110,11 +126,19 @@
 </template>
 
 <script lang="ts">
-  import LookupSelect from './LookupSelect'
-  import { ref, reactive, getCurrentInstance, set, toRefs } from '@vue/composition-api'
-  import axios from 'axios'
+  import LookupSelect from './LookupSelect.vue'
+  import {
+    ref,
+    reactive,
+    set,
+    toRefs,
+    defineComponent,
+    PropType,
+  } from '@vue/composition-api'
+  import axios, { AxiosError } from 'axios'
+  import { FormField } from '@/types/Forms.interface'
 
-  export default {
+  export default defineComponent({
     components: {
       LookupSelect,
     },
@@ -129,7 +153,7 @@
         default: 'POST',
       },
       fields: {
-        type: Array,
+        type: Array as PropType<FormField[]>,
         required: true,
       },
       baseData: {
@@ -150,9 +174,7 @@
       },
     },
     setup(props, { emit, root }) {
-      const instance = getCurrentInstance()
-
-      let form = reactive({})
+      let form: any = reactive({})
 
       const { baseData } = toRefs(props)
 
@@ -165,7 +187,7 @@
       resetForm()
 
       function resetForm() {
-        if (baseData.value) {
+        if (baseData && baseData.value) {
           form = baseData.value
           // for (const { key, value } in Object.entries(baseData.value)) {
           //   set(form, key, value)
@@ -184,29 +206,26 @@
 
       let processing = ref(false)
 
-      function triggerSubmit() {
-        this.$refs.form.submit.click()
-      }
-
       function doSubmit() {
         if (root.$route.query.id) {
           console.log('Aooga')
           set(form, 'customerId', root.$route.query.id)
         }
         console.log(form)
-        processing = true
+        processing.value = true
+
         if (props.submitType == 'POST') {
           axios
             .post(props.submitUrl, form)
             .then(() => {
               emit('submitted')
-              this.$refs[props.modalId].hide()
+              root.$bvModal.hide(props.modalId)
             })
-            .catch((error) => {
+            .catch((error: AxiosError) => {
               handleError(error)
             })
             .finally(() => {
-              processing = false
+              processing.value = false
               resetForm()
             })
         } else if (props.submitType == 'PUT') {
@@ -214,55 +233,65 @@
             .put(props.submitUrl, form)
             .then(() => {
               emit('submitted')
-              this.$refs[props.modalId].hide()
+              root.$bvModal.hide(props.modalId)
             })
             .catch((error) => {
               handleError(error)
             })
             .finally(() => {
-              processing = false
+              processing.value = false
               resetForm()
             })
         }
       }
 
-      function handleCheckboxChange(event, key) {
+      function handleCheckboxChange(event: any, key: string) {
         if (key) {
-          let obj = props.fields.find((obj) => obj.key == key)
-          obj.show = event
+          const obj = props.fields.find((obj) => obj.key == key)
+          if (obj) {
+            obj.show = event
+          }
         } else {
           console.log('Nothing triggered')
         }
       }
 
-      async function handleSelectChange(event, field) {
-        if (field) {
-          const response = await axios.get(`${field.baseUrl}/${event}`)
-          for (const [key, value] of Object.entries(field.keys)) {
+      async function handleSelectChange(event: any, field: FormField) {
+        if (field.formOptions) {
+          const response = await axios.get(
+            `${field.formOptions.baseUrl}/${event}`
+          )
+          for (const [key, value] of Object.entries(field.formOptions.keys)) {
             set(form, key, response.data[value])
           }
         }
       }
 
-      function getFieldObjectByKey(key) {
-        let obj = props.fields.find((obj) => obj.key == key)
-        return obj.key
+      function getFieldObjectByKey(key: string) {
+        const obj = props.fields.find((obj: FormField) => obj.key == key)
+        if (obj) {
+          return obj.key
+        }
       }
 
-      function handleError(error) {
-        instance.err = error.response.data
-        instance.errorCode = error.response.status
-        instance.showErrorAlert = true // I don't kn
+      function handleError(error: AxiosError) {
+        if (error.response) {
+          err.value = error.response.data
+          errorCode.value = error.response.status
+          showErrorAlert.value = true // I don't kn
+        }
       }
 
       function cancelForm() {
         resetForm()
       }
 
-      async function lookupValueSelected(event, field) {
+      async function lookupValueSelected(event: any, field: FormField) {
         form[field.key] = event[field.key]
         if (field.formOptions) {
-          const response = await axios.get(`${field.formOptions.baseUrl}/${event[field.key]}`)
+          const response = await axios.get(
+            `${field.formOptions.baseUrl}/${event[field.key]}`
+          )
           for (const [key, value] of Object.entries(field.formOptions.keys)) {
             set(form, key, response.data[value])
           }
@@ -277,7 +306,6 @@
         doSubmit,
         cancelForm,
         lookupValueSelected,
-        triggerSubmit,
         handleCheckboxChange,
         getFieldObjectByKey,
         errorCode,
@@ -285,5 +313,5 @@
         handleSelectChange,
       }
     },
-  }
+  })
 </script>

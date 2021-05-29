@@ -9,35 +9,33 @@
 </template>
 
 <script>
-import axios from 'axios'
+  import axios from 'axios'
+  import Vue from '@vue/composition-api'
 
-export default {
-  data() {
-    return {
-      items: [],
-      creationForm: {},
-    }
-  },
-  created() {
-    this.loadItems()
-  },
-  methods: {
-    async loadItems() {
-      let data = await axios.get(`${process.env.VUE_APP_URL}subscriptionGroups`)
-
-      this.items = data.data
+  export default Vue.extend({
+    data() {
+      return {
+        items: [],
+        creationForm: {},
+      }
     },
-    submit() {
-      axios
-        .post(`${process.env.VUE_APP_URL}subscriptionGroups`, this.creationForm)
-        .then(() => {
+    created() {
+      this.loadItems()
+    },
+    methods: {
+      async loadItems() {
+        let data = await axios.get(`${process.env.VUE_APP_URL}subscriptionGroups`)
+
+        this.items = data.data
+      },
+      submit() {
+        axios.post(`${process.env.VUE_APP_URL}subscriptionGroups`, this.creationForm).then(() => {
           this.loadItems()
           this.$refs['createGroupModal'].hide()
         })
+      },
     },
-  },
-}
+  })
 </script>
 
-<style>
-</style>
+<style></style>

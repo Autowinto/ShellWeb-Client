@@ -88,9 +88,7 @@
             <div class="col">
               <div class="card shadow mb-3">
                 <div class="card-header">
-                  <h6 class="text-primary font-weight-bold mb-0">
-                    Newest Activity
-                  </h6>
+                  <h6 class="text-primary font-weight-bold mb-0">Newest Activity</h6>
                 </div>
                 <div class="card-body p4">
                   <div class="row m-0 mb-3">
@@ -101,15 +99,12 @@
                     >
                       <div id="info" class="mb-2">
                         <span class="small"
-                          >{{ comments[0].FirstName }}
-                          {{ comments[0].LastName }} |</span
+                          >{{ comments[0].FirstName }} {{ comments[0].LastName }} |</span
                         >
                         <span class="small" style="color: limegreen"
                           >{{ comments[0].Email }} |</span
                         >
-                        <span class="small">{{
-                          comments[0].Date | dayjsDateTime
-                        }}</span>
+                        <span class="small">{{ comments[0].Date | dayjsDateTime }}</span>
                       </div>
                       <div class="mb-3 commentDisplay">
                         {{ parseHTML(comments[0].Comment) }}
@@ -122,32 +117,19 @@
 
               <div class="card shadow mb-3">
                 <div class="card-header">
-                  <span class="text-primary font-weight-bold mb-0 mr-2"
-                    >Conversation History</span
-                  >
+                  <span class="text-primary font-weight-bold mb-0 mr-2">Conversation History</span>
                 </div>
                 <div class="card-body p4">
-                  <div
-                    v-for="(comment, idx) in comments"
-                    :key="idx"
-                    class="row m-0 mb-3"
-                  >
+                  <div v-for="(comment, idx) in comments" :key="idx" class="row m-0 mb-3">
                     <div
                       class="rounded border w-100 p-3"
                       v-if="comment.EndUserID"
                       style="background-color: #f9f9f9"
                     >
                       <div id="info" class="mb-2">
-                        <span class="small"
-                          >{{ comment.FirstName }}
-                          {{ comment.LastName }} |</span
-                        >
-                        <span class="small" style="color: limegreen"
-                          >{{ comment.Email }} |</span
-                        >
-                        <span class="small">{{
-                          comment.Date | dayjsDateTime
-                        }}</span>
+                        <span class="small">{{ comment.FirstName }} {{ comment.LastName }} |</span>
+                        <span class="small" style="color: limegreen">{{ comment.Email }} |</span>
+                        <span class="small">{{ comment.Date | dayjsDateTime }}</span>
                       </div>
                       <div class="mb-3 commentDisplay">
                         {{ parseHTML(comment.Comment) }}
@@ -162,9 +144,7 @@
                         <span class="small" style="color: limegreen"
                           >{{ comment.FirstName }} {{ comment.LastName }}</span
                         >
-                        <span class="small">{{
-                          comment.Date | dayjsDateTime
-                        }}</span>
+                        <span class="small">{{ comment.Date | dayjsDateTime }}</span>
                       </div>
                       <div class="mb-3 commentDisplay">
                         {{ parseHTML(comment.Comment) }}
@@ -182,61 +162,60 @@
 </template>
 
 <script>
-import axios from 'axios'
-import dayjs from 'dayjs'
+  import Vue from 'vue'
+  import axios from 'axios'
+  import dayjs from 'dayjs'
 
-export default {
-  data() {
-    return {
-      items: {},
-      comments: [],
-      ticketID: this.$route.query.id,
-    }
-  },
-  created() {
-    this.fetchData(`tickets/${this.ticketID}`).then((response) => {
-      this.items = response.data
-    })
-    this.fetchData(`ticket/ticketComments/${this.ticketID}/1/10`).then(
-      (response) => {
+  export default Vue.extend({
+    data() {
+      return {
+        items: {},
+        comments: [],
+        ticketID: this.$route.query.id,
+      }
+    },
+    created() {
+      this.fetchData(`tickets/${this.ticketID}`).then((response) => {
+        this.items = response.data
+      })
+      this.fetchData(`ticket/ticketComments/${this.ticketID}/1/10`).then((response) => {
         this.comments = response.data.comments.items
         console.log(this.comments)
-      }
-    )
-  },
-  methods: {
-    fetchData(endpoint) {
-      return axios.get(process.env.VUE_APP_URL + endpoint)
+      })
     },
-    parseHTML(html) {
-      return html.replace(/.*\(#default#VML\);}(\r\n|\r|\n)*/g, '')
+    methods: {
+      fetchData(endpoint) {
+        return axios.get(process.env.VUE_APP_URL + endpoint)
+      },
+      parseHTML(html) {
+        return html.replace(/.*\(#default#VML\);}(\r\n|\r|\n)*/g, '')
+      },
     },
-  },
-  filters: {
-    dayjsDateOnly: function (date) {
-      return dayjs(date).format('MMM D, YYYY')
-    },
-    dayjsDateTime: function (date) {
-      return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
-    },
-    stripHTML: function (value) {
-      if (value == null) {
-        return ''
-      }
-      var div = document.createElement('div')
+    filters: {
+      dayjsDateOnly: function (date) {
+        return dayjs(date).format('MMM D, YYYY')
+      },
+      dayjsDateTime: function (date) {
+        return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
+      },
+      stripHTML: function (value) {
+        if (value == null) {
+          return ''
+        }
+        var div = document.createElement('div')
 
-      value = value.replace(/[^{]*{[^}]*[^-]*[}]/g, '') //TODO: This RegEx needs some work and isn't fully functional.
-      value = value.replace(/&nbsp;&zwnj;/g, '')
-      div.innerHTML = value
-      var text = div.textContent || div.innerText || ''
-      return text
+        value = value.replace(/[^{]*{[^}]*[^-]*[}]/g, '') //TODO: This RegEx needs some work and isn't fully functional.
+        value = value.replace(/&nbsp;&zwnj;/g, '')
+        div.innerHTML = value
+        var text = div.textContent || div.innerText || ''
+        return text
+      },
     },
-  },
-}
+  })
 </script>
 
 <style scoped>
-.commentDisplay {
-  white-space: pre-wrap;
-}
+  .commentDisplay {
+    white-space: pre-wrap;
+  }
 </style>

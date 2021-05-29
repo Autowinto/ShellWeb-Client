@@ -1,6 +1,6 @@
 import * as msal from '@azure/msal-browser'
 import axios from 'axios'
-import store from '../auth/store'
+import store from './store'
 
 const msalConfig = {
   graphEndpoints: {
@@ -8,7 +8,7 @@ const msalConfig = {
   },
   authConfig: {
     auth: {
-      clientId: process.env.VUE_APP_CLIENT_ID,
+      clientId: process.env.VUE_APP_CLIENT_ID || '',
       authority: `https://login.microsoftonline.com/${process.env.VUE_APP_TENANT_ID}`,
       redirectUri: process.env.VUE_APP_BASE_URL,
       navigateToLoginRequestUrl: true,
@@ -22,17 +22,17 @@ const msalConfig = {
 
 //FIXME: Rewrite this to be just a utility helper instead of a mixin
 
-const loginRequest = {
+const loginRequest: any = {
   scopes: ['User.Read'],
 }
 
-var username = ''
+let username = ''
 
 const app = new msal.PublicClientApplication(msalConfig.authConfig)
 
 //Check authentication and update the isAuthenticated value in the vuex store.
 
-function loginBackend(account) {
+function loginBackend(account: any) {
   axios
     .post(`${process.env.VUE_APP_URL}login`, {
       accountId: account.homeAccountId,
@@ -44,7 +44,7 @@ function loginBackend(account) {
     })
 }
 
-function getGraphToken(accountValue) {
+function getGraphToken(this: any, accountValue: any) {
   loginRequest.account = accountValue
   return app
     .acquireTokenSilent(loginRequest)
@@ -68,15 +68,15 @@ function getGraphToken(accountValue) {
     })
 }
 
-export function setRole(role) {
+export function setRole(role: number) {
   store.commit('setRole', role)
 }
 
-export function setDisplayName(name) {
+export function setDisplayName(name: string) {
   store.commit('setDisplayName', name)
 }
 
-export function signIn() {
+export function signIn(this: any) {
   console.log('Signing in')
   app.loginPopup(loginRequest).then(async () => {
     const account = app.getAllAccounts()[0]
@@ -95,7 +95,7 @@ export function checkAuthenticationStatus() {
       reject()
     } else if (currentAccounts.length > 1) {
       //More than one account signed in currently
-      for (var account in currentAccounts) {
+      for (const account in currentAccounts) {
         if (currentAccounts[account].tenantId == process.env.VUE_APP_TENANT_ID) {
           getGraphToken(currentAccounts[account]) //Attempt getting a graph token to truly make sure that the user is authenticated.
             .then(() => {
@@ -137,17 +137,17 @@ export function getCurrentAccount() {
   return app.getAccountByUsername(username)
 }
 
-export function getUserAccessLevel() {
+export function getUserAccessLevel(this: any) {
   return this.$store.state.role.role
 }
 
 export function getAccountId() {
-  return getCurrentAccount().homeAccountId
+  return getCurrentAccount()!.homeAccountId
 }
 
-export function getAccountGraph(accountValue) {
-  return getGraphToken(accountValue).then((response) => {
-    let accessToken = response.accessToken
+export function getAccountGraph(accountValue: any) {
+  return getGraphToken(accountValue).then((response: any) => {
+    const accessToken = response.accessToken
     const config = {
       headers: {
         authorization: `bearer ${accessToken}`,
@@ -167,11 +167,4 @@ export function getAccountGraph(accountValue) {
 
 export function getToken() {
   return app.acquireTokenSilent(loginRequest)
-}
-
-export function signOut() {
-  store.commit('setAuthenticationStatus', false)
-  app.logout({
-    //TODO: Add the specific account here
-  })
 }

@@ -39,146 +39,147 @@
   </div>
 </template>
 
-<script>
-import axios from 'axios'
-import PaginatedTable from '../PaginatedTable'
-import * as auth from '../../auth/authHelper'
-import ModalForm from '../ModalForm'
-import { reactive } from '@vue/composition-api'
+<script lang="ts">
+  import axios from 'axios'
+  import PaginatedTable from '../PaginatedTable.vue'
+  import * as auth from '../../auth/authHelper'
+  import ModalForm from '../ModalForm.vue'
+  import { defineComponent, reactive } from '@vue/composition-api'
 
-export default {
-  setup() {
-    let paymentTerms = reactive([])
-    let customerGroups = reactive([])
-    let currencies = reactive([])
-    let vatZones = reactive([])
-    let employees = reactive([])
-    let selectedEmployee = auth.getAccountId()
-    let invoiceFrequencies = [
-      { text: 'Weekly', value: 2 },
-      { text: 'Biweekly', value: 3 },
-      { text: 'Monthly', value: 4 },
-    ]
+  export default defineComponent({
+    setup() {
+      interface SelectOption {
+        text: string
+        value: string
+      }
+      let paymentTerms: Array<SelectOption> = reactive([])
+      let customerGroups: Array<SelectOption> = reactive([])
+      let currencies: Array<SelectOption> = reactive([])
+      let vatZones: Array<SelectOption> = reactive([])
+      let employees: Array<SelectOption> = reactive([])
+      let selectedEmployee = auth.getAccountId()
+      let invoiceFrequencies = [
+        { text: 'Weekly', value: 2 },
+        { text: 'Biweekly', value: 3 },
+        { text: 'Monthly', value: 4 },
+      ]
 
-    return {
-      paymentTerms,
-      customerGroups,
-      currencies,
-      vatZones,
-      employees,
-      invoiceFrequencies,
-      selectedEmployee,
-    }
-  },
-  data() {
-    return {
-      url: `${process.env.VUE_APP_URL}customers`,
-      showError: false,
-      form: {
-        name: null,
-        businessNumber: 0,
-        domain: null,
-        country: null,
-        city: null,
-        address: null,
-        zip: null,
-        phone: null,
-        eInvoicingDisabledByDefault: null,
-      },
-      fields: [
-        {
-          key: 'customerId',
-          label: 'CVR',
-          sortable: true,
-          thClass: 'idColumn',
+      return {
+        paymentTerms,
+        customerGroups,
+        currencies,
+        vatZones,
+        employees,
+        invoiceFrequencies,
+        selectedEmployee,
+      }
+    },
+    data(this: any) {
+      return {
+        url: `${process.env.VUE_APP_URL}customers`,
+        showError: false,
+        form: {
+          name: null,
+          businessNumber: 0,
+          domain: null,
+          country: null,
+          city: null,
+          address: null,
+          zip: null,
+          phone: null,
+          eInvoicingDisabledByDefault: null,
         },
-        {
-          key: 'name',
-          label: 'Name',
-          sortable: true,
-          typeOptions: {
-            type: 'link',
-            linkText: 'name',
-            path: 'customer',
-            idName: 'customerId',
+        fields: [
+          {
+            key: 'customerId',
+            label: 'CVR',
+            sortable: true,
+            thClass: 'idColumn',
           },
-        },
-      ],
-      formFields: [
-        { key: 'name', type: 'string', label: 'Name', cols: 6, required: true },
-        { key: 'cvr', type: 'integer', label: 'CVR', cols: 6, required: true },
-        {
-          key: 'domain',
-          type: 'string',
-          label: 'Domain',
-          cols: 6,
-          required: true,
-        },
-        {
-          key: 'phone',
-          type: 'integer',
-          label: 'Phone',
-          cols: 6,
-          required: true,
-        },
-        {
-          key: 'employee',
-          type: 'select',
-          options: this.employees,
-          label: 'Employee',
-          cols: 4,
-          required: true,
-        },
-        {
-          key: 'group',
-          type: 'select',
-          label: 'Group',
-          options: this.customerGroups,
-          cols: 4,
-          required: true,
-        },
-        {
-          key: 'currency',
-          type: 'select',
-          label: 'Currency',
-          options: this.currencies,
-          cols: 4,
-          required: true,
-        },
-        {
-          key: 'paymentTerms',
-          type: 'select',
-          label: 'Payment Terms',
-          options: this.paymentTerms,
-          cols: 4,
-          required: true,
-        },
-        {
-          key: 'vatZone',
-          type: 'select',
-          label: 'VAT Zone',
-          options: this.vatZones,
-          cols: 4,
-          required: true,
-        },
-        {
-          key: 'invoiceFrequency',
-          type: 'select',
-          label: 'Invoice Frequency',
-          options: this.invoiceFrequencies,
-          cols: 4,
-          required: true,
-        },
-      ],
-      searchableColumn: 'name',
-    }
-  },
-  created() {
-    console.log(this)
-    //Collect these calls in one axios.all call
-    axios
-      .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
-      .then((response) => {
+          {
+            key: 'name',
+            label: 'Name',
+            sortable: true,
+            typeOptions: {
+              type: 'link',
+              linkText: 'name',
+              path: 'customer',
+              idName: 'customerId',
+            },
+          },
+        ],
+        formFields: [
+          { key: 'name', type: 'string', label: 'Name', cols: 6, required: true },
+          { key: 'cvr', type: 'integer', label: 'CVR', cols: 6, required: true },
+          {
+            key: 'domain',
+            type: 'string',
+            label: 'Domain',
+            cols: 6,
+            required: true,
+          },
+          {
+            key: 'phone',
+            type: 'integer',
+            label: 'Phone',
+            cols: 6,
+            required: true,
+          },
+          {
+            key: 'employee',
+            type: 'select',
+            options: this.employees,
+            label: 'Employee',
+            cols: 4,
+            required: true,
+          },
+          {
+            key: 'group',
+            type: 'select',
+            label: 'Group',
+            options: this.customerGroups,
+            cols: 4,
+            required: true,
+          },
+          {
+            key: 'currency',
+            type: 'select',
+            label: 'Currency',
+            options: this.currencies,
+            cols: 4,
+            required: true,
+          },
+          {
+            key: 'paymentTerms',
+            type: 'select',
+            label: 'Payment Terms',
+            options: this.paymentTerms,
+            cols: 4,
+            required: true,
+          },
+          {
+            key: 'vatZone',
+            type: 'select',
+            label: 'VAT Zone',
+            options: this.vatZones,
+            cols: 4,
+            required: true,
+          },
+          {
+            key: 'invoiceFrequency',
+            type: 'select',
+            label: 'Invoice Frequency',
+            options: this.invoiceFrequencies,
+            cols: 4,
+            required: true,
+          },
+        ],
+        searchableColumn: 'name',
+      }
+    },
+    created() {
+      //Collect these calls in one axios.all call
+      axios.get(`${process.env.VUE_APP_URL}invoices/customerGroups`).then((response) => {
         for (var group of response.data) {
           this.customerGroups.push({
             value: group.customerGroupNumber,
@@ -186,9 +187,7 @@ export default {
           })
         }
       })
-    axios
-      .get(`${process.env.VUE_APP_URL}invoices/currencies`)
-      .then((response) => {
+      axios.get(`${process.env.VUE_APP_URL}invoices/currencies`).then((response) => {
         for (var currency of response.data) {
           this.currencies.push({
             value: currency.code,
@@ -196,9 +195,7 @@ export default {
           })
         }
       })
-    axios
-      .get(`${process.env.VUE_APP_URL}invoices/paymentTerms`)
-      .then((response) => {
+      axios.get(`${process.env.VUE_APP_URL}invoices/paymentTerms`).then((response) => {
         for (var term of response.data) {
           this.paymentTerms.push({
             value: term.paymentTermsNumber,
@@ -206,9 +203,7 @@ export default {
           })
         }
       })
-    axios
-      .get(`${process.env.VUE_APP_URL}invoices/vatZones`)
-      .then((response) => {
+      axios.get(`${process.env.VUE_APP_URL}invoices/vatZones`).then((response) => {
         for (var vatZone of response.data) {
           this.vatZones.push({
             value: vatZone.vatZoneNumber,
@@ -216,51 +211,28 @@ export default {
           })
         }
       })
-    axios.get(`${process.env.VUE_APP_URL}employees`).then((response) => {
-      for (var employee of response.data) {
-        this.employees.push({
-          value: employee.microsoftId,
-          text: employee.name,
-        })
-      }
-    })
-  },
-  methods: {
-    submitCustomer() {
-      axios
-        .post(`${process.env.VUE_APP_URL}customers`, this.form)
-        .then(() => {
-          //Refresh table of customers
-          this.$refs['customerFormModal'].hide()
-          this.$refs.customersTable.loadData()
-        })
-        .catch((error) => {
-          console.log(error)
-          if (error.response.status === 409) {
-            //Code 409 is the code for duplicate resource
-            this.showError = true
-            this.scrollToModalTop()
-          }
-        })
+      axios.get(`${process.env.VUE_APP_URL}employees`).then((response) => {
+        for (var employee of response.data) {
+          this.employees.push({
+            value: employee.microsoftId,
+            text: employee.name,
+          })
+        }
+      })
     },
-    scrollToModalTop() {
-      var modal = document.getElementById('customerForm')
-      modal.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    components: {
+      PaginatedTable,
+      ModalForm,
     },
-  },
-  components: {
-    PaginatedTable,
-    ModalForm,
-  },
-}
+  })
 </script>
 
 <style lang="css">
-.form-row {
-  color: black;
-}
+  .form-row {
+    color: black;
+  }
 
-.idColumn {
-  width: 15%;
-}
+  .idColumn {
+    width: 15%;
+  }
 </style>

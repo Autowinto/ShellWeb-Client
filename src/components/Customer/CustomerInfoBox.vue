@@ -133,8 +133,14 @@
 <script lang="ts">
   import ModalForm from '../ModalForm.vue'
   import axios from 'axios'
-  import { ref, reactive } from '@vue/composition-api'
-  export default {
+  import { ref, reactive, defineComponent } from '@vue/composition-api'
+
+  interface SelectOption {
+    text: string
+    value: string
+  }
+
+  export default defineComponent({
     props: {
       customer: {
         type: Object,
@@ -142,12 +148,14 @@
       },
     },
 
-    setup(props, { emit }) {
-      let groupOptions = reactive([])
-      let currencyOptions = reactive([])
-      let paymentTermOptions = reactive([])
-      let vatZoneOptions = reactive([])
-      let employeeOptions = reactive([])
+    setup(props, { emit, root }) {
+      const id = root.$route.query.id
+
+      let groupOptions: SelectOption[] = reactive([])
+      let currencyOptions: SelectOption[] = reactive([])
+      let paymentTermOptions: SelectOption[] = reactive([])
+      let vatZoneOptions: SelectOption[] = reactive([])
+      let employeeOptions: SelectOption[] = reactive([])
       const invoiceFrequencies = [
         { text: 'Weekly', value: 2 },
         { text: 'Biweekly', value: 3 },
@@ -331,12 +339,10 @@
       return { editForm, customerEditUrl, formFields, submitted }
     },
     data() {
-      return {
-        id: this.$route.query.id,
-      }
+      return {}
     },
     components: {
       ModalForm,
     },
-  }
+  })
 </script>

@@ -433,7 +433,8 @@
 </template>
 
 <script>
-export default {
-  components: {},
-}
+  import Vue from 'vue'
+  export default Vue.extend({
+    components: {},
+  })
 </script>

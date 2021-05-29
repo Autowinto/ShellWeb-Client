@@ -95,6 +95,7 @@
 </template>
 
 <script>
+  import Vue from 'vue'
 import TimeDisplay from '../TimeDisplay'
 // import WorkHourTable from '../WorkHourTable'
 import PaginatedTable from '../PaginatedTable'
@@ -102,7 +103,7 @@ import dayjs from 'dayjs'
 import axios from 'axios'
 import * as auth from '../../auth/authHelper'
 
-export default {
+export default Vue.extend({
   data() {
     return {
       url: `${
@@ -259,7 +260,7 @@ export default {
     // WorkHourTable,
     PaginatedTable,
   },
-}
+})
 </script>
 
 <style></style>

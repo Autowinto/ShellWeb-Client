@@ -15,17 +15,18 @@
 </template>
 
 <script>
-import { ref } from '@vue/composition-api'
-import axios from 'axios'
+  import Vue from 'vue'
+  import { ref } from '@vue/composition-api'
+  import axios from 'axios'
 
-export default {
-  setup() {
-    let changelog = ref([])
+  export default Vue.extend({
+    setup() {
+      let changelog = ref([])
 
-    axios.get(`${process.env.VUE_APP_URL}misc/changelog`).then((response) => {
-      changelog.value = response.data
-    })
-    return { changelog }
-  },
-}
+      axios.get(`${process.env.VUE_APP_URL}misc/changelog`).then((response) => {
+        changelog.value = response.data
+      })
+      return { changelog }
+    },
+  })
 </script>

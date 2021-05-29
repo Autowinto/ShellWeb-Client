@@ -35,6 +35,6 @@ dayjs.extend(relativeTime)
 //Initialize authentication before creating the app
 new Vue({
   router,
-  store: store,
+  store,
   render: (h) => h(App),
 }).$mount('#app')

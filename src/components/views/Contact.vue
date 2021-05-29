@@ -3,18 +3,14 @@
     <div class="d-flex flex-column" id="content-wrapper">
       <div id="content">
         <div class="container-fluid">
-          <h3 class="text-dark mb-4">
-            Contact ID: {{ contactInfo.contactId }}
-          </h3>
+          <h3 class="text-dark mb-4">Contact ID: {{ contactInfo.contactId }}</h3>
           <div class="row">
             <div class="col-3">
               <div class="card shadow mb-4">
                 <div class="card-header p-0">
                   <div class="row">
                     <div class="col">
-                      <h6 class="text-primary font-weight-bold mb-0 p-3">
-                        Contact Information
-                      </h6>
+                      <h6 class="text-primary font-weight-bold mb-0 p-3">Contact Information</h6>
                     </div>
                   </div>
                 </div>
@@ -42,11 +38,7 @@
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Phone Numbers</h4>
-                        <h4
-                          class="small"
-                          v-for="phone in contactInfo.phones"
-                          :key="phone.phone"
-                        >
+                        <h4 class="small" v-for="phone in contactInfo.phones" :key="phone.phone">
                           {{ phone.name }}: {{ phone.phone }}
                         </h4>
                       </div>
@@ -59,10 +51,7 @@
                     </div>
                   </div>
                   <div class="card shadow mb-3"></div>
-                  <button
-                    class="btn btn-primary w-100 mb-2"
-                    v-b-modal.contactEditModal
-                  >
+                  <button class="btn btn-primary w-100 mb-2" v-b-modal.contactEditModal>
                     Edit Contact
                   </button>
                   <!-- <button class="btn btn-danger w-100">Delete Contact</button> -->
@@ -72,9 +61,7 @@
             <div class="col">
               <div class="card shadow mb-3">
                 <div class="card-header">
-                  <h6 class="text-primary mb-0 font-weight-bold">
-                    Assigned Tickets
-                  </h6>
+                  <h6 class="text-primary mb-0 font-weight-bold">Assigned Tickets</h6>
                 </div>
                 <div class="card-body shadow">
                   <div>
@@ -104,11 +91,7 @@
       size="lg"
     >
       <b-card bg-variant="light" body-class="p-0">
-        <b-form
-          @submit="submitContactEdit"
-          onsubmit="return false;"
-          class="p-3"
-        >
+        <b-form @submit="submitContactEdit" onsubmit="return false;" class="p-3">
           <b-form-group
             label-cols-lg="3"
             label="Basic Information:"
@@ -127,10 +110,7 @@
             <b-card v-if="form.phones && !form.phones.length">
               <b-row>
                 <b-col class="text-right">
-                  <b-btn
-                    class="btn-success fas fa-plus"
-                    @click="addPhone"
-                  ></b-btn>
+                  <b-btn class="btn-success fas fa-plus" @click="addPhone"></b-btn>
                 </b-col>
               </b-row>
             </b-card>
@@ -157,10 +137,7 @@
                     ></b-input>
                   </b-col>
                   <b-col class="text-right">
-                    <b-button
-                      class="fas fa-plus btn-success mr-2"
-                      @click="addPhone()"
-                    ></b-button>
+                    <b-button class="fas fa-plus btn-success mr-2" @click="addPhone()"></b-button>
                     <b-button
                       class="fas fa-trash btn-danger"
                       @click="removePhone(index)"
@@ -196,119 +173,113 @@
 </template>
 
 <script>
-import axios from 'axios'
-import dayjs from 'dayjs'
-import PaginatedTable from '../PaginatedTable'
+  import Vue from 'vue'
+  import axios from 'axios'
+  import dayjs from 'dayjs'
+  import PaginatedTable from '../PaginatedTable'
 
-export default {
-  data() {
-    return {
-      url: `${process.env.VUE_APP_URL}contact/tickets/${this.$route.query.contactid}/1/10`,
-      contactInfo: {},
-      tickets: [],
-      form: {
-        emailNotifications: [],
-      },
-      notifyOptions: [
-        { text: 'Invoices', value: 'invoices' },
-        { text: 'Orders', value: 'orders' },
-        { text: 'Quotations', value: 'quotations' },
-        { text: 'Remindeers', value: 'reminders' },
-      ],
-      fields: [
-        {
-          key: 'ticketId',
-          label: 'Ticket ID',
-          sortable: true,
+  export default Vue.extend({
+    data() {
+      return {
+        url: `${process.env.VUE_APP_URL}contact/tickets/${this.$route.query.contactid}/1/10`,
+        contactInfo: {},
+        tickets: [],
+        form: {
+          emailNotifications: [],
         },
-        {
-          key: 'subject',
-          label: 'Subject',
-          sortable: true,
-          typeOptions: {
-            type: 'link',
-            path: '/ticket',
-            idName: 'ticketId',
-            linkText: 'subject',
+        notifyOptions: [
+          { text: 'Invoices', value: 'invoices' },
+          { text: 'Orders', value: 'orders' },
+          { text: 'Quotations', value: 'quotations' },
+          { text: 'Remindeers', value: 'reminders' },
+        ],
+        fields: [
+          {
+            key: 'ticketId',
+            label: 'Ticket ID',
+            sortable: true,
           },
-        },
-        {
-          key: 'createdDate',
-          label: 'Date of Creation',
-          sortable: true,
-        },
-        {
-          key: 'modifiedDate',
-          label: 'Last Updated',
-          sortable: true,
-        },
-        {
-          key: 'status',
-          sortable: true,
-        },
-        {
-          key: 'replyStatus',
-          sortable: true,
-        },
-      ],
-    }
-  },
-  created() {
-    this.getContactInfo()
-    axios
-      .get(
-        `${process.env.VUE_APP_URL}contact/tickets/${this.$route.query.contactid}/1/10`
-      )
-      .then((response) => {
-        this.tickets = response.data.tickets
-      })
-  },
-  methods: {
-    getContactInfo() {
+          {
+            key: 'subject',
+            label: 'Subject',
+            sortable: true,
+            typeOptions: {
+              type: 'link',
+              path: '/ticket',
+              idName: 'ticketId',
+              linkText: 'subject',
+            },
+          },
+          {
+            key: 'createdDate',
+            label: 'Date of Creation',
+            sortable: true,
+          },
+          {
+            key: 'modifiedDate',
+            label: 'Last Updated',
+            sortable: true,
+          },
+          {
+            key: 'status',
+            sortable: true,
+          },
+          {
+            key: 'replyStatus',
+            sortable: true,
+          },
+        ],
+      }
+    },
+    created() {
+      this.getContactInfo()
       axios
-        .get(
-          `${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`
-        )
+        .get(`${process.env.VUE_APP_URL}contact/tickets/${this.$route.query.contactid}/1/10`)
         .then((response) => {
-          this.contactInfo = response.data
-          this.populateForm()
+          this.tickets = response.data.tickets
         })
     },
-    submitContactEdit() {
-      axios
-        .put(
-          `${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`,
-          this.form
-        )
-        .then(() => {
-          this.$refs['contactEditModal'].hide()
-          this.getContactInfo()
-        })
+    methods: {
+      getContactInfo() {
+        axios
+          .get(`${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`)
+          .then((response) => {
+            this.contactInfo = response.data
+            this.populateForm()
+          })
+      },
+      submitContactEdit() {
+        axios
+          .put(`${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`, this.form)
+          .then(() => {
+            this.$refs['contactEditModal'].hide()
+            this.getContactInfo()
+          })
+      },
+      populateForm() {
+        //Stringify, then parse to achieve a deep copy.
+        let dataString = JSON.stringify(this.contactInfo)
+        this.form = JSON.parse(dataString)
+      },
+      addPhone() {
+        this.form.phones.push({})
+      },
+      removePhone(index) {
+        console.log(index)
+        this.$set(this.form.phones[index], 'delete', true)
+        // this.$delete(this.form.phones, index)
+      },
     },
-    populateForm() {
-      //Stringify, then parse to achieve a deep copy.
-      let dataString = JSON.stringify(this.contactInfo)
-      this.form = JSON.parse(dataString)
+    filters: {
+      dayjsDateOnly: function (date) {
+        return dayjs(date).format('MMM D, YYYY')
+      },
+      dayjsDateTime: function (date) {
+        return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
+      },
     },
-    addPhone() {
-      this.form.phones.push({})
+    components: {
+      PaginatedTable,
     },
-    removePhone(index) {
-      console.log(index)
-      this.$set(this.form.phones[index], 'delete', true)
-      // this.$delete(this.form.phones, index)
-    },
-  },
-  filters: {
-    dayjsDateOnly: function (date) {
-      return dayjs(date).format('MMM D, YYYY')
-    },
-    dayjsDateTime: function (date) {
-      return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
-    },
-  },
-  components: {
-    PaginatedTable,
-  },
-}
+  })
 </script>

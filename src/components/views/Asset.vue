@@ -1,17 +1,35 @@
 <template>
   <div id="wrapper">
     <div class="container-fluid">
-      <h3 class="text-dark mb-4">{{assetInfo.AgentName}} ({{assetInfo.AgentID}})</h3>
+      <h3 class="text-dark mb-4">{{ assetInfo.AgentName }} ({{ assetInfo.AgentID }})</h3>
       <b-row class="mb-3">
         <b-col v-for="disk in assetInfo.HardwareDisks" :key="disk.id" cols="4">
           <b-card class="border-left-primary">
-            <h5>{{disk.Drive}}</h5>
-            <h6>Free: {{disk.Free}}MB</h6>
-            <h6>Used: {{disk.Used}}MB</h6>
-            <h6>Total: {{disk.Total}}MB</h6>
-            <b-progress v-if="disk.Used / disk.Total * 100 < 50" variant="success" height="30px" show-progress :value="disk.Used / disk.Total * 100"></b-progress>
-            <b-progress v-else-if="disk.Used / disk.Total * 100 >= 50" variant="warning" height="30px" show-progress :value="disk.Used / disk.Total * 100"></b-progress>
-            <b-progress v-else-if="disk.Used / disk.Total * 100 >= 75" variant="danger" height="30px" show-progress :value="disk.Used / disk.Total * 100"></b-progress>
+            <h5>{{ disk.Drive }}</h5>
+            <h6>Free: {{ disk.Free }}MB</h6>
+            <h6>Used: {{ disk.Used }}MB</h6>
+            <h6>Total: {{ disk.Total }}MB</h6>
+            <b-progress
+              v-if="(disk.Used / disk.Total) * 100 < 50"
+              variant="success"
+              height="30px"
+              show-progress
+              :value="(disk.Used / disk.Total) * 100"
+            ></b-progress>
+            <b-progress
+              v-else-if="(disk.Used / disk.Total) * 100 >= 50"
+              variant="warning"
+              height="30px"
+              show-progress
+              :value="(disk.Used / disk.Total) * 100"
+            ></b-progress>
+            <b-progress
+              v-else-if="(disk.Used / disk.Total) * 100 >= 75"
+              variant="danger"
+              height="30px"
+              show-progress
+              :value="(disk.Used / disk.Total) * 100"
+            ></b-progress>
           </b-card>
         </b-col>
       </b-row>
@@ -23,25 +41,27 @@
               <b-row class="ml-0">
                 <b-col>
                   <h4 class="small font-weight-bold">Name</h4>
-                  <h4 class="small">{{assetInfo.AgentName}}</h4>
+                  <h4 class="small">{{ assetInfo.AgentName }}</h4>
                 </b-col>
                 <b-col>
                   <h4 class="small font-weight-bold">Domain</h4>
-                  <h4 class="small">{{assetInfo.DomainName}}</h4>
+                  <h4 class="small">{{ assetInfo.DomainName }}</h4>
                 </b-col>
               </b-row>
               <b-row class="ml-0">
                 <b-col>
                   <h4 class="small font-weight-bold">Last User</h4>
-                  <h4 class="small">{{assetInfo.LastLoginUser}}</h4>
+                  <h4 class="small">{{ assetInfo.LastLoginUser }}</h4>
                 </b-col>
                 <b-col>
                   <h4 class="small font-weight-bold">Last User</h4>
-                  <h4 class="small">{{assetInfo.LastLoginUser}}</h4>
+                  <h4 class="small">{{ assetInfo.LastLoginUser }}</h4>
                 </b-col>
               </b-row>
               <b-card class="mb-2" no-body></b-card>
-              <b-button style="width: 100%;" :href="assetInfo.AppViewUrl" variant="primary">Go to asset</b-button>
+              <b-button style="width: 100%" :href="assetInfo.AppViewUrl" variant="primary"
+                >Go to asset</b-button
+              >
             </b-card-body>
           </b-card>
         </b-col>
@@ -59,7 +79,7 @@
                           <span>OS Edition</span>
                         </b-col>
                         <b-col>
-                          <span>{{this.assetInfo.OS}}</span>
+                          <span>{{ this.assetInfo.OS }}</span>
                         </b-col>
                       </b-row>
                       <b-row class="mb-2">
@@ -67,7 +87,7 @@
                           <span>OS Version</span>
                         </b-col>
                         <b-col>
-                          <span>{{this.assetInfo.OSVersion}}</span>
+                          <span>{{ this.assetInfo.OSVersion }}</span>
                         </b-col>
                       </b-row>
                       <b-row class="mb-2">
@@ -75,7 +95,7 @@
                           <span>OS Build</span>
                         </b-col>
                         <b-col>
-                          <span>{{this.assetInfo.OSBuild}}</span>
+                          <span>{{ this.assetInfo.OSBuild }}</span>
                         </b-col>
                       </b-row>
                       <b-row class="mb-2">
@@ -83,7 +103,7 @@
                           <span>Office</span>
                         </b-col>
                         <b-col>
-                          <span>{{this.assetInfo.Office}}</span>
+                          <span>{{ this.assetInfo.Office }}</span>
                         </b-col>
                       </b-row>
                     </b-col>
@@ -95,7 +115,7 @@
                           <span>Vendor</span>
                         </b-col>
                         <b-col>
-                          <span>{{this.assetInfo.Vendor}}</span>
+                          <span>{{ this.assetInfo.Vendor }}</span>
                         </b-col>
                       </b-row>
                       <b-row class="mb-2">
@@ -103,7 +123,7 @@
                           <span>Model</span>
                         </b-col>
                         <b-col>
-                          <span>{{this.assetInfo.VendorBrandModel}}</span>
+                          <span>{{ this.assetInfo.VendorBrandModel }}</span>
                         </b-col>
                       </b-row>
                       <b-row class="mb-2">
@@ -111,7 +131,7 @@
                           <span>Serial Number</span>
                         </b-col>
                         <b-col>
-                          <span>{{this.assetInfo.VendorSerialNumber}}</span>
+                          <span>{{ this.assetInfo.VendorSerialNumber }}</span>
                         </b-col>
                       </b-row>
                       <b-row class="mb-2">
@@ -119,7 +139,7 @@
                           <span>Motherboard</span>
                         </b-col>
                         <b-col>
-                          <span>{{this.assetInfo.Motherboard}}</span>
+                          <span>{{ this.assetInfo.Motherboard }}</span>
                         </b-col>
                       </b-row>
                       <b-row class="mb-2">
@@ -127,7 +147,7 @@
                           <span>Processor</span>
                         </b-col>
                         <b-col>
-                          <span>{{this.assetInfo.Processor}}</span>
+                          <span>{{ this.assetInfo.Processor }}</span>
                         </b-col>
                       </b-row>
                       <b-row class="mb-2">
@@ -135,7 +155,7 @@
                           <span>Memory</span>
                         </b-col>
                         <b-col>
-                          <span>{{this.assetInfo.Memory}}MB</span>
+                          <span>{{ this.assetInfo.Memory }}MB</span>
                         </b-col>
                       </b-row>
                       <b-row class="mb-2">
@@ -143,7 +163,7 @@
                           <span>Video Card</span>
                         </b-col>
                         <b-col>
-                          <span>{{this.assetInfo.Display}}</span>
+                          <span>{{ this.assetInfo.Display }}</span>
                         </b-col>
                       </b-row>
                       <b-row class="mb-2">
@@ -151,7 +171,7 @@
                           <span>Sound</span>
                         </b-col>
                         <b-col>
-                          <span>{{this.assetInfo.Sound}}</span>
+                          <span>{{ this.assetInfo.Sound }}</span>
                         </b-col>
                       </b-row>
                       <b-row class="mb-2">
@@ -159,7 +179,7 @@
                           <span>System Drive</span>
                         </b-col>
                         <b-col>
-                          <span>{{this.assetInfo.SystemDrive}}</span>
+                          <span>{{ this.assetInfo.SystemDrive }}</span>
                         </b-col>
                       </b-row>
                       <b-row class="mb-2">
@@ -167,7 +187,7 @@
                           <span>MAC Addresses</span>
                         </b-col>
                         <b-col>
-                          <span>{{this.assetInfo.MacAddresses}}</span>
+                          <span>{{ this.assetInfo.MacAddresses }}</span>
                         </b-col>
                       </b-row>
                     </b-col>
@@ -183,30 +203,31 @@
 </template>
 
 <script>
-import axios from "axios";
+  import axios from 'axios'
+  import Vue from 'vue'
 
-export default {
-  data() {
-    return {
-      assetInfo: {},
-    };
-  },
-  created() {
-    this.fetchData(`asset/${this.$route.query.assetID}`).then((response) => {
-      console.log(response.data.asset);
-      this.assetInfo = response.data.asset;
-    });
-  },
-  methods: {
-    fetchData(endpoint) {
-      return axios.get(process.env.VUE_APP_URL + endpoint);
+  export default Vue.extend({
+    data() {
+      return {
+        assetInfo: {},
+      }
     },
-  },
-};
+    created() {
+      this.fetchData(`asset/${this.$route.query.assetID}`).then((response) => {
+        console.log(response.data.asset)
+        this.assetInfo = response.data.asset
+      })
+    },
+    methods: {
+      fetchData(endpoint) {
+        return axios.get(process.env.VUE_APP_URL + endpoint)
+      },
+    },
+  })
 </script>
 
 <style scoped>
-span.block {
-  display: block;
-}
+  span.block {
+    display: block;
+  }
 </style>

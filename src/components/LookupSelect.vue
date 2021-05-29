@@ -26,85 +26,84 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { CoolSelect } from 'vue-cool-select'
+  import Vue from 'vue'
+  import axios from 'axios'
+  import { CoolSelect } from 'vue-cool-select'
 
-import 'vue-cool-select/dist/themes/bootstrap.css'
-import { onMounted, ref } from '@vue/composition-api'
+  import 'vue-cool-select/dist/themes/bootstrap.css'
+  import { onMounted, ref } from '@vue/composition-api'
 
-export default {
-  setup(props) {
-    let options = ref([])
-    let selected = ref('')
-    let errorMessage = ref(null)
+  export default Vue.extend({
+    setup(props) {
+      let options = ref([])
+      let selected = ref('')
+      let errorMessage = ref(null)
 
-    function lookup(searchTerm) {
-      // Only search if one or more characters have been typed to reduce large api calls
-      axios
-        .get(props.lookupUrl, {
-          params: {
-            query: searchTerm,
-          },
-        })
-        .then((response) => {
-          options.value = filterData(response.data)
-        })
-    }
-
-    function emitSelected() {
-      this.$emit('selected', this.selected)
-    }
-
-    const form = props.form
-
-    function filterData(data) {
-      let filteredData
-      if (form[props.parentKey]) {
-        filteredData = data.filter(
-          (option) => option[props.filterKey] == form[props.parentKey]
-        )
-      } else {
-        filteredData = data
+      function lookup(searchTerm) {
+        // Only search if one or more characters have been typed to reduce large api calls
+        axios
+          .get(props.lookupUrl, {
+            params: {
+              query: searchTerm,
+            },
+          })
+          .then((response) => {
+            options.value = filterData(response.data)
+          })
       }
-      return filteredData
-    }
-    onMounted(() => {
-      lookup('')
-    })
 
-    return {
-      options,
-      selected,
-      errorMessage,
-      lookup,
-      emitSelected,
-    }
-  },
-  components: {
-    CoolSelect,
-  },
-  props: {
-    lookupUrl: {
-      type: String,
-      required: true,
+      function emitSelected() {
+        this.$emit('selected', this.selected)
+      }
+
+      const form = props.form
+
+      function filterData(data) {
+        let filteredData
+        if (form[props.parentKey]) {
+          filteredData = data.filter((option) => option[props.filterKey] == form[props.parentKey])
+        } else {
+          filteredData = data
+        }
+        return filteredData
+      }
+      onMounted(() => {
+        lookup('')
+      })
+
+      return {
+        options,
+        selected,
+        errorMessage,
+        lookup,
+        emitSelected,
+      }
     },
-    textKeys: {
-      type: Array,
-      required: true,
+    components: {
+      CoolSelect,
     },
-    required: {
-      type: Boolean,
-      required: true,
+    props: {
+      lookupUrl: {
+        type: String,
+        required: true,
+      },
+      textKeys: {
+        type: Array,
+        required: true,
+      },
+      required: {
+        type: Boolean,
+        required: true,
+      },
+      size: {
+        type: String,
+        default: 'md',
+      },
+      placeholder: String,
+      form: Object,
+      selectedValues: Array,
+      parentKey: String,
+      filterKey: String,
     },
-    size: {
-      type: String,
-      default: 'md',
-    },
-    placeholder: String,
-    form: Object,
-    selectedValues: Array,
-    parentKey: String,
-    filterKey: String,
-  },
-}
+  })
 </script>

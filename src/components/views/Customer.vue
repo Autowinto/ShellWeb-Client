@@ -107,7 +107,13 @@
                           <div class="container h-100 pl-0">
                             <div class="row">
                               <div
-                                class="col-2 bg-success d-flex align-items-center justify-content-center"
+                                class="
+                                  col-2
+                                  bg-success
+                                  d-flex
+                                  align-items-center
+                                  justify-content-center
+                                "
                               >
                                 <i class="fa rel fa-bookmark" style="font-size: 30px"></i>
                               </div>
@@ -443,6 +449,8 @@
 </template>
 
 <script>
+  import Vue from 'vue'
+
   import axios from 'axios'
   import dayjs from 'dayjs'
   import fileDownload from 'js-file-download'
@@ -454,7 +462,7 @@
   import CustomerCallLog from '../Customer/CustomerCallLog'
   import CustomerInfoBox from '../Customer/CustomerInfoBox'
 
-  export default {
+  export default Vue.extend({
     data() {
       return {
         id: this.$route.query.id,
@@ -845,7 +853,9 @@
       async submitContractRates() {
         axios
           .put(`${process.env.VUE_APP_URL}customers/${this.id}/rates`, this.items.contractRates)
-          .then(() => {})
+          .then(() => {
+            console.log('Success')
+          })
       },
       async downloadAttachment(id, name, type) {
         let attachment = await axios.get(`${process.env.VUE_APP_URL}attachments/${id}`)
@@ -892,7 +902,7 @@
       },
     },
     filters: {
-      dayjsDateTime: function(date) {
+      dayjsDateTime: function (date) {
         return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
       },
     },
@@ -927,5 +937,5 @@
       CustomerCallLog,
       CustomerInfoBox,
     },
-  }
+  })
 </script>
