@@ -1,6 +1,7 @@
 <template>
   <div id="wrapper">
     <b-modal
+      hide-footer
       :size="this.windowSize"
       centered
       :ref="this.modalId"
@@ -20,113 +21,24 @@
           <div>{{ err }}</div>
         </div>
       </b-alert>
-      <b-form id="form" onsubmit="return false;" @submit="doSubmit">
-        <b-row>
-          <!-- If no collumn size is defined, set it to full size -->
-          <b-col
-            :cols="field.cols || 6"
-            v-for="field in fields"
-            :key="field.key"
-            class="mb-3"
-          >
-            <div v-if="field.show">
-              <label class="font-weight-bold" v-if="field.label">{{
-                field.label
-              }}</label>
-              <div id="input-string" v-if="field.type == 'string'">
-                <b-input
-                  :size="field.size || fieldSize"
-                  :required="field.required"
-                  type="text"
-                  v-model="form[field.key]"
-                ></b-input>
-              </div>
-              <div id="input-double" v-if="field.type == 'double'">
-                <b-input
-                  :size="field.size || fieldSize"
-                  type="number"
-                  :required="field.required"
-                  step="0.01"
-                  v-model="form[field.key]"
-                ></b-input>
-              </div>
-              <div id="input-int" v-if="field.type == 'integer'">
-                <b-input
-                  :size="field.size || fieldSize"
-                  :required="field.required"
-                  type="number"
-                  v-model="form[field.key]"
-                ></b-input>
-              </div>
-              <div id="input-text" v-if="field.type == 'text'">
-                <b-textarea
-                  :size="field.size || fieldSize"
-                  :required="field.required"
-                  v-model="form[field.key]"
-                ></b-textarea>
-              </div>
-              <div id="input-lookup" v-if="field.type == 'lookup'">
-                <lookup-select
-                  :size="field.size || fieldSize"
-                  @selected="lookupValueSelected($event, field)"
-                  :lookupUrl="`${baseUrl}/${field.lookupEndpoint}`"
-                  :textKeys="field.textKeys"
-                  :required="Boolean(field.required)"
-                  :parentKey="field.parentKey"
-                  :filterKey="field.filterKey"
-                  :placeholder="field.placeholder"
-                  :form="form"
-                ></lookup-select>
-              </div>
-              <div v-if="field.type == 'boolean'">
-                <b-checkbox
-                  @change="handleCheckboxChange($event, field.triggersKey)"
-                  v-model="form[field.key]"
-                  :size="field.size || fieldSize"
-                  >{{ field.checkText }}</b-checkbox
-                >
-              </div>
-              <div v-if="field.type == 'select'">
-                <b-select
-                  :size="field.size || fieldSize"
-                  v-model="form[field.key]"
-                  :options="field.options"
-                  :required="field.required"
-                  @change="handleSelectChange($event, field)"
-                ></b-select>
-              </div>
-              <div v-if="field.type == 'date'">
-                <b-datepicker
-                  :size="field.size || fieldSize"
-                  :required="field.required"
-                  v-model="form[field.key]"
-                ></b-datepicker>
-              </div>
-              <small v-if="field.required">Required</small>
-            </div>
-          </b-col>
-          <b-overlay
-            :show="processing"
-            spinner-small
-            rounded="sm"
-            class="d-inline-block w-100"
-          >
-          </b-overlay>
-        </b-row>
-      </b-form>
-      <template #modal-footer>
-        <div class="w-100">
-          <b-btn form="form" type="submit" class="float-left" variant="success"
-            >Submit</b-btn
-          >
-        </div>
-      </template>
+      <dynamic-form
+        @submit="doSubmit($event)"
+        :fields="fields"
+        :fieldSize="fieldSize"
+        :windowSize="windowSize"
+      ></dynamic-form>
+      <b-overlay
+        :show="processing"
+        spinner-small
+        rounded="sm"
+        class="d-inline-block w-100"
+      >
+      </b-overlay>
     </b-modal>
   </div>
 </template>
 
 <script lang="ts">
-  import LookupSelect from './LookupSelect.vue'
   import {
     ref,
     reactive,
@@ -137,10 +49,11 @@
   } from '@vue/composition-api'
   import axios, { AxiosError } from 'axios'
   import { FormField } from '@/types/Forms.interface'
+  import DynamicForm from './Forms/DynamicForm.vue'
 
   export default defineComponent({
     components: {
-      LookupSelect,
+      DynamicForm,
     },
     props: {
       submitUrl: {
@@ -197,8 +110,6 @@
         }
       }
 
-      let baseUrl = `${process.env.VUE_APP_URL}lookups`
-
       let showErrorAlert = ref(false)
 
       let errorCode = ref(0)
@@ -206,7 +117,7 @@
 
       let processing = ref(false)
 
-      function doSubmit() {
+      function doSubmit(form: any) {
         if (root.$route.query.id) {
           console.log('Aooga')
           set(form, 'customerId', root.$route.query.id)
@@ -245,28 +156,6 @@
         }
       }
 
-      function handleCheckboxChange(event: any, key: string) {
-        if (key) {
-          const obj = props.fields.find((obj) => obj.key == key)
-          if (obj) {
-            obj.show = event
-          }
-        } else {
-          console.log('Nothing triggered')
-        }
-      }
-
-      async function handleSelectChange(event: any, field: FormField) {
-        if (field.formOptions) {
-          const response = await axios.get(
-            `${field.formOptions.baseUrl}/${event}`
-          )
-          for (const [key, value] of Object.entries(field.formOptions.keys)) {
-            set(form, key, response.data[value])
-          }
-        }
-      }
-
       function getFieldObjectByKey(key: string) {
         const obj = props.fields.find((obj: FormField) => obj.key == key)
         if (obj) {
@@ -286,31 +175,15 @@
         resetForm()
       }
 
-      async function lookupValueSelected(event: any, field: FormField) {
-        form[field.key] = event[field.key]
-        if (field.formOptions) {
-          const response = await axios.get(
-            `${field.formOptions.baseUrl}/${event[field.key]}`
-          )
-          for (const [key, value] of Object.entries(field.formOptions.keys)) {
-            set(form, key, response.data[value])
-          }
-        }
-      }
-
       return {
         form,
         err,
         processing,
-        baseUrl,
         doSubmit,
         cancelForm,
-        lookupValueSelected,
-        handleCheckboxChange,
         getFieldObjectByKey,
         errorCode,
         showErrorAlert,
-        handleSelectChange,
       }
     },
   })

@@ -64,18 +64,24 @@
           <div class="col">
             <div class="mb-3">
               <h4 class="small font-weight-bold">Phone Number</h4>
-              <b-link v-if="customer.phone" class="small" :href="'tel:' + customer.phone">{{
-                customer.phone
-              }}</b-link>
+              <b-link
+                v-if="customer.phone"
+                class="small"
+                :href="'tel:' + customer.phone"
+                >{{ customer.phone }}</b-link
+              >
               <h4 v-else class="small">N/A</h4>
             </div>
           </div>
           <div class="col">
             <div class="mb-3">
               <h4 class="small font-weight-bold">E-mail</h4>
-              <b-link v-if="customer.phone" class="small" :href="'mailto:' + customer.email">{{
-                customer.email
-              }}</b-link>
+              <b-link
+                v-if="customer.phone"
+                class="small"
+                :href="'mailto:' + customer.email"
+                >{{ customer.email }}</b-link
+              >
             </div>
           </div>
         </div>
@@ -109,7 +115,10 @@
         <div class="card shadow mb-2"></div>
         <div class="row mb-2">
           <div class="col">
-            <button class="btn btn-sm btn-primary w-100" v-b-modal.customerEditModal>
+            <button
+              class="btn btn-sm btn-primary w-100"
+              v-b-modal.customerEditModal
+            >
               Edit Customer
             </button>
           </div>
@@ -148,8 +157,8 @@
       },
     },
 
-    setup(props, { emit, root }) {
-      const id = root.$route.query.id
+    setup(props, { emit }) {
+      // const id = root.$route.query.id
 
       let groupOptions: SelectOption[] = reactive([])
       let currencyOptions: SelectOption[] = reactive([])
@@ -162,43 +171,51 @@
         { text: 'Monthly', value: 4 },
       ]
 
-      axios.get(`${process.env.VUE_APP_URL}invoices/customerGroups`).then((response) => {
-        for (var item in response.data) {
-          const group = response.data[item]
-          groupOptions.push({
-            value: group.customerGroupNumber,
-            text: group.name,
-          })
-        }
-      })
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
+        .then((response) => {
+          for (var item in response.data) {
+            const group = response.data[item]
+            groupOptions.push({
+              value: group.customerGroupNumber,
+              text: group.name,
+            })
+          }
+        })
 
-      axios.get(`${process.env.VUE_APP_URL}invoices/currencies`).then((response) => {
-        for (var item in response.data) {
-          const currency = response.data[item]
-          currencyOptions.push({
-            value: currency.code,
-            text: currency.name,
-          })
-        }
-      })
-      axios.get(`${process.env.VUE_APP_URL}invoices/paymentTerms`).then((response) => {
-        for (var item in response.data) {
-          const term = response.data[item]
-          paymentTermOptions.push({
-            value: term.paymentTermsNumber,
-            text: term.name,
-          })
-        }
-      })
-      axios.get(`${process.env.VUE_APP_URL}invoices/vatZones`).then((response) => {
-        for (var item in response.data) {
-          const vatZone = response.data[item]
-          vatZoneOptions.push({
-            value: vatZone.vatZoneNumber,
-            text: vatZone.name,
-          })
-        }
-      })
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/currencies`)
+        .then((response) => {
+          for (var item in response.data) {
+            const currency = response.data[item]
+            currencyOptions.push({
+              value: currency.code,
+              text: currency.name,
+            })
+          }
+        })
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/paymentTerms`)
+        .then((response) => {
+          for (var item in response.data) {
+            const term = response.data[item]
+            paymentTermOptions.push({
+              value: term.paymentTermsNumber,
+              text: term.name,
+            })
+          }
+        })
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/vatZones`)
+        .then((response) => {
+          for (var item in response.data) {
+            const vatZone = response.data[item]
+            vatZoneOptions.push({
+              value: vatZone.vatZoneNumber,
+              text: vatZone.name,
+            })
+          }
+        })
       axios.get(`${process.env.VUE_APP_URL}employees`).then((response) => {
         for (var item in response.data) {
           const employee = response.data[item]
@@ -216,6 +233,7 @@
           label: 'Name',
           required: true,
           cols: 6,
+          defaultValue: props.customer.name,
         },
         {
           key: 'domain',
@@ -223,12 +241,14 @@
           label: 'Domain',
           required: true,
           cols: 6,
+          defaultValue: props.customer.domain,
         },
         {
           key: 'phone',
           type: 'string',
           label: 'Phone',
           cols: 3,
+          defaultValue: props.customer.phone,
         },
         {
           key: 'employee',
@@ -237,6 +257,7 @@
           options: employeeOptions,
           required: true,
           cols: 3,
+          defaultValue: props.customer.employee,
         },
         {
           key: 'customerGroupNumber',
@@ -245,6 +266,7 @@
           options: groupOptions,
           required: true,
           cols: 3,
+          defaultValue: props.customer.customerGroupNumber,
         },
         {
           key: 'paymentTermsNumber',
@@ -253,6 +275,7 @@
           options: paymentTermOptions,
           required: true,
           cols: 3,
+          defaultValue: props.customer.paymentTermsNumber,
         },
 
         {
@@ -262,6 +285,7 @@
           options: invoiceFrequencies,
           required: true,
           cols: 4,
+          defaultValue: props.customer.invoiceFrequency,
         },
         {
           key: 'vatZoneNumber',
@@ -270,6 +294,7 @@
           options: vatZoneOptions,
           required: true,
           cols: 4,
+          defaultValue: props.customer.vatZoneNumber,
         },
         {
           key: 'currency',
@@ -278,6 +303,7 @@
           options: currencyOptions,
           required: true,
           cols: 4,
+          defaultValue: props.customer.currency,
         },
         {
           key: 'address',
@@ -285,6 +311,7 @@
           label: 'Address',
           required: true,
           cols: 4,
+          defaultValue: props.customer.address,
         },
         {
           key: 'city',
@@ -292,6 +319,7 @@
           label: 'City',
           required: true,
           cols: 3,
+          defaultValue: props.customer.city,
         },
         {
           key: 'country',
@@ -299,6 +327,7 @@
           label: 'Country',
           required: true,
           cols: 3,
+          defaultValue: props.customer.country,
         },
         {
           key: 'zip',
@@ -306,6 +335,7 @@
           label: 'Zip Code',
           required: true,
           cols: 2,
+          defaultValue: props.customer.zip,
         },
         {
           key: 'invoiceSingleTickets',
@@ -313,6 +343,7 @@
           label: 'Invoice Tickets As Single',
           required: true,
           cols: 4,
+          defaultValue: props.customer.invoiceSingleTickets,
         },
         {
           key: 'eInvoicingDisabledByDefault',
@@ -320,6 +351,7 @@
           label: 'Disable E-Invoicing',
           required: true,
           cols: 4,
+          defaultValue: props.customer.eInvoicingDisabledByDefault,
         },
         {
           key: 'accessToOperationsCenter',
@@ -327,6 +359,7 @@
           label: 'Access To Operations Center',
           required: true,
           cols: 4,
+          defaultValue: props.customer.accessToOperationsCenter,
         },
       ])
 

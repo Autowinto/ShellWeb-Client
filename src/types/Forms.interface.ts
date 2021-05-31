@@ -1,7 +1,8 @@
 export interface FormField {
   key: string
   label: string
-  cols: number
+  cols: number | undefined
+  defaultValue: string | number | undefined
   show: boolean
   formOptions: FormOptions
 }
@@ -12,8 +13,4 @@ export interface FormOptions {
     value: string
   }
   baseUrl: string
-}
-
-export interface FormFields {
-  [index: number]: FormField[]
 }
