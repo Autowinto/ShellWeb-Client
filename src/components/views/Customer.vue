@@ -14,7 +14,9 @@
           </div>
           <div class="row">
             <div class="col">
-              <customer-call-log :customerId="Number(this.id)"></customer-call-log>
+              <customer-call-log
+                :customerId="Number(this.id)"
+              ></customer-call-log>
             </div>
           </div>
         </div>
@@ -26,41 +28,21 @@
                   <b-card-text>
                     <b-card bg-variant="light" class="mb-3">
                       <b-col>
-                        <b-button v-b-modal.createContactModal class="float-right" variant="success"
+                        <b-button
+                          v-b-modal.createContactModal
+                          class="float-right"
+                          variant="success"
                           >Create Contact</b-button
                         >
                       </b-col>
                     </b-card>
                     <b-row v-if="items.contacts.length">
-                      <div v-for="(contact, idx) in items.contacts" :key="idx" class="col-4">
-                        <div class="card mb-3 p-3" style="height: 140px">
-                          <div class="row ml-3">
-                            <b-link
-                              class="font-weight-bold"
-                              style="color: black; font-size: 120%"
-                              :to="{
-                                path: '/contact/',
-                                query: { contactid: contact.contactId },
-                              }"
-                              >{{ contact.firstName }} {{ contact.lastName }}</b-link
-                            >
-                          </div>
-                          <div class="row ml-3" v-if="contact.jobTitle !== 'null'">
-                            <h6 class="small">{{ contact.jobTitle }}</h6>
-                          </div>
-                          <div v-if="contact.email && contact.email !== 'null'" class="row ml-3">
-                            <span style="color: black" class="fa fa-at fa-fw mr-1"></span>
-                            <b-link :href="'mailto:' + contact.email">{{ contact.email }}</b-link>
-                          </div>
-                          <div v-if="contact.phones && contact.phones !== 'null'" class="row ml-3">
-                            <div v-for="phone in contact.phones" :key="phone.phone">
-                              <span style="color: black" class="fa fa-phone fa-fw mr-1"></span>
-                              <b-link :href="'tel:' + phone.phone"
-                                >{{ phone.name }}: {{ phone.phone }}</b-link
-                              >
-                            </div>
-                          </div>
-                        </div>
+                      <div
+                        v-for="(contact, idx) in items.contacts"
+                        :key="idx"
+                        class="col-4 mb-3"
+                      >
+                        <contact-card :contact="contact"></contact-card>
                       </div>
                     </b-row>
                     <b-row v-else align-h="center">
@@ -92,17 +74,28 @@
                           ></b-form-input>
                         </div>
                         <div role="group" class="mx-auto py-0">
-                          <label>Consultant ({{ customerInfo.currency }}):</label>
+                          <label
+                            >Consultant ({{ customerInfo.currency }}):</label
+                          >
                           <b-form-input
                             type="number"
                             v-model="items.contractRates.consultantRate"
                           ></b-form-input>
                         </div>
-                        <b-button type="submit" variant="success" class="mx-auto">Apply</b-button>
+                        <b-button
+                          type="submit"
+                          variant="success"
+                          class="mx-auto"
+                          >Apply</b-button
+                        >
                       </b-form>
                     </b-card>
                     <b-row v-if="items.contracts">
-                      <div v-for="(contract, idx) in items.contracts" :key="idx" class="pl-4 col-6">
+                      <div
+                        v-for="(contract, idx) in items.contracts"
+                        :key="idx"
+                        class="pl-4 col-6"
+                      >
                         <div class="card mb-3" style="color: black">
                           <div class="container h-100 pl-0">
                             <div class="row">
@@ -115,7 +108,10 @@
                                   justify-content-center
                                 "
                               >
-                                <i class="fa rel fa-bookmark" style="font-size: 30px"></i>
+                                <i
+                                  class="fa rel fa-bookmark"
+                                  style="font-size: 30px"
+                                ></i>
                               </div>
                               <div class="col py-3">
                                 <div class="row ml-1">
@@ -161,13 +157,19 @@
                         </template>
                         <template v-slot:cell(Online)="data">
                           <h5 class="m-0 p-0">
-                            <b-badge v-if="data.item.Online" variant="success">Online</b-badge>
+                            <b-badge v-if="data.item.Online" variant="success"
+                              >Online</b-badge
+                            >
                             <b-badge v-else variant="danger">Offline</b-badge>
                           </h5>
                         </template>
-                        <template v-slot:cell(LastPatchManagementReceived)="data">{{
-                          data.item.LastPatchManagementReceived | dayjsDateTime
-                        }}</template>
+                        <template
+                          v-slot:cell(LastPatchManagementReceived)="data"
+                          >{{
+                            data.item.LastPatchManagementReceived
+                              | dayjsDateTime
+                          }}</template
+                        >
                       </b-table>
                       <b-pagination
                         size="md"
@@ -449,8 +451,6 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-
   import axios from 'axios'
   import dayjs from 'dayjs'
   import fileDownload from 'js-file-download'
@@ -461,8 +461,10 @@
   import PasswordsTab from '../Customer/PasswordsTab.vue'
   import CustomerCallLog from '../Customer/CustomerCallLog'
   import CustomerInfoBox from '../Customer/CustomerInfoBox'
+  import ContactCard from '../Customer/ContactCard.vue'
+  import { defineComponent } from '@vue/composition-api'
 
-  export default Vue.extend({
+  export default defineComponent({
     data() {
       return {
         id: this.$route.query.id,
@@ -689,42 +691,50 @@
       this.fetchData(`customers/${this.id}/rates`).then((response) => {
         this.items.contractRates = response.data
       })
-      axios.get(`${process.env.VUE_APP_URL}invoices/customerGroups`).then((response) => {
-        for (var item in response.data) {
-          const group = response.data[item]
-          this.dropdownData.customerGroups.push({
-            value: group.customerGroupNumber,
-            text: group.name,
-          })
-        }
-      })
-      axios.get(`${process.env.VUE_APP_URL}invoices/currencies`).then((response) => {
-        for (var item in response.data) {
-          const currency = response.data[item]
-          this.dropdownData.currencies.push({
-            value: currency.code,
-            text: currency.name,
-          })
-        }
-      })
-      axios.get(`${process.env.VUE_APP_URL}invoices/paymentTerms`).then((response) => {
-        for (var item in response.data) {
-          const term = response.data[item]
-          this.dropdownData.paymentTerms.push({
-            value: term.paymentTermsNumber,
-            text: term.name,
-          })
-        }
-      })
-      axios.get(`${process.env.VUE_APP_URL}invoices/vatZones`).then((response) => {
-        for (var item in response.data) {
-          const vatZone = response.data[item]
-          this.dropdownData.vatZones.push({
-            value: vatZone.vatZoneNumber,
-            text: vatZone.name,
-          })
-        }
-      })
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
+        .then((response) => {
+          for (var item in response.data) {
+            const group = response.data[item]
+            this.dropdownData.customerGroups.push({
+              value: group.customerGroupNumber,
+              text: group.name,
+            })
+          }
+        })
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/currencies`)
+        .then((response) => {
+          for (var item in response.data) {
+            const currency = response.data[item]
+            this.dropdownData.currencies.push({
+              value: currency.code,
+              text: currency.name,
+            })
+          }
+        })
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/paymentTerms`)
+        .then((response) => {
+          for (var item in response.data) {
+            const term = response.data[item]
+            this.dropdownData.paymentTerms.push({
+              value: term.paymentTermsNumber,
+              text: term.name,
+            })
+          }
+        })
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/vatZones`)
+        .then((response) => {
+          for (var item in response.data) {
+            const vatZone = response.data[item]
+            this.dropdownData.vatZones.push({
+              value: vatZone.vatZoneNumber,
+              text: vatZone.name,
+            })
+          }
+        })
       axios.get(`${process.env.VUE_APP_URL}employees`).then((response) => {
         for (var item in response.data) {
           const employee = response.data[item]
@@ -739,8 +749,14 @@
     methods: {
       async getCustomerInfo() {
         try {
-          const response = await axios.get(`${process.env.VUE_APP_URL}customers/${this.id}`)
-          this.customerInfo = Object.assign({}, this.customerInfo, response.data)
+          const response = await axios.get(
+            `${process.env.VUE_APP_URL}customers/${this.id}`
+          )
+          this.customerInfo = Object.assign(
+            {},
+            this.customerInfo,
+            response.data
+          )
           // const data = response.data
           // this.customerInfo = data.customer
           // this.customerGroup = data.customerGroup
@@ -758,10 +774,12 @@
           console.error(err)
         }
 
-        axios.get(`${process.env.VUE_APP_URL}customers/${this.id}/contacts`).then((response) => {
-          const data = response.data
-          this.items.contacts = data
-        })
+        axios
+          .get(`${process.env.VUE_APP_URL}customers/${this.id}/contacts`)
+          .then((response) => {
+            const data = response.data
+            this.items.contacts = data
+          })
       },
       fetchData(endpoint, params) {
         if (params) {
@@ -824,41 +842,52 @@
           address: this.customerInfo.address,
           zip: this.customerInfo.zip,
           phone: this.customerInfo.telephoneAndFaxNumber,
-          selectedPaymentTerms: this.customerInfo.paymentTerms.paymentTermsNumber,
+          selectedPaymentTerms:
+            this.customerInfo.paymentTerms.paymentTermsNumber,
           selectedGroup: this.customerInfo.customerGroup.customerGroupNumber,
           selectedEmployee: this.employee,
           selectedCurrency: this.customerInfo.currency,
           selectedVatZone: this.customerInfo.vatZone.vatZoneNumber,
-          eInvoicingDisabledByDefault: this.customerInfo.eInvoicingDisabledByDefault,
+          eInvoicingDisabledByDefault:
+            this.customerInfo.eInvoicingDisabledByDefault,
           invoiceFrequency: this.invoiceFrequency,
           invoiceSingleTickets: this.invoiceSingleTickets,
           accessToOperationsCenter: this.accessToOperationsCenter,
         }
       },
       submitCustomerEdit() {
-        axios.put(`${process.env.VUE_APP_URL}customers/${this.id}`, this.form).then(() => {
-          this.$refs['customerEditModal'].hide()
-          this.getCustomerInfo()
-        })
+        axios
+          .put(`${process.env.VUE_APP_URL}customers/${this.id}`, this.form)
+          .then(() => {
+            this.$refs['customerEditModal'].hide()
+            this.getCustomerInfo()
+          })
       },
       submitContact() {
         var requestBody = this.contactForm
         requestBody.businessNumber = this.id
 
-        axios.post(`${process.env.VUE_APP_URL}contacts`, requestBody).then(() => {
-          this.$refs['createContactModal'].hide()
-          this.getCustomerInfo()
-        })
+        axios
+          .post(`${process.env.VUE_APP_URL}contacts`, requestBody)
+          .then(() => {
+            this.$refs['createContactModal'].hide()
+            this.getCustomerInfo()
+          })
       },
       async submitContractRates() {
         axios
-          .put(`${process.env.VUE_APP_URL}customers/${this.id}/rates`, this.items.contractRates)
+          .put(
+            `${process.env.VUE_APP_URL}customers/${this.id}/rates`,
+            this.items.contractRates
+          )
           .then(() => {
             console.log('Success')
           })
       },
       async downloadAttachment(id, name, type) {
-        let attachment = await axios.get(`${process.env.VUE_APP_URL}attachments/${id}`)
+        let attachment = await axios.get(
+          `${process.env.VUE_APP_URL}attachments/${id}`
+        )
 
         download(`data:${type};base64,${attachment.data}`, name, type)
       },
@@ -923,7 +952,8 @@
           `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
         ).then((response) => {
           this.items.assets = response.data.assets.items
-          this.pagination.assets.totalItems = response.data.assets.totalItemCount
+          this.pagination.assets.totalItems =
+            response.data.assets.totalItemCount
         })
       },
       async attachmentsCurrentPage() {
@@ -936,6 +966,7 @@
       SubscriptionsTab,
       CustomerCallLog,
       CustomerInfoBox,
+      ContactCard,
     },
   })
 </script>

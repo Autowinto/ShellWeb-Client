@@ -74,6 +74,7 @@
         selectedEmployee,
       }
     },
+    // eslint-disable-next-line no-unused-vars
     data(this: any) {
       return {
         url: `${process.env.VUE_APP_URL}customers`,
@@ -109,8 +110,20 @@
           },
         ],
         formFields: [
-          { key: 'name', type: 'string', label: 'Name', cols: 6, required: true },
-          { key: 'cvr', type: 'integer', label: 'CVR', cols: 6, required: true },
+          {
+            key: 'name',
+            type: 'string',
+            label: 'Name',
+            cols: 6,
+            required: true,
+          },
+          {
+            key: 'cvr',
+            type: 'integer',
+            label: 'CVR',
+            cols: 6,
+            required: true,
+          },
           {
             key: 'domain',
             type: 'string',
@@ -179,38 +192,46 @@
     },
     created() {
       //Collect these calls in one axios.all call
-      axios.get(`${process.env.VUE_APP_URL}invoices/customerGroups`).then((response) => {
-        for (var group of response.data) {
-          this.customerGroups.push({
-            value: group.customerGroupNumber,
-            text: group.name,
-          })
-        }
-      })
-      axios.get(`${process.env.VUE_APP_URL}invoices/currencies`).then((response) => {
-        for (var currency of response.data) {
-          this.currencies.push({
-            value: currency.code,
-            text: currency.name,
-          })
-        }
-      })
-      axios.get(`${process.env.VUE_APP_URL}invoices/paymentTerms`).then((response) => {
-        for (var term of response.data) {
-          this.paymentTerms.push({
-            value: term.paymentTermsNumber,
-            text: term.name,
-          })
-        }
-      })
-      axios.get(`${process.env.VUE_APP_URL}invoices/vatZones`).then((response) => {
-        for (var vatZone of response.data) {
-          this.vatZones.push({
-            value: vatZone.vatZoneNumber,
-            text: vatZone.name,
-          })
-        }
-      })
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
+        .then((response) => {
+          for (var group of response.data) {
+            this.customerGroups.push({
+              value: group.customerGroupNumber,
+              text: group.name,
+            })
+          }
+        })
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/currencies`)
+        .then((response) => {
+          for (var currency of response.data) {
+            this.currencies.push({
+              value: currency.code,
+              text: currency.name,
+            })
+          }
+        })
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/paymentTerms`)
+        .then((response) => {
+          for (var term of response.data) {
+            this.paymentTerms.push({
+              value: term.paymentTermsNumber,
+              text: term.name,
+            })
+          }
+        })
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/vatZones`)
+        .then((response) => {
+          for (var vatZone of response.data) {
+            this.vatZones.push({
+              value: vatZone.vatZoneNumber,
+              text: vatZone.name,
+            })
+          }
+        })
       axios.get(`${process.env.VUE_APP_URL}employees`).then((response) => {
         for (var employee of response.data) {
           this.employees.push({

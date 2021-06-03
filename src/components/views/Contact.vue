@@ -3,14 +3,17 @@
     <div class="d-flex flex-column" id="content-wrapper">
       <div id="content">
         <div class="container-fluid">
-          <h3 class="text-dark mb-4">Contact ID: {{ contactInfo.contactId }}</h3>
           <div class="row">
             <div class="col-3">
               <div class="card shadow mb-4">
                 <div class="card-header p-0">
                   <div class="row">
                     <div class="col">
-                      <h6 class="text-primary font-weight-bold mb-0 p-3">Contact Information</h6>
+                      <h6 class="text-primary font-weight-bold mb-0 p-3">
+                        {{
+                          contactInfo.firstName + ' ' + contactInfo.lastName
+                        }}: ({{ contactInfo.contactId }})
+                      </h6>
                     </div>
                   </div>
                 </div>
@@ -38,7 +41,11 @@
                     <div class="col">
                       <div class="mb-3">
                         <h4 class="small font-weight-bold">Phone Numbers</h4>
-                        <h4 class="small" v-for="phone in contactInfo.phones" :key="phone.phone">
+                        <h4
+                          class="small"
+                          v-for="phone in contactInfo.phones"
+                          :key="phone.phone"
+                        >
                           {{ phone.name }}: {{ phone.phone }}
                         </h4>
                       </div>
@@ -51,7 +58,14 @@
                     </div>
                   </div>
                   <div class="card shadow mb-3"></div>
-                  <button class="btn btn-primary w-100 mb-2" v-b-modal.contactEditModal>
+
+                  <h4 class="small font-weight-bold">Office 365 ID</h4>
+                  <h4 class="small">{{ contactInfo.o365Id }}</h4>
+                  <div class="card shadow mb-3"></div>
+                  <button
+                    class="btn btn-primary w-100 mb-2"
+                    v-b-modal.contactEditModal
+                  >
                     Edit Contact
                   </button>
                   <!-- <button class="btn btn-danger w-100">Delete Contact</button> -->
@@ -61,7 +75,9 @@
             <div class="col">
               <div class="card shadow mb-3">
                 <div class="card-header">
-                  <h6 class="text-primary mb-0 font-weight-bold">Assigned Tickets</h6>
+                  <h6 class="text-primary mb-0 font-weight-bold">
+                    Assigned Tickets
+                  </h6>
                 </div>
                 <div class="card-body shadow">
                   <div>
@@ -91,7 +107,11 @@
       size="lg"
     >
       <b-card bg-variant="light" body-class="p-0">
-        <b-form @submit="submitContactEdit" onsubmit="return false;" class="p-3">
+        <b-form
+          @submit="submitContactEdit"
+          onsubmit="return false;"
+          class="p-3"
+        >
           <b-form-group
             label-cols-lg="3"
             label="Basic Information:"
@@ -110,7 +130,10 @@
             <b-card v-if="form.phones && !form.phones.length">
               <b-row>
                 <b-col class="text-right">
-                  <b-btn class="btn-success fas fa-plus" @click="addPhone"></b-btn>
+                  <b-btn
+                    class="btn-success fas fa-plus"
+                    @click="addPhone"
+                  ></b-btn>
                 </b-col>
               </b-row>
             </b-card>
@@ -137,7 +160,10 @@
                     ></b-input>
                   </b-col>
                   <b-col class="text-right">
-                    <b-button class="fas fa-plus btn-success mr-2" @click="addPhone()"></b-button>
+                    <b-button
+                      class="fas fa-plus btn-success mr-2"
+                      @click="addPhone()"
+                    ></b-button>
                     <b-button
                       class="fas fa-trash btn-danger"
                       @click="removePhone(index)"
@@ -173,12 +199,12 @@
 </template>
 
 <script>
-  import Vue from 'vue'
   import axios from 'axios'
   import dayjs from 'dayjs'
   import PaginatedTable from '../PaginatedTable'
+  import { defineComponent } from '@vue/composition-api'
 
-  export default Vue.extend({
+  export default defineComponent({
     data() {
       return {
         url: `${process.env.VUE_APP_URL}contact/tickets/${this.$route.query.contactid}/1/10`,
@@ -234,7 +260,9 @@
     created() {
       this.getContactInfo()
       axios
-        .get(`${process.env.VUE_APP_URL}contact/tickets/${this.$route.query.contactid}/1/10`)
+        .get(
+          `${process.env.VUE_APP_URL}contact/tickets/${this.$route.query.contactid}/1/10`
+        )
         .then((response) => {
           this.tickets = response.data.tickets
         })
@@ -242,7 +270,9 @@
     methods: {
       getContactInfo() {
         axios
-          .get(`${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`)
+          .get(
+            `${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`
+          )
           .then((response) => {
             this.contactInfo = response.data
             this.populateForm()
@@ -250,7 +280,10 @@
       },
       submitContactEdit() {
         axios
-          .put(`${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`, this.form)
+          .put(
+            `${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`,
+            this.form
+          )
           .then(() => {
             this.$refs['contactEditModal'].hide()
             this.getContactInfo()
