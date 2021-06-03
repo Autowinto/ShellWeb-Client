@@ -240,8 +240,16 @@
           type: 'string',
           label: 'Domain',
           required: true,
-          cols: 6,
+          cols: 3,
           defaultValue: props.customer.domain,
+        },
+        {
+          key: 'email',
+          type: 'string',
+          label: 'Email',
+          required: true,
+          cols: 3,
+          defaultValue: props.customer.email,
         },
         {
           key: 'phone',
