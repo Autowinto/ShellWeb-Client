@@ -9,7 +9,10 @@
             </b-col>
             <b-col>
               <div class="text-md-right">
-                <b-button size="sm" v-b-modal.ticket-creation-modal variant="primary"
+                <b-button
+                  size="sm"
+                  v-b-modal.ticket-creation-modal
+                  variant="primary"
                   >Create Ticket</b-button
                 >
               </div>
@@ -73,7 +76,7 @@
           },
           {
             key: 'subject',
-            label: 'Name',
+            label: 'Subject',
             sortable: true,
             typeOptions: {
               type: 'link',
@@ -81,6 +84,26 @@
               idName: 'ticketId',
               linkText: 'subject',
             },
+          },
+          {
+            key: 'createdDate',
+            label: 'Created',
+            sortable: true,
+            type: 'date',
+          },
+          {
+            key: 'modifiedDate',
+            label: 'Updated',
+            sortable: true,
+            type: 'date',
+          },
+          {
+            key: 'replyStatus',
+            sortable: true,
+          },
+          {
+            key: 'status',
+            sortable: true,
           },
         ],
         formFields: [
