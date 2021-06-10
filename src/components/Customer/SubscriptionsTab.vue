@@ -4,7 +4,12 @@
       <b-row>
         <!-- <b-col cols="8"><b-select></b-select></b-col> -->
         <b-col>
-          <b-btn class="mr-2" v-if="role >= 4" @click="generateInvoice" variant="primary">
+          <b-btn
+            class="mr-2"
+            v-if="role >= 4"
+            @click="generateInvoice"
+            variant="primary"
+          >
             Generate Invoice
           </b-btn>
           <b-btn v-b-modal.customerSubscriptionModal variant="primary">
@@ -177,15 +182,20 @@
         }
       },
       postSubscription() {
-        axios.post(`${process.env.VUE_APP_URL}subscriptions/instances`, this.form).then(() => {
-          this.loadSubscriptionInstances()
-          this.$refs['customerSubscriptionModal'].hide()
-          this.resetForm()
-        })
+        axios
+          .post(`${process.env.VUE_APP_URL}subscriptions/instances`, this.form)
+          .then(() => {
+            this.loadSubscriptionInstances()
+            this.$refs['customerSubscriptionModal'].hide()
+            this.resetForm()
+          })
       },
       sendSubEdit(data) {
         axios
-          .put(`${process.env.VUE_APP_URL}subscriptions/instances/${data.item.id}`, data.item)
+          .put(
+            `${process.env.VUE_APP_URL}subscriptions/instances/${data.item.id}`,
+            data.item
+          )
           .then(() => {
             this.loadSubscriptionInstances()
             this.cancelEdit(data)
@@ -219,12 +229,15 @@
         alert('Invoice Generated') //Temporary alert solution
       },
       async populateOptions() {
-        let subResponse = await axios.get(`${process.env.VUE_APP_URL}subscriptions`, {
-          params: {
-            sortColumn: 'id',
-            sortDirection: 'ASC',
-          },
-        })
+        let subResponse = await axios.get(
+          `${process.env.VUE_APP_URL}subscriptions`,
+          {
+            params: {
+              sortColumn: 'id',
+              sortDirection: 'ASC',
+            },
+          }
+        )
         this.subscriptions = subResponse.data.collection
 
         for (let subscription of this.subscriptions) {

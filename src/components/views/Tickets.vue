@@ -101,10 +101,6 @@
             key: 'replyStatus',
             sortable: true,
           },
-          {
-            key: 'status',
-            sortable: true,
-          },
         ],
         formFields: [
           {
