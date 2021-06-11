@@ -31,7 +31,7 @@
           </b-link>
         </b-col>
         <b-col v-if="contact.phones && contact.phones.length" cols="12">
-          <b-link small :href="`telto:${contact.phones[0].phone}`">
+          <b-link small :href="`tel:${contact.phones[0].phone}`">
             <b-icon icon="telephone"></b-icon>
 
             {{ contact.phones[0].phone }}
