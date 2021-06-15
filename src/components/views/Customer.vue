@@ -256,13 +256,13 @@
                 <b-tab title="Subscriptions">
                   <subscriptions-tab></subscriptions-tab>
                 </b-tab>
-                <b-tab title="DNS">
+                <!-- <b-tab title="DNS">
                   <b-card-text>Tab contents 2</b-card-text>
                 </b-tab>
                 <b-tab title="Backup">
                   <b-card-text>Tab contents 2</b-card-text>
-                </b-tab>
-                <b-tab title="Log">WIP</b-tab>
+                </b-tab> -->
+                <log-tab></log-tab>
               </b-tabs>
             </b-card>
           </div>
@@ -462,6 +462,7 @@
   import CustomerCallLog from '../Customer/CustomerCallLog'
   import CustomerInfoBox from '../Customer/CustomerInfoBox'
   import ContactCard from '../Customer/ContactCard.vue'
+  import LogTab from '../Customer/LogTab.vue'
   import { defineComponent } from '@vue/composition-api'
 
   export default defineComponent({
@@ -967,6 +968,7 @@
       CustomerCallLog,
       CustomerInfoBox,
       ContactCard,
+      LogTab,
     },
   })
 </script>
