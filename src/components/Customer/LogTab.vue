@@ -1,5 +1,5 @@
 <template>
-  <b-tab title="Log">
+  <b-tab lazy title="Log">
     <paginated-table :url="url" :fields="fields"></paginated-table>
   </b-tab>
 </template>
