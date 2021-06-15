@@ -8,8 +8,9 @@
   import { defineComponent } from '@vue/composition-api'
   import PaginatedTable from '../PaginatedTable.vue'
   export default defineComponent({
-    setup() {
-      const url = `${process.env.VUE_APP_URL}customers/31750350/logs`
+    setup(props, { root }) {
+      const customerId = root.$route.query.id
+      const url = `${process.env.VUE_APP_URL}customers/${customerId}/logs`
 
       const fields = [
         {
