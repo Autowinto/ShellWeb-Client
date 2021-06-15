@@ -30,13 +30,15 @@
     },
     methods: {
       fetchRole(accountId) {
-        axios.get(`${process.env.VUE_APP_URL}employees/${accountId}/role`).then((response) => {
-          auth.setRole(response.data)
-        })
+        axios
+          .get(`${process.env.VUE_APP_URL}employees/${accountId}/role`)
+          .then((response) => {
+            auth.setRole(response.data)
+          })
       },
       handleMSGraph(value) {
         if (value !== null) {
-          this.fetchRole(value.homeAccountId)
+          this.fetchRole(value.localAccountId)
           auth.getAccountGraph(value).then((response) => {
             auth.setDisplayName(response.data.displayName)
           })

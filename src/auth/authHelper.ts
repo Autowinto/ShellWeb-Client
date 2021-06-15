@@ -35,7 +35,7 @@ const app = new msal.PublicClientApplication(msalConfig.authConfig)
 function loginBackend(account: any) {
   axios
     .post(`${process.env.VUE_APP_URL}login`, {
-      accountId: account.homeAccountId,
+      accountId: account.localAccountId,
       email: account.username,
       name: account.name,
     })
@@ -80,6 +80,7 @@ export function signIn(this: any) {
   console.log('Signing in')
   app.loginPopup(loginRequest).then(async () => {
     const account = app.getAllAccounts()[0]
+    console.log(account)
     this.username = account.username //Upon succesful login, there should only ever be one account logged in.
     store.commit('setAccount', account)
     store.commit('setAuthenticationStatus', true) //Upon succesful sign-in set authentication status to true.
@@ -96,7 +97,9 @@ export function checkAuthenticationStatus() {
     } else if (currentAccounts.length > 1) {
       //More than one account signed in currently
       for (const account in currentAccounts) {
-        if (currentAccounts[account].tenantId == process.env.VUE_APP_TENANT_ID) {
+        if (
+          currentAccounts[account].tenantId == process.env.VUE_APP_TENANT_ID
+        ) {
           getGraphToken(currentAccounts[account]) //Attempt getting a graph token to truly make sure that the user is authenticated.
             .then(() => {
               loginBackend(currentAccounts[account])
@@ -117,7 +120,6 @@ export function checkAuthenticationStatus() {
       if (currentAccounts[0].tenantId == process.env.VUE_APP_TENANT_ID) {
         getGraphToken(currentAccounts[0]) //Attempt getting a graph token to truly make sure that the user is authenticated.
           .then((accessToken) => {
-            console.log(accessToken)
             loginBackend(currentAccounts[0])
             store.commit('setAuthenticationStatus', true)
             store.commit('setAccount', currentAccounts[0])
@@ -142,7 +144,7 @@ export function getUserAccessLevel(this: any) {
 }
 
 export function getAccountId() {
-  return getCurrentAccount()!.homeAccountId
+  return getCurrentAccount()!.localAccountId
 }
 
 export function getAccountGraph(accountValue: any) {
