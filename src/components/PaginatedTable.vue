@@ -20,7 +20,6 @@
           show-empty
           outlined
           hover
-          :fixed="fixed"
           ref="table"
           no-local-sorting
           @sort-changed="sort"
@@ -28,104 +27,151 @@
           :fields="fields"
           :current-page="currentPage"
         >
-          <template v-for="field in fields" v-slot:[`cell(${field.key})`]="scope">
-            <div :key="field.key" v-if="field.typeOptions == undefined">
-              <span class="text-break" v-if="!scope.item.editing">
-                {{ scope.item[field.key] }}
-              </span>
-              <b-input v-else :key="field.key" v-model="scope.item[field.key]"></b-input>
-            </div>
-            <div :key="field.key" v-else-if="field.typeOptions.type == 'link'">
-              <b-link
-                :to="{
-                  path: field.typeOptions.path,
-                  query: {
-                    id: scope.item[field.typeOptions.idName],
-                  },
-                }"
-                >{{ scope.item[field.typeOptions.linkText] }}</b-link
-              >
-            </div>
-            <div :key="field.key" v-else-if="field.typeOptions.type == 'datetime'">
-              <span>
-                {{ formatDateTime(scope.item[field.key]) }}
-              </span>
-            </div>
-            <div :key="field.key" v-else-if="field.typeOptions.type == 'time'">
-              <span v-if="!scope.item.editing">
-                {{ scope.item[field.key] }}
-              </span>
-              <b-time v-else v-model="scope.item[field.key]"></b-time>
-            </div>
-            <div :key="field.key" v-else-if="field.typeOptions.type == 'date'">
-              <div v-if="!scope.item.editing">
-                {{ formatDate(scope.item[field.key]) }}
-              </div>
-              <div v-else-if="scope.item.editing">
-                <b-datepicker
-                  size="sm"
-                  calendar-width="350px"
+          <template
+            v-for="field in fields"
+            v-slot:[`cell(${field.key})`]="scope"
+          >
+            <div :key="field.key">
+              <div v-if="field.typeOptions == undefined">
+                <span v-if="!scope.item.editing">
+                  {{ scope.item[field.key] }}
+                </span>
+                <b-input
+                  v-else
+                  :key="field.key"
                   v-model="scope.item[field.key]"
-                ></b-datepicker>
+                ></b-input>
               </div>
-            </div>
-            <!--- Custom Stuff. Might rework. --->
-            <div :key="field.key" v-else-if="field.typeOptions.type == 'boolean'">
-              <div v-if="!scope.item.editing">
-                <b-badge variant="success" v-if="scope.item[field.key] == 'true'">
-                  {{ scope.item[field.key] }}</b-badge
+              <div
+                :key="field.key"
+                v-else-if="field.typeOptions.type == 'link'"
+              >
+                <b-link
+                  :to="{
+                    path: field.typeOptions.path,
+                    query: {
+                      id: scope.item[field.typeOptions.idName],
+                    },
+                  }"
                 >
-                <b-badge variant="danger" v-else> {{ scope.item[field.key] }}</b-badge>
-              </div>
-              <b-checkbox v-else v-model="scope.item[field.key]"></b-checkbox>
-            </div>
-            <div :key="field.key" v-else-if="field.typeOptions.type == 'rate'">
-              <span v-if="!scope.item.editing">{{ scope.item[field.key] }}DKK </span>
-              <b-input v-else v-model="scope.item[field.key]" type="number" step="0.01"></b-input>
-            </div>
-            <div :key="field.key" v-else-if="field.typeOptions.type == 'select'">
-              <span v-if="!scope.item.editing">{{ scope.item[field.key] }}</span>
-              <b-select
-                v-else
-                v-model="scope.item[field.key]"
-                :options="field.typeOptions.options"
-              ></b-select>
-            </div>
-            <div :key="field.key" v-else-if="field.typeOptions.type == 'status'">
-              <div v-if="!scope.item.editing">
-                <div v-if="scope.item[field.key] == '1'">
-                  <b-badge size="sm" variant="success">Active</b-badge>
-                </div>
-                <div v-else>
-                  <b-badge size="sm" variant="danger">Inactive</b-badge>
-                </div>
-              </div>
-              <div v-else>
-                <b-checkbox v-model="scope.item[field.key]" value="1" unchecked-value="0">
-                </b-checkbox>
-              </div>
-            </div>
-            <div :key="field.key" v-else-if="field.typeOptions.type == 'constant'">
-              <span> {{ scope.item[field.key] }}</span>
-            </div>
-            <div :key="field.key" v-else-if="field.typeOptions.type == 'password'">
-              <div>
-                <div v-if="!scope.item.editing">
-                  <b-btn
-                    variant="primary"
-                    size="sm"
-                    v-if="
-                      scope.item[field.key] === undefined &&
-                      employeeAccessLevel >= scope.item.accessLevel
-                    "
-                    @click="getPassword(scope)"
+                  <div
+                    :style="evaluateColumnWidth(field.width)"
+                    class="text-truncate"
                   >
-                    <b-icon icon="eye"></b-icon
-                  ></b-btn>
-                  <span v-else>{{ scope.item[field.key] }}</span>
+                    {{ scope.item[field.typeOptions.linkText] }}
+                  </div>
+                </b-link>
+              </div>
+              <div
+                :key="field.key"
+                v-else-if="field.typeOptions.type == 'datetime'"
+              >
+                <span>
+                  {{ formatDateTime(scope.item[field.key]) }}
+                </span>
+              </div>
+              <div
+                :key="field.key"
+                v-else-if="field.typeOptions.type == 'time'"
+              >
+                <span v-if="!scope.item.editing">
+                  {{ scope.item[field.key] }}
+                </span>
+                <b-time v-else v-model="scope.item[field.key]"></b-time>
+              </div>
+              <div
+                :key="field.key"
+                v-else-if="field.typeOptions.type == 'date'"
+              >
+                <div v-if="!scope.item.editing">
+                  {{ formatDate(scope.item[field.key]) }}
+                </div>
+                <div v-else-if="scope.item.editing">
+                  <b-datepicker
+                    size="sm"
+                    calendar-width="350px"
+                    v-model="scope.item[field.key]"
+                  ></b-datepicker>
+                </div>
+              </div>
+              <!--- Custom Stuff. Might rework. --->
+              <div
+                :key="field.key"
+                v-else-if="field.typeOptions.type == 'boolean'"
+              >
+                <div v-if="!scope.item.editing">
+                  <b-badge
+                    variant="success"
+                    v-if="scope.item[field.key] == 'true'"
+                  >
+                    {{ scope.item[field.key] }}</b-badge
+                  >
+                  <b-badge variant="danger" v-else>
+                    {{ scope.item[field.key] }}</b-badge
+                  >
+                </div>
+                <b-checkbox v-else v-model="scope.item[field.key]"></b-checkbox>
+              </div>
+              <div
+                :key="field.key"
+                v-else-if="field.typeOptions.type == 'rate'"
+              >
+                <span v-if="!scope.item.editing"
+                  >{{ scope.item[field.key] }}DKK
+                </span>
+                <b-input
+                  v-else
+                  v-model="scope.item[field.key]"
+                  type="number"
+                  step="0.01"
+                ></b-input>
+              </div>
+              <div
+                :key="field.key"
+                v-else-if="field.typeOptions.type == 'select'"
+              >
+                <span v-if="!scope.item.editing">{{
+                  scope.item[field.key]
+                }}</span>
+                <b-select
+                  v-else
+                  v-model="scope.item[field.key]"
+                  :options="field.typeOptions.options"
+                ></b-select>
+              </div>
+              <div
+                :key="field.key"
+                v-else-if="field.typeOptions.type == 'status'"
+              >
+                <div v-if="!scope.item.editing">
+                  <div v-if="scope.item[field.key] == '1'">
+                    <b-badge size="sm" variant="success">Active</b-badge>
+                  </div>
+                  <div v-else>
+                    <b-badge size="sm" variant="danger">Inactive</b-badge>
+                  </div>
                 </div>
                 <div v-else>
-                  <div v-if="employeeAccessLevel >= scope.item.accessLevel">
+                  <b-checkbox
+                    v-model="scope.item[field.key]"
+                    value="1"
+                    unchecked-value="0"
+                  >
+                  </b-checkbox>
+                </div>
+              </div>
+              <div
+                :key="field.key"
+                v-else-if="field.typeOptions.type == 'constant'"
+              >
+                <span> {{ scope.item[field.key] }}</span>
+              </div>
+              <div
+                :key="field.key"
+                v-else-if="field.typeOptions.type == 'password'"
+              >
+                <div>
+                  <div v-if="!scope.item.editing">
                     <b-btn
                       variant="primary"
                       size="sm"
@@ -137,30 +183,69 @@
                     >
                       <b-icon icon="eye"></b-icon
                     ></b-btn>
-                    <b-input v-else v-model="scope.item[field.key]"></b-input>
+                    <span v-else>{{ scope.item[field.key] }}</span>
+                  </div>
+                  <div v-else>
+                    <div v-if="employeeAccessLevel >= scope.item.accessLevel">
+                      <b-btn
+                        variant="primary"
+                        size="sm"
+                        v-if="
+                          scope.item[field.key] === undefined &&
+                          employeeAccessLevel >= scope.item.accessLevel
+                        "
+                        @click="getPassword(scope)"
+                      >
+                        <b-icon icon="eye"></b-icon
+                      ></b-btn>
+                      <b-input v-else v-model="scope.item[field.key]"></b-input>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div :key="field.key" v-else-if="field.typeOptions.type == 'paid'">
-              <div v-if="!scope.item.editing">
-                <b-badge v-if="scope.item[field.key] == 0" variant="success">Paid</b-badge>
-                <b-badge v-if="scope.item[field.key] != 0" variant="warning">Unpaid</b-badge>
+              <div
+                :key="field.key"
+                v-else-if="field.typeOptions.type == 'paid'"
+              >
+                <div v-if="!scope.item.editing">
+                  <b-badge v-if="scope.item[field.key] == 0" variant="success"
+                    >Paid</b-badge
+                  >
+                  <b-badge v-if="scope.item[field.key] != 0" variant="warning"
+                    >Unpaid</b-badge
+                  >
+                </div>
               </div>
             </div>
           </template>
           <template #row-details="scope">
             <label for="description-area">Description</label>
-            <b-textarea id="description-area" v-model="scope.item.description"></b-textarea>
+            <b-textarea
+              id="description-area"
+              v-model="scope.item.description"
+            ></b-textarea>
           </template>
 
           <template v-slot:cell(actions)="scope">
-            <div v-if="scope.item[editBooleanKey] == 'false' || editBooleanKey == undefined">
+            <div
+              v-if="
+                scope.item[editBooleanKey] == 'false' ||
+                editBooleanKey == undefined
+              "
+            >
               <div v-if="!scope.item.editing">
-                <b-btn size="sm" v-if="editable" variant="primary" @click="doEdit(scope)"
+                <b-btn
+                  size="sm"
+                  v-if="editable"
+                  variant="primary"
+                  @click="doEdit(scope)"
                   ><b-icon icon="pencil-square"></b-icon
                 ></b-btn>
-                <b-btn size="sm" v-if="downloadable" variant="primary" @click="doDownload(scope)"
+                <b-btn
+                  size="sm"
+                  v-if="downloadable"
+                  variant="primary"
+                  @click="doDownload(scope)"
                   ><b-icon icon="download"></b-icon
                 ></b-btn>
                 <b-btn
@@ -172,8 +257,15 @@
                 ></b-btn>
               </div>
               <div v-else>
-                <b-btn size="sm" variant="success" @click="sendEdit(scope.item)">Save</b-btn>
-                <b-btn size="sm" variant="danger" @click="cancelEdit(scope.item)">Cancel</b-btn>
+                <b-btn size="sm" variant="success" @click="sendEdit(scope.item)"
+                  >Save</b-btn
+                >
+                <b-btn
+                  size="sm"
+                  variant="danger"
+                  @click="cancelEdit(scope.item)"
+                  >Cancel</b-btn
+                >
               </div>
             </div>
             <div v-else>
@@ -278,6 +370,10 @@
         this.sortedColumn = this.fields[0].key
       }
 
+      // for (const field of this.fields) {
+      //   if (field.width) field.thStyle = `width: 25`
+      // }
+
       this.loadData()
     },
     computed: {
@@ -358,6 +454,10 @@
           this.downloadAttachment(scope)
         }
       },
+      evaluateColumnWidth(width) {
+        if (!width) return 'width: 100%'
+        return `width: ${width}`
+      },
       async downloadAttachment(scope) {
         console.log(scope)
         let url = `${this.downloadUrl}/${scope.item.id}`
@@ -424,5 +524,6 @@
         this.loadData()
       },
     },
+    components: {},
   })
 </script>

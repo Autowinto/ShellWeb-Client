@@ -521,6 +521,7 @@
               key: 'subject',
               label: 'Subject',
               sortable: true,
+              width: '400px',
               typeOptions: {
                 type: 'link',
                 path: '/ticket',
@@ -550,6 +551,7 @@
             },
             {
               key: 'replyStatus',
+              label: 'Reply',
               sortable: true,
             },
           ],

@@ -78,6 +78,7 @@
             key: 'subject',
             label: 'Subject',
             sortable: true,
+            width: '450px',
             typeOptions: {
               type: 'link',
               path: 'ticket',
@@ -98,7 +99,12 @@
             type: 'date',
           },
           {
+            key: 'status',
+            sortable: true,
+          },
+          {
             key: 'replyStatus',
+            label: 'Reply',
             sortable: true,
           },
         ],
