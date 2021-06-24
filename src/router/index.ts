@@ -12,7 +12,6 @@ import TimeOverview from '../components/views/TimeOverview.vue'
 import Administration from '../components/views/Administration.vue'
 import Asset from '../components/views/Asset.vue'
 import Authentication from '../components/views/Authentication.vue'
-import Changelog from '../components/views/Changelog.vue'
 
 Vue.use(Router)
 
@@ -43,6 +42,15 @@ const router = new Router({
       component: Customer,
       meta: {
         title: 'Customer',
+        requireAuth: true,
+      },
+    },
+    {
+      path: '/invoices',
+      name: 'invoices',
+      component: Invoices,
+      meta: {
+        title: 'Invoices',
         requireAuth: true,
       },
     },
@@ -127,15 +135,6 @@ const router = new Router({
         title: 'Authentication',
       },
     },
-    {
-      path: '/changelog',
-      name: 'changelog',
-      component: Changelog,
-      meta: {
-        title: 'Changelog',
-        requireAuth: false,
-      },
-    },
     // {
     //   path: "*",
     //   name: "404",
@@ -149,7 +148,8 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title + ' - IT-Confidence Shell' || 'Something Went Wrong'
+  document.title =
+    to.meta.title + ' - IT-Confidence Shell' || 'Something Went Wrong'
   next()
 })
 
