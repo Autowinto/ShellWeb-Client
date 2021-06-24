@@ -148,7 +148,8 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title + ' - IT-Confidence Shell' || 'Something Went Wrong'
+  document.title =
+    to?.meta?.title + ' - IT-Confidence Shell' || 'Something Went Wrong'
   next()
 })
 
