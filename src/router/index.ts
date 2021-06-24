@@ -148,9 +148,11 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  document.title =
-    to.meta.title + ' - IT-Confidence Shell' || 'Something Went Wrong'
-  next()
+  if (to) {
+    document.title =
+      to.meta.title + ' - IT-Confidence Shell' || 'Something Went Wrong'
+    next()
+  }
 })
 
 export default router
