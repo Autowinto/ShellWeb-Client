@@ -1,11 +1,26 @@
 <template>
   <div id="wrapper" class="h-100">
     <b-navbar
-      class="shadow navbar align-items-start sidebar sidebar-white accordion bg-white p-0"
+      class="
+        shadow
+        navbar
+        align-items-start
+        sidebar sidebar-white
+        accordion
+        bg-white
+        p-0
+      "
     >
       <div class="container-fluid d-flex flex-column p-0">
         <a
-          class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0"
+          class="
+            navbar-brand
+            d-flex
+            justify-content-center
+            align-items-center
+            sidebar-brand
+            m-0
+          "
           href="#"
         >
           <b-navbar-brand to="/">
@@ -22,9 +37,9 @@
           <b-nav-item :active="$route.name == 'dashboard'" to="/">
             <b-icon icon="house"></b-icon> Dashboard
           </b-nav-item>
-          <b-nav-item :active="$route.name == 'changelog'" to="/changelog">
+          <!-- <b-nav-item :active="$route.name == 'changelog'" to="/changelog">
             <b-icon icon="newspaper"></b-icon> Changelog
-          </b-nav-item>
+          </b-nav-item> -->
           <b-nav-item :active="$route.name == 'customers'" to="/customers">
             <b-icon icon="people"></b-icon> Customers
           </b-nav-item>
@@ -56,7 +71,14 @@
     >
       <div id="content">
         <nav
-          class="navbar navbar-light navbar-expand bg-white shadow mb-3 topbar static-top"
+          class="
+            navbar navbar-light navbar-expand
+            bg-white
+            shadow
+            mb-3
+            topbar
+            static-top
+          "
         >
           <div class="container-fluid">
             <button
@@ -77,7 +99,11 @@
                   <i class="fas fa-search"></i>
                 </a>
                 <div
-                  class="dropdown-menu dropdown-menu-right p-3 animated--grow-in"
+                  class="
+                    dropdown-menu dropdown-menu-right
+                    p-3
+                    animated--grow-in
+                  "
                   role="menu"
                   aria-labelledby="searchDropdown"
                 >
@@ -181,12 +207,22 @@
                     >
                   </a>
                   <div
-                    class="dropdown-menu shadow dropdown-menu-right animated--grow-in"
+                    class="
+                      dropdown-menu
+                      shadow
+                      dropdown-menu-right
+                      animated--grow-in
+                    "
                     role="menu"
                   >
                     <a class="dropdown-item" role="button">
                       <i
-                        class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"
+                        class="
+                          fas
+                          fa-sign-out-alt fa-sm fa-fw
+                          mr-2
+                          text-gray-400
+                        "
                       ></i
                       >&nbsp;Logout
                     </a>
@@ -210,57 +246,56 @@
 </template>
 
 <script>
-import axios from 'axios'
-import store from '../auth/store'
-export default {
-  data() {
-    return {
-      user: {
-        displayName: 'Not Logged In', //displayName is just "Not Logged In" per default, so that displays when the user isn't logged in properly
-        role: '',
+  import axios from 'axios'
+  import store from '../auth/store'
+  export default {
+    data() {
+      return {
+        user: {
+          displayName: 'Not Logged In', //displayName is just "Not Logged In" per default, so that displays when the user isn't logged in properly
+          role: '',
+        },
+        textMessageForm: {
+          message: null,
+          receiver: null,
+        },
+      }
+    },
+    mounted() {
+      this.user.displayName = store.state.displayName
+    },
+    methods: {
+      submitTextMessage() {
+        console.log('Submitting text message')
+        axios
+          .post(`${process.env.VUE_APP_URL}misc/sms`, {
+            message: this.textMessageForm.message,
+            receiver: this.textMessageForm.receiver,
+          })
+          .then(() => {
+            this.$refs['smsModal'].hide()
+            this.textMessageForm.message = null
+            this.textMessageForm.receiver = null
+          })
       },
-      textMessageForm: {
-        message: null,
-        receiver: null,
+    },
+    computed: {
+      displayName() {
+        return store.state.displayName
       },
-    }
-  },
-  mounted() {
-    this.user.displayName = store.state.displayName
-  },
-  methods: {
-    submitTextMessage() {
-      console.log('Submitting text message')
-      axios
-        .post(`${process.env.VUE_APP_URL}misc/sms`, {
-          message: this.textMessageForm.message,
-          receiver: this.textMessageForm.receiver,
-        })
-        .then(() => {
-          this.$refs['smsModal'].hide()
-          this.textMessageForm.message = null
-          this.textMessageForm.receiver = null
-        })
+      role() {
+        return store.state.role
+      },
     },
-  },
-  computed: {
-    displayName() {
-      return store.state.displayName
+    watch: {
+      displayName(displayName) {
+        this.user.displayName = displayName
+      },
+      role(role) {
+        this.user.role = role.name
+      },
     },
-    role() {
-      return store.state.role
-    },
-  },
-  watch: {
-    displayName(displayName) {
-      this.user.displayName = displayName
-    },
-    role(role) {
-      this.user.role = role.name
-    },
-  },
-}
+  }
 </script>
 
-<style>
-</style>
+<style></style>
