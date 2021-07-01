@@ -23,7 +23,7 @@
         <b-col cols="9">
           <div style="height: 100%">
             <b-card no-body shadow style="height: 100%">
-              <b-tabs card fill>
+              <b-tabs small card fill>
                 <b-tab title="Contacts" active>
                   <b-card-text>
                     <b-card bg-variant="light" class="mb-3">

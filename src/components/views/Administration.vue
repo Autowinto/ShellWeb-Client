@@ -5,9 +5,11 @@
         <div class="container-fluid">
           <h3 class="text-dark mb-4">Administration</h3>
           <b-card no-body>
-            <b-tabs card>
+            <b-tabs small card>
               <b-tab title="Subscriptions">
-                <subscriptions-tab :products="items.products"></subscriptions-tab>
+                <subscriptions-tab
+                  :products="items.products"
+                ></subscriptions-tab>
               </b-tab>
               <b-tab title="Products">
                 <div>
@@ -206,7 +208,8 @@
         this.fetchData(
           `products/${this.pagination.products.currentPage}/${this.pagination.products.perPage}`
         ).then((result) => {
-          this.pagination.products.totalItems = result.data.products.pagination.results
+          this.pagination.products.totalItems =
+            result.data.products.pagination.results
           this.items.products = result.data.products.collection
         })
       },
@@ -214,7 +217,8 @@
         this.fetchData(
           `productGroups/${this.pagination.productGroups.currentPage}/${this.pagination.productGroups.perPage}`
         ).then((result) => {
-          this.pagination.productGroups.totalItems = result.data.productGroups.pagination.results
+          this.pagination.productGroups.totalItems =
+            result.data.productGroups.pagination.results
           this.items.productGroups = result.data.productGroups.collection
         })
       },
@@ -225,7 +229,8 @@
             results: this.pagination.tickets.perPage,
           },
         }).then((result) => {
-          this.pagination.tickets.totalItems = result.data.tickets.totalItemCount
+          this.pagination.tickets.totalItems =
+            result.data.tickets.totalItemCount
           this.items.tickets = result.data.tickets.items
         })
       },
