@@ -245,15 +245,17 @@
             <div v-else>
               <b-icon icon="lock-fill"></b-icon>
             </div>
+            <slot name="custom" :scope="scope">Fallback</slot>
           </template>
         </b-table>
-        <!-- <b-pagination
+        <b-pagination
           v-if="paginated"
           v-model="currentPage"
           :total-rows="totalItems"
           :per-page="results"
+          size="sm"
         >
-        </b-pagination> -->
+        </b-pagination>
       </b-overlay>
     </b-container>
   </div>
@@ -322,6 +324,7 @@
         type: Boolean,
         default: false,
       },
+      activatesModal: Boolean,
     },
     data() {
       return {
@@ -335,7 +338,12 @@
       }
     },
     created() {
-      if (this.editable || this.downloadable || this.deletable) {
+      if (
+        this.editable ||
+        this.downloadable ||
+        this.deletable ||
+        this.activatesModal
+      ) {
         // eslint-disable-next-line vue/no-mutating-props
         this.fields.push({ key: 'actions' })
       }
@@ -344,11 +352,13 @@
         this.sortedColumn = this.fields[0].key
       }
 
-      // for (const field of this.fields) {
-      //   if (field.width) field.thStyle = `width: 25`
-      // }
-
       this.loadData()
+    },
+    mounted() {
+      if (this.$scopedSlots.custom) {
+        // eslint-disable-next-line vue/no-mutating-props
+        this.fields.push({ key: 'actions' })
+      }
     },
     computed: {
       editableFields() {
