@@ -176,7 +176,7 @@
             </div>
             <div
               :key="scope.field.key"
-              v-else-if="field.typeOptions.type == 'paid'"
+              v-else-if="scope.field.typeOptions.type == 'paid'"
             >
               <div v-if="!scope.item.editing">
                 <b-badge
@@ -245,7 +245,7 @@
             <div v-else>
               <b-icon icon="lock-fill"></b-icon>
             </div>
-            <slot name="custom" :scope="scope">Fallback</slot>
+            <slot name="custom" :scope="scope"></slot>
           </template>
         </b-table>
         <b-pagination
