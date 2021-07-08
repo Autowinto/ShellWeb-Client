@@ -30,7 +30,7 @@
           label: 'Invoice ID',
         },
         {
-          key: 'customer.customerNumber',
+          key: 'customer.customerName',
           label: 'Customer',
         },
         {

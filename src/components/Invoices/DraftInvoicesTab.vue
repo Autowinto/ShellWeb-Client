@@ -57,7 +57,7 @@
       const bookInvoiceModal = ref(null)
       const fields = [
         { key: 'draftInvoiceNumber', label: 'Invoice ID' },
-        { key: 'customer.customerNumber', label: 'Customer' },
+        { key: 'customer.customerName', label: 'Customer' },
         { key: 'date', label: 'Date Created' },
       ]
 
