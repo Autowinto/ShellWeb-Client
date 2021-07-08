@@ -8,7 +8,7 @@
       </template>
     </paginated-table>
     <b-modal hide-footer size="xl" ref="bookedInvoiceModal" title="Invoice">
-      <b-embed :src="pdf" type="iframe" />
+      <vue-pdf-app style="height: 79vh" :pdf="pdf"></vue-pdf-app>
     </b-modal>
   </b-tab>
 </template>
@@ -17,6 +17,8 @@
   import { defineComponent, reactive, ref } from '@vue/composition-api'
   import PaginatedTable from '../PaginatedTable.vue'
   import axios from 'axios'
+  import VuePdfApp from 'vue-pdf-app'
+  import 'vue-pdf-app/dist/icons/main.css'
 
   export default defineComponent({
     setup() {
@@ -71,6 +73,7 @@
     },
     components: {
       PaginatedTable,
+      VuePdfApp,
     },
   })
 </script>

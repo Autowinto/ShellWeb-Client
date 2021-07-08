@@ -27,7 +27,7 @@
               size="sm"
             ></b-select>
           </div>
-          <b-embed :src="pdf" type="iframe" />
+          <vue-pdf-app style="height: 79vh" :pdf="pdf"> </vue-pdf-app>
           <b-button
             @click="bookInvoice"
             class="my-2"
@@ -46,6 +46,8 @@
   import PaginatedTable from '../PaginatedTable.vue'
   import axios from 'axios'
   import * as auth from '../../auth/authHelper'
+  import VuePdfApp from 'vue-pdf-app'
+  import 'vue-pdf-app/dist/icons/main.css'
 
   export default defineComponent({
     setup() {
@@ -147,6 +149,7 @@
     },
     components: {
       PaginatedTable,
+      VuePdfApp,
     },
   })
 </script>

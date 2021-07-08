@@ -9597,6 +9597,13 @@ vue-loader@^15.9.2:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
+vue-pdf-app@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/vue-pdf-app/-/vue-pdf-app-2.1.0.tgz#71c2a91760b629b8e66023a4329c61ce95267058"
+  integrity sha512-eQUeDBdvwxBUvnrojBY+jfaKmwEVwHNC7be6eHreG1yxPSvPFoBzFa93411u15/Ze4NmZCIJKXEWvFz/RM6lxQ==
+  dependencies:
+    vue "^2.6.11"
+
 vue-router@^3.3.4:
   version "3.3.4"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.3.4.tgz#4e38abc34a11c41b6c3d8244449a2e363ba6250b"
