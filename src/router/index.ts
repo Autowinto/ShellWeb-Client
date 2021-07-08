@@ -82,15 +82,6 @@ const router = new Router({
       },
     },
     {
-      path: '/invoices',
-      name: 'invoices',
-      component: Invoices,
-      meta: {
-        title: 'Invoices',
-        requireAuth: true,
-      },
-    },
-    {
       path: '/timeoverview',
       name: 'timeoverview',
       component: TimeOverview,

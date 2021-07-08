@@ -182,7 +182,7 @@
             class="mb-0"
           >
             <b-form-checkbox-group
-              stacked="true"
+              stacked
               v-model="form.emailNotifications"
               :options="notifyOptions"
             >
@@ -293,6 +293,8 @@
         //Stringify, then parse to achieve a deep copy.
         let dataString = JSON.stringify(this.contactInfo)
         this.form = JSON.parse(dataString)
+        console.log(this.contactInfo)
+        console.log(this.form)
       },
       addPhone() {
         this.form.phones.push({})
