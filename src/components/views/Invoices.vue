@@ -12,13 +12,13 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent } from '@vue/composition-api'
-  import DraftInvoicesTab from '../Invoices/DraftInvoicesTab.vue'
-  import BookedInvoicesTab from '../Invoices/BookedInvoicesTab.vue'
-  export default defineComponent({
-    components: {
-      DraftInvoicesTab,
-      BookedInvoicesTab,
-    },
-  })
+import { defineComponent } from "@vue/composition-api";
+import DraftInvoicesTab from "../Invoices/DraftInvoicesTab.vue";
+import BookedInvoicesTab from "../Invoices/BookedInvoicesTab.vue";
+export default defineComponent({
+  components: {
+    DraftInvoicesTab,
+    BookedInvoicesTab,
+  },
+});
 </script>

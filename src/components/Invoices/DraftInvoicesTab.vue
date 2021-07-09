@@ -1,7 +1,6 @@
 <template>
   <b-tab title="Draft Invoices">
     <div id="draft-table">
-      <b-btn @click="test">TEST</b-btn>
       <paginated-table ref="table" :results="10" :fields="fields" :url="url">
         <template #custom="{ scope }">
           <b-btn @click="loadInvoicePDF(scope)" size="sm" variant="primary"
@@ -113,8 +112,8 @@ export default defineComponent({
             })
             .then(() => {
               isBooking.value = false;
+              table.value.loadData();
               bookInvoiceModal.value.hide();
-              this.$refs.table.loadData();
             })
             .catch((err) => {
               console.error(err);
@@ -126,16 +125,14 @@ export default defineComponent({
             draftInvoiceId: currentScope.item.draftInvoiceNumber,
           })
           .then(() => {
+            isBooking.value = false;
+            table.value.loadData();
             bookInvoiceModal.value.hide();
           })
           .catch((err) => {
             console.error(err);
           });
       }
-    }
-
-    function test() {
-      table.value.loadData();
     }
 
     return {
@@ -150,7 +147,6 @@ export default defineComponent({
       selectedContact,
       isBooking,
       table,
-      test,
     };
   },
   components: {

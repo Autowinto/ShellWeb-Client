@@ -26,18 +26,18 @@
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import { CoolSelect } from "vue-cool-select";
+import Vue from 'vue'
+import axios from 'axios'
+import { CoolSelect } from 'vue-cool-select'
 
-import "vue-cool-select/dist/themes/bootstrap.css";
-import { onMounted, ref } from "@vue/composition-api";
+import 'vue-cool-select/dist/themes/bootstrap.css'
+import { onMounted, ref } from '@vue/composition-api'
 
 export default Vue.extend({
   setup(props) {
-    let options = ref([]);
-    let selected = ref("");
-    let errorMessage = ref(null);
+    let options = ref([])
+    let selected = ref('')
+    let errorMessage = ref(null)
 
     function lookup(searchTerm) {
       // Only search if one or more characters have been typed to reduce large api calls
@@ -48,30 +48,30 @@ export default Vue.extend({
           },
         })
         .then((response) => {
-          options.value = filterData(response.data);
-        });
+          options.value = filterData(response.data)
+        })
     }
 
     function emitSelected() {
-      this.$emit("selected", this.selected);
+      this.$emit('selected', this.selected)
     }
 
-    const form = props.form;
+    const form = props.form
 
     function filterData(data) {
-      let filteredData;
+      let filteredData
       if (form[props.parentKey]) {
         filteredData = data.filter(
-          (option) => option[props.filterKey] == form[props.parentKey]
-        );
+          (option) => option[props.filterKey] == form[props.parentKey],
+        )
       } else {
-        filteredData = data;
+        filteredData = data
       }
-      return filteredData;
+      return filteredData
     }
     onMounted(() => {
-      lookup("");
-    });
+      lookup('')
+    })
 
     return {
       options,
@@ -79,7 +79,7 @@ export default Vue.extend({
       errorMessage,
       lookup,
       emitSelected,
-    };
+    }
   },
   components: {
     CoolSelect,
@@ -99,7 +99,7 @@ export default Vue.extend({
     },
     size: {
       type: String,
-      default: "md",
+      default: 'md',
     },
     placeholder: String,
     form: Object,
@@ -107,5 +107,5 @@ export default Vue.extend({
     parentKey: String,
     filterKey: String,
   },
-});
+})
 </script>
