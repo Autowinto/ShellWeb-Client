@@ -1,6 +1,7 @@
 <template>
   <b-tab title="Draft Invoices">
     <div id="draft-table">
+      <b-btn @click="test">TEST</b-btn>
       <paginated-table ref="table" :results="10" :fields="fields" :url="url">
         <template #custom="{ scope }">
           <b-btn @click="loadInvoicePDF(scope)" size="sm" variant="primary"
@@ -69,7 +70,7 @@ export default defineComponent({
 
     let selectedContact = ref(null);
 
-    let table = ref(null);
+    const table = ref(null);
     function loadInvoicePDF(ctx) {
       axios
         .get(
