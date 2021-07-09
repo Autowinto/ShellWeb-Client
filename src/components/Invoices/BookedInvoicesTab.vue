@@ -44,98 +44,98 @@
 </template>
 
 <script>
-  import { defineComponent, reactive, ref } from '@vue/composition-api'
-  import PaginatedTable from '../PaginatedTable.vue'
-  import axios from 'axios'
-  import VuePdfApp from 'vue-pdf-app'
-  import 'vue-pdf-app/dist/icons/main.css'
+import { defineComponent, reactive, ref } from "@vue/composition-api";
+import PaginatedTable from "../PaginatedTable.vue";
+import axios from "axios";
+import VuePdfApp from "vue-pdf-app";
+import "vue-pdf-app/dist/icons/main.css";
 
-  export default defineComponent({
-    setup() {
-      const url = `${process.env.VUE_APP_URL}invoices/booked`
+export default defineComponent({
+  setup() {
+    const url = `${process.env.VUE_APP_URL}invoices/booked`;
 
-      const fields = [
-        {
-          key: 'bookedInvoiceNumber',
-          label: 'Invoice ID',
-        },
-        {
-          key: 'customer.customerName',
-          label: 'Customer',
-        },
-        {
-          key: 'date',
-        },
-        {
-          key: 'currency',
-        },
-        {
-          key: 'netAmount',
-        },
-        {
-          key: 'grossAmount',
-        },
-      ]
+    const fields = [
+      {
+        key: "bookedInvoiceNumber",
+        label: "Invoice ID",
+      },
+      {
+        key: "customer.customerName",
+        label: "Customer",
+      },
+      {
+        key: "date",
+      },
+      {
+        key: "currency",
+      },
+      {
+        key: "netAmount",
+      },
+      {
+        key: "grossAmount",
+      },
+    ];
 
-      let pdf = ref(null)
-      let bookedInvoiceModal = ref(null)
-      let currentScope = reactive({ item: { bookedInvoiceNumber: null } })
+    let pdf = ref(null);
+    let bookedInvoiceModal = ref(null);
+    let currentScope = reactive({ item: { bookedInvoiceNumber: null } });
 
-      function loadInvoicePDF(ctx) {
-        axios
-          .get(
-            `${process.env.VUE_APP_URL}invoices/booked/${ctx.item.bookedInvoiceNumber}/pdf`,
-            { responseType: 'blob' }
-          )
-          .then((res) => {
-            Object.assign(currentScope, ctx)
-            const blob = new Blob([res.data])
-            const objectUrl = URL.createObjectURL(blob)
-            pdf.value = objectUrl
-            bookedInvoiceModal.value.show()
-          })
-          .catch((err) => {
-            console.error(err)
-          })
-      }
+    function loadInvoicePDF(ctx) {
+      axios
+        .get(
+          `${process.env.VUE_APP_URL}invoices/booked/${ctx.item.bookedInvoiceNumber}/pdf`,
+          { responseType: "blob" }
+        )
+        .then((res) => {
+          Object.assign(currentScope, ctx);
+          const blob = new Blob([res.data]);
+          const objectUrl = URL.createObjectURL(blob);
+          pdf.value = objectUrl;
+          bookedInvoiceModal.value.show();
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
 
-      const notifyConfirmationModal = ref(null)
+    const notifyConfirmationModal = ref(null);
 
-      function openNotifyModal(scope) {
-        Object.assign(currentScope, scope)
-        notifyConfirmationModal.value.show()
-      }
+    function openNotifyModal(scope) {
+      Object.assign(currentScope, scope);
+      notifyConfirmationModal.value.show();
+    }
 
-      function closeNotifyModal() {
-        notifyConfirmationModal.value.hide()
-      }
+    function closeNotifyModal() {
+      notifyConfirmationModal.value.hide();
+    }
 
-      function notify() {
-        axios
-          .post(
-            `${process.env.VUE_APP_URL}invoices/booked/${currentScope.item.bookedInvoiceNumber}/notify`
-          )
-          .then(() => {
-            notifyConfirmationModal.value.hide()
-          })
-      }
+    function notify() {
+      axios
+        .post(
+          `${process.env.VUE_APP_URL}invoices/booked/${currentScope.item.bookedInvoiceNumber}/notify`
+        )
+        .then(() => {
+          notifyConfirmationModal.value.hide();
+        });
+    }
 
-      return {
-        url,
-        fields,
-        loadInvoicePDF,
-        bookedInvoiceModal,
-        pdf,
-        openNotifyModal,
-        currentScope,
-        notifyConfirmationModal,
-        closeNotifyModal,
-        notify,
-      }
-    },
-    components: {
-      PaginatedTable,
-      VuePdfApp,
-    },
-  })
+    return {
+      url,
+      fields,
+      loadInvoicePDF,
+      bookedInvoiceModal,
+      pdf,
+      openNotifyModal,
+      currentScope,
+      notifyConfirmationModal,
+      closeNotifyModal,
+      notify,
+    };
+  },
+  components: {
+    PaginatedTable,
+    VuePdfApp,
+  },
+});
 </script>

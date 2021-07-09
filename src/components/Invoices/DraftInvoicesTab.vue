@@ -42,119 +42,119 @@
 </template>
 
 <script>
-  import { defineComponent, ref, reactive } from '@vue/composition-api'
-  import PaginatedTable from '../PaginatedTable.vue'
-  import axios from 'axios'
-  import * as auth from '../../auth/authHelper'
-  import VuePdfApp from 'vue-pdf-app'
-  import 'vue-pdf-app/dist/icons/main.css'
+import { defineComponent, ref, reactive } from "@vue/composition-api";
+import PaginatedTable from "../PaginatedTable.vue";
+import axios from "axios";
+import * as auth from "../../auth/authHelper";
+import VuePdfApp from "vue-pdf-app";
+import "vue-pdf-app/dist/icons/main.css";
 
-  export default defineComponent({
-    setup() {
-      const url = `${process.env.VUE_APP_URL}employees/${
-        auth.getCurrentAccount().localAccountId
-      }/invoices/drafts`
-      const bookInvoiceModal = ref(null)
-      const fields = [
-        { key: 'draftInvoiceNumber', label: 'Invoice ID' },
-        { key: 'customer.customerName', label: 'Customer' },
-        { key: 'date', label: 'Date Created' },
-      ]
+export default defineComponent({
+  setup() {
+    const url = `${process.env.VUE_APP_URL}employees/${
+      auth.getCurrentAccount().localAccountId
+    }/invoices/drafts`;
+    const bookInvoiceModal = ref(null);
+    const fields = [
+      { key: "draftInvoiceNumber", label: "Invoice ID" },
+      { key: "customer.customerName", label: "Customer" },
+      { key: "date", label: "Date Created" },
+    ];
 
-      let currentScope = reactive({ item: { recipient: {} } })
+    let currentScope = reactive({ item: { recipient: {} } });
 
-      let pdf = ref('')
+    let pdf = ref("");
 
-      let contacts = reactive([])
+    let contacts = reactive([]);
 
-      let selectedContact = ref(null)
+    let selectedContact = ref(null);
 
-      let table = ref(null)
-      function loadInvoicePDF(ctx) {
-        axios
-          .get(
-            `${process.env.VUE_APP_URL}customers/${ctx.item.customer.customerNumber}/contacts`
-          )
-          .then((res) => {
-            res.data.forEach((el) => {
-              contacts.push({
-                value: el.economicId,
-                text: `${el.contactId} - ${el.firstName} ${el.lastName}`,
-              })
-            })
-          })
-        axios
-          .get(
-            `${process.env.VUE_APP_URL}invoices/drafts/${ctx.item.draftInvoiceNumber}/pdf`,
-            { responseType: 'blob' }
-          )
-          .then((res) => {
-            Object.assign(currentScope, ctx)
-            const blob = new Blob([res.data])
-            const objectUrl = URL.createObjectURL(blob)
-            pdf.value = objectUrl
-            bookInvoiceModal.value.show()
-          })
-          .catch(function () {
-            console.error('Failed to fetch PDF')
-          })
-      }
-      let isBooking = ref(false)
+    let table = ref(null);
+    function loadInvoicePDF(ctx) {
+      axios
+        .get(
+          `${process.env.VUE_APP_URL}customers/${ctx.item.customer.customerNumber}/contacts`
+        )
+        .then((res) => {
+          res.data.forEach((el) => {
+            contacts.push({
+              value: el.economicId,
+              text: `${el.contactId} - ${el.firstName} ${el.lastName}`,
+            });
+          });
+        });
+      axios
+        .get(
+          `${process.env.VUE_APP_URL}invoices/drafts/${ctx.item.draftInvoiceNumber}/pdf`,
+          { responseType: "blob" }
+        )
+        .then((res) => {
+          Object.assign(currentScope, ctx);
+          const blob = new Blob([res.data]);
+          const objectUrl = URL.createObjectURL(blob);
+          pdf.value = objectUrl;
+          bookInvoiceModal.value.show();
+        })
+        .catch(function () {
+          console.error("Failed to fetch PDF");
+        });
+    }
+    let isBooking = ref(false);
 
-      function bookInvoice() {
-        isBooking.value = true
-        if (currentScope.item.recipient.ean) {
-          if (selectedContact.value) {
-            axios
-              .post(`${process.env.VUE_APP_URL}invoices/booked`, {
-                draftInvoiceId: currentScope.item.draftInvoiceNumber,
-                economicContactId: selectedContact.value,
-              })
-              .then(() => {
-                isBooking.value = false
-                bookInvoiceModal.value.hide()
-                this.$refs.table.loadData()
-              })
-              .catch((err) => {
-                console.error(err)
-              })
-          }
-        } else {
+    function bookInvoice() {
+      isBooking.value = true;
+      if (currentScope.item.recipient.ean) {
+        if (selectedContact.value) {
           axios
             .post(`${process.env.VUE_APP_URL}invoices/booked`, {
               draftInvoiceId: currentScope.item.draftInvoiceNumber,
+              economicContactId: selectedContact.value,
             })
             .then(() => {
-              bookInvoiceModal.value.hide()
+              isBooking.value = false;
+              bookInvoiceModal.value.hide();
+              this.$refs.table.loadData();
             })
             .catch((err) => {
-              console.error(err)
-            })
+              console.error(err);
+            });
         }
+      } else {
+        axios
+          .post(`${process.env.VUE_APP_URL}invoices/booked`, {
+            draftInvoiceId: currentScope.item.draftInvoiceNumber,
+          })
+          .then(() => {
+            bookInvoiceModal.value.hide();
+          })
+          .catch((err) => {
+            console.error(err);
+          });
       }
+    }
 
-      function test() {
-        table.value.loadData()
-      }
+    function test() {
+      table.value.loadData();
+    }
 
-      return {
-        url,
-        fields,
-        loadInvoicePDF,
-        pdf,
-        bookInvoiceModal,
-        bookInvoice,
-        contacts,
-        currentScope,
-        selectedContact,
-        isBooking,
-        table,
-        test,
-      }
-    },
-    components: {
-      PaginatedTable,
-      VuePdfApp,
-    },
-  })
+    return {
+      url,
+      fields,
+      loadInvoicePDF,
+      pdf,
+      bookInvoiceModal,
+      bookInvoice,
+      contacts,
+      currentScope,
+      selectedContact,
+      isBooking,
+      table,
+      test,
+    };
+  },
+  components: {
+    PaginatedTable,
+    VuePdfApp,
+  },
+});
 </script>

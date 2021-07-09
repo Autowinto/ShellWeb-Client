@@ -11,7 +11,7 @@
                     <div class="col">
                       <h6 class="text-primary font-weight-bold mb-0 p-3">
                         {{
-                          contactInfo.firstName + ' ' + contactInfo.lastName
+                          contactInfo.firstName + " " + contactInfo.lastName
                         }}: ({{ contactInfo.contactId }})
                       </h6>
                     </div>
@@ -199,122 +199,122 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import dayjs from 'dayjs'
-  import PaginatedTable from '../PaginatedTable'
-  import { defineComponent } from '@vue/composition-api'
+import axios from "axios";
+import dayjs from "dayjs";
+import PaginatedTable from "../PaginatedTable";
+import { defineComponent } from "@vue/composition-api";
 
-  export default defineComponent({
-    data() {
-      return {
-        url: `${process.env.VUE_APP_URL}contact/tickets/${this.$route.query.contactid}/1/10`,
-        contactInfo: {},
-        tickets: [],
-        form: {
-          emailNotifications: [],
+export default defineComponent({
+  data() {
+    return {
+      url: `${process.env.VUE_APP_URL}contact/tickets/${this.$route.query.contactid}/1/10`,
+      contactInfo: {},
+      tickets: [],
+      form: {
+        emailNotifications: [],
+      },
+      notifyOptions: [
+        { text: "Invoices", value: "invoices" },
+        { text: "Orders", value: "orders" },
+        { text: "Quotations", value: "quotations" },
+        { text: "Remindeers", value: "reminders" },
+      ],
+      fields: [
+        {
+          key: "ticketId",
+          label: "Ticket ID",
+          sortable: true,
         },
-        notifyOptions: [
-          { text: 'Invoices', value: 'invoices' },
-          { text: 'Orders', value: 'orders' },
-          { text: 'Quotations', value: 'quotations' },
-          { text: 'Remindeers', value: 'reminders' },
-        ],
-        fields: [
-          {
-            key: 'ticketId',
-            label: 'Ticket ID',
-            sortable: true,
+        {
+          key: "subject",
+          label: "Subject",
+          sortable: true,
+          typeOptions: {
+            type: "link",
+            path: "/ticket",
+            idName: "ticketId",
+            linkText: "subject",
           },
-          {
-            key: 'subject',
-            label: 'Subject',
-            sortable: true,
-            typeOptions: {
-              type: 'link',
-              path: '/ticket',
-              idName: 'ticketId',
-              linkText: 'subject',
-            },
-          },
-          {
-            key: 'createdDate',
-            label: 'Date of Creation',
-            sortable: true,
-          },
-          {
-            key: 'modifiedDate',
-            label: 'Last Updated',
-            sortable: true,
-          },
-          {
-            key: 'status',
-            sortable: true,
-          },
-          {
-            key: 'replyStatus',
-            sortable: true,
-          },
-        ],
-      }
-    },
-    created() {
-      this.getContactInfo()
+        },
+        {
+          key: "createdDate",
+          label: "Date of Creation",
+          sortable: true,
+        },
+        {
+          key: "modifiedDate",
+          label: "Last Updated",
+          sortable: true,
+        },
+        {
+          key: "status",
+          sortable: true,
+        },
+        {
+          key: "replyStatus",
+          sortable: true,
+        },
+      ],
+    };
+  },
+  created() {
+    this.getContactInfo();
+    axios
+      .get(
+        `${process.env.VUE_APP_URL}contact/tickets/${this.$route.query.contactid}/1/10`
+      )
+      .then((response) => {
+        this.tickets = response.data.tickets;
+      });
+  },
+  methods: {
+    getContactInfo() {
       axios
         .get(
-          `${process.env.VUE_APP_URL}contact/tickets/${this.$route.query.contactid}/1/10`
+          `${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`
         )
         .then((response) => {
-          this.tickets = response.data.tickets
-        })
+          this.contactInfo = response.data;
+          this.populateForm();
+        });
     },
-    methods: {
-      getContactInfo() {
-        axios
-          .get(
-            `${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`
-          )
-          .then((response) => {
-            this.contactInfo = response.data
-            this.populateForm()
-          })
-      },
-      submitContactEdit() {
-        axios
-          .put(
-            `${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`,
-            this.form
-          )
-          .then(() => {
-            this.$refs['contactEditModal'].hide()
-            this.getContactInfo()
-          })
-      },
-      populateForm() {
-        //Stringify, then parse to achieve a deep copy.
-        let dataString = JSON.stringify(this.contactInfo)
-        this.form = JSON.parse(dataString)
-        console.log(this.contactInfo)
-        console.log(this.form)
-      },
-      addPhone() {
-        this.form.phones.push({})
-      },
-      removePhone(index) {
-        console.log(index)
-        this.$set(this.form.phones[index], 'delete', true)
-        // this.$delete(this.form.phones, index)
-      },
+    submitContactEdit() {
+      axios
+        .put(
+          `${process.env.VUE_APP_URL}contacts/${this.$route.query.contactid}`,
+          this.form
+        )
+        .then(() => {
+          this.$refs["contactEditModal"].hide();
+          this.getContactInfo();
+        });
     },
-    filters: {
-      dayjsDateOnly: function (date) {
-        return dayjs(date).format('MMM D, YYYY')
-      },
-      dayjsDateTime: function (date) {
-        return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
-      },
+    populateForm() {
+      //Stringify, then parse to achieve a deep copy.
+      let dataString = JSON.stringify(this.contactInfo);
+      this.form = JSON.parse(dataString);
+      console.log(this.contactInfo);
+      console.log(this.form);
     },
-    components: {
-      PaginatedTable,
+    addPhone() {
+      this.form.phones.push({});
     },
-  })
+    removePhone(index) {
+      console.log(index);
+      this.$set(this.form.phones[index], "delete", true);
+      // this.$delete(this.form.phones, index)
+    },
+  },
+  filters: {
+    dayjsDateOnly: function (date) {
+      return dayjs(date).format("MMM D, YYYY");
+    },
+    dayjsDateTime: function (date) {
+      return dayjs(date).format("MMM D, YYYY, h:mm:ss a");
+    },
+  },
+  components: {
+    PaginatedTable,
+  },
+});
 </script>

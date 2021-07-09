@@ -1,7 +1,9 @@
 <template>
   <div id="wrapper">
     <div class="container-fluid">
-      <h3 class="text-dark mb-4">{{ assetInfo.AgentName }} ({{ assetInfo.AgentID }})</h3>
+      <h3 class="text-dark mb-4">
+        {{ assetInfo.AgentName }} ({{ assetInfo.AgentID }})
+      </h3>
       <b-row class="mb-3">
         <b-col v-for="disk in assetInfo.HardwareDisks" :key="disk.id" cols="4">
           <b-card class="border-left-primary">
@@ -59,7 +61,10 @@
                 </b-col>
               </b-row>
               <b-card class="mb-2" no-body></b-card>
-              <b-button style="width: 100%" :href="assetInfo.AppViewUrl" variant="primary"
+              <b-button
+                style="width: 100%"
+                :href="assetInfo.AppViewUrl"
+                variant="primary"
                 >Go to asset</b-button
               >
             </b-card-body>
@@ -203,31 +208,31 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import Vue from 'vue'
+import axios from "axios";
+import Vue from "vue";
 
-  export default Vue.extend({
-    data() {
-      return {
-        assetInfo: {},
-      }
+export default Vue.extend({
+  data() {
+    return {
+      assetInfo: {},
+    };
+  },
+  created() {
+    this.fetchData(`asset/${this.$route.query.assetID}`).then((response) => {
+      console.log(response.data.asset);
+      this.assetInfo = response.data.asset;
+    });
+  },
+  methods: {
+    fetchData(endpoint) {
+      return axios.get(process.env.VUE_APP_URL + endpoint);
     },
-    created() {
-      this.fetchData(`asset/${this.$route.query.assetID}`).then((response) => {
-        console.log(response.data.asset)
-        this.assetInfo = response.data.asset
-      })
-    },
-    methods: {
-      fetchData(endpoint) {
-        return axios.get(process.env.VUE_APP_URL + endpoint)
-      },
-    },
-  })
+  },
+});
 </script>
 
 <style scoped>
-  span.block {
-    display: block;
-  }
+span.block {
+  display: block;
+}
 </style>

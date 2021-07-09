@@ -95,13 +95,13 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-import TimeDisplay from '../TimeDisplay'
+import Vue from "vue";
+import TimeDisplay from "../TimeDisplay";
 // import WorkHourTable from '../WorkHourTable'
-import PaginatedTable from '../PaginatedTable'
-import dayjs from 'dayjs'
-import axios from 'axios'
-import * as auth from '../../auth/authHelper'
+import PaginatedTable from "../PaginatedTable";
+import dayjs from "dayjs";
+import axios from "axios";
+import * as auth from "../../auth/authHelper";
 
 export default Vue.extend({
   data() {
@@ -112,73 +112,73 @@ export default Vue.extend({
       uploadUrl: `${process.env.VUE_APP_URL}workHours`,
       fields: [
         {
-          key: 'customerName',
-          label: 'Customer',
+          key: "customerName",
+          label: "Customer",
           sortable: true,
           typeOptions: {
-            type: 'link',
-            path: 'customer',
-            linkText: 'customerName',
-            idName: 'customerId',
+            type: "link",
+            path: "customer",
+            linkText: "customerName",
+            idName: "customerId",
           },
         },
         {
-          key: 'ticketId',
-          label: 'Ticket',
+          key: "ticketId",
+          label: "Ticket",
           sortable: true,
           typeOptions: {
-            type: 'link',
-            path: 'ticket',
-            linkText: 'ticketId',
-            idName: 'ticketId',
+            type: "link",
+            path: "ticket",
+            linkText: "ticketId",
+            idName: "ticketId",
           },
         },
         {
-          key: 'startTime',
+          key: "startTime",
           sortable: true,
           typeOptions: {
-            type: 'datetime',
+            type: "datetime",
           },
         },
         {
-          key: 'endTime',
+          key: "endTime",
           sortable: true,
           typeOptions: {
-            type: 'datetime',
+            type: "datetime",
           },
         },
         {
-          key: 'billable',
+          key: "billable",
           editable: true,
           sortable: true,
           typeOptions: {
-            type: 'boolean',
+            type: "boolean",
           },
         },
         {
-          key: 'rate',
+          key: "rate",
           editable: true,
           sortable: true,
           typeOptions: {
-            type: 'rate',
+            type: "rate",
           },
         },
         {
-          key: 'time',
-          label: 'Actual Time',
+          key: "time",
+          label: "Actual Time",
           editable: false,
           sortable: true,
           typeOptions: {
-            type: 'time',
+            type: "time",
           },
         },
         {
-          key: 'timeRounded',
-          label: 'Rounded Time',
+          key: "timeRounded",
+          label: "Rounded Time",
           editable: false,
           sortable: true,
           typeOptions: {
-            type: 'time',
+            type: "time",
           },
         },
       ],
@@ -197,39 +197,39 @@ export default Vue.extend({
           rounded: 0,
         },
       },
-      selected: 'weekly',
+      selected: "weekly",
       options: [
-        { value: 'weekly', text: 'Weekly' },
-        { value: 'monthly', text: 'Monthly' },
-        { value: 'custom', text: 'Custom' },
+        { value: "weekly", text: "Weekly" },
+        { value: "monthly", text: "Monthly" },
+        { value: "custom", text: "Custom" },
       ],
-    }
+    };
   },
   created() {
-    this.fetchTimeWeekly()
+    this.fetchTimeWeekly();
   },
   methods: {
     async fetchTimeWeekly() {
-      let startDate = dayjs().startOf('week').format('YYYY-MM-DD')
-      let endDate = dayjs().endOf('week').format('YYYY-MM-DD')
-      this.timeSums = await this.fetchTimeSum(startDate, endDate)
+      let startDate = dayjs().startOf("week").format("YYYY-MM-DD");
+      let endDate = dayjs().endOf("week").format("YYYY-MM-DD");
+      this.timeSums = await this.fetchTimeSum(startDate, endDate);
     },
     async fetchTimeMonthly() {
-      let startDate = dayjs().startOf('month').format('YYYY-MM-DD')
-      let endDate = dayjs().endOf('month').format('YYYY-MM-DD')
-      this.timeSums = await this.fetchTimeSum(startDate, endDate)
+      let startDate = dayjs().startOf("month").format("YYYY-MM-DD");
+      let endDate = dayjs().endOf("month").format("YYYY-MM-DD");
+      this.timeSums = await this.fetchTimeSum(startDate, endDate);
     },
     async fetchTimeSumCustom() {
       if (this.dateRange.startDate && this.dateRange.endDate) {
-        let startDate = dayjs(this.dateRange.startDate).format('YYYY-MM-DD')
-        let endDate = dayjs(this.dateRange.endDate).format('YYYY-MM-DD')
-        this.timeSums = await this.fetchTimeSum(startDate, endDate)
-        console.log(this.timeSums)
+        let startDate = dayjs(this.dateRange.startDate).format("YYYY-MM-DD");
+        let endDate = dayjs(this.dateRange.endDate).format("YYYY-MM-DD");
+        this.timeSums = await this.fetchTimeSum(startDate, endDate);
+        console.log(this.timeSums);
       }
     },
     async fetchTimeSum(startDate, endDate) {
-      this.startDate = startDate
-      this.endDate = endDate
+      this.startDate = startDate;
+      this.endDate = endDate;
 
       if (startDate && endDate) {
         let time = await axios.get(
@@ -239,20 +239,20 @@ export default Vue.extend({
           {
             params: { startDate, endDate },
           }
-        )
-        return time.data
+        );
+        return time.data;
       }
     },
     handleTimeframeChange(value) {
-      console.log(value)
-      if (value == 'weekly') {
-        this.fetchTimeWeekly()
-      } else if (value == 'monthly') {
-        this.fetchTimeMonthly()
+      console.log(value);
+      if (value == "weekly") {
+        this.fetchTimeWeekly();
+      } else if (value == "monthly") {
+        this.fetchTimeMonthly();
       }
     },
     generateConsultantInvoices() {
-      axios.post(`${process.env.VUE_APP_URL}invoices/consultantHours/generate`)
+      axios.post(`${process.env.VUE_APP_URL}invoices/consultantHours/generate`);
     },
   },
   components: {
@@ -260,7 +260,7 @@ export default Vue.extend({
     // WorkHourTable,
     PaginatedTable,
   },
-})
+});
 </script>
 
 <style></style>

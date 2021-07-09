@@ -451,526 +451,518 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import dayjs from 'dayjs'
-  import fileDownload from 'js-file-download'
-  import download from 'downloadjs'
-  import PaginatedTable from '../PaginatedTable'
-  import { getToken } from '../../auth/authHelper'
-  import SubscriptionsTab from '../Customer/SubscriptionsTab.vue'
-  import PasswordsTab from '../Customer/PasswordsTab.vue'
-  import CustomerCallLog from '../Customer/CustomerCallLog'
-  import CustomerInfoBox from '../Customer/CustomerInfoBox'
-  import ContactCard from '../Customer/ContactCard.vue'
-  import LogTab from '../Customer/LogTab.vue'
-  import { defineComponent } from '@vue/composition-api'
+import axios from "axios";
+import dayjs from "dayjs";
+import fileDownload from "js-file-download";
+import download from "downloadjs";
+import PaginatedTable from "../PaginatedTable";
+import { getToken } from "../../auth/authHelper";
+import SubscriptionsTab from "../Customer/SubscriptionsTab.vue";
+import PasswordsTab from "../Customer/PasswordsTab.vue";
+import CustomerCallLog from "../Customer/CustomerCallLog";
+import CustomerInfoBox from "../Customer/CustomerInfoBox";
+import ContactCard from "../Customer/ContactCard.vue";
+import LogTab from "../Customer/LogTab.vue";
+import { defineComponent } from "@vue/composition-api";
 
-  export default defineComponent({
-    data() {
-      return {
-        id: this.$route.query.id,
-        fileRecords: [],
-        uploadHeaders: {},
-        apiUrl: `${process.env.VUE_APP_URL}`,
-        ticketsUrl: null,
-        customerEditUrl: '',
-        uploadUrl: `${process.env.VUE_APP_URL}attachments/customers/${this.$route.query.id}`,
-        invoicesUrl: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/booked`,
-        dropdownData: {
-          paymentTerms: [],
-          customerGroups: [],
-          currencies: [],
-          vatZones: [],
-          employees: [],
-          invoiceFrequencies: [
-            { text: 'Weekly', value: 2 },
-            { text: 'Biweekly', value: 3 },
-            { text: 'Monthly', value: 4 },
-          ],
-        },
-        form: {},
-        contactForm: {
-          notify: [],
-        },
-        fields: {
-          assets: [
-            {
-              key: 'AgentID',
-              label: 'Asset ID',
-            },
-            {
-              key: 'AgentName',
-              label: 'Asset Name',
-            },
-            {
-              key: 'Online',
-              label: 'Status',
-            },
-            {
-              key: 'LastPatchManagementReceived',
-              label: 'Last Patched',
-            },
-          ],
-          tickets: [
-            {
-              key: 'ticketId',
-              label: 'Ticket ID',
-              sortable: true,
-            },
-            {
-              key: 'subject',
-              label: 'Subject',
-              sortable: true,
-              width: '400px',
-              typeOptions: {
-                type: 'link',
-                path: '/ticket',
-                idName: 'ticketId',
-                linkText: 'subject',
-              },
-            },
-            {
-              key: 'createdDate',
-              label: 'Date of Creation',
-              sortable: true,
-              typeOptions: {
-                type: 'datetime',
-              },
-            },
-            {
-              key: 'modifiedDate',
-              label: 'Last Updated',
-              sortable: true,
-              typeOptions: {
-                type: 'datetime',
-              },
-            },
-            {
-              key: 'status',
-              sortable: true,
-            },
-            {
-              key: 'replyStatus',
-              label: 'Reply',
-              sortable: true,
-            },
-          ],
-          invoices: [
-            {
-              key: 'bookedInvoiceNumber', //Fix this so it fits all invoices and not just the booked ones
-              label: 'Invoice Number',
-              sortable: true,
-            },
-            {
-              key: 'date',
-              label: 'Date Created',
-              typeOptions: {
-                type: 'date',
-              },
-            },
-            {
-              key: 'dueDate',
-              label: 'Due On',
-              typeOptions: {
-                type: 'date',
-              },
-            },
-            {
-              key: 'netAmount',
-              typeOptions: {
-                type: 'rate',
-              },
-            },
-            {
-              key: 'remainder',
-              label: 'Payment',
-              sortable: true,
-              typeOptions: {
-                type: 'paid',
-              },
-            },
-          ],
-          attachments: [
-            {
-              key: 'fileName',
-              label: 'Name',
-              sortable: true,
-            },
-            {
-              key: 'fileSize',
-              label: 'Size (WIP)',
-              sortable: true,
-              typeOptions: {
-                type: 'constant',
-              },
-            },
-            {
-              key: 'visibleToCustomer',
-              label: 'Visible',
-              sortable: true,
-              typeOptions: {
-                type: 'constant',
-              },
-            },
-          ],
-        },
-        items: {
-          tickets: [],
-          contacts: [],
-          contracts: [],
-          contractRates: {},
-          assets: [],
-          invoices: [],
-          attachments: [],
-        },
-        pagination: {
-          assets: {
-            perPage: 18,
-            currentPage: 1,
-            totalItems: 0,
+export default defineComponent({
+  data() {
+    return {
+      id: this.$route.query.id,
+      fileRecords: [],
+      uploadHeaders: {},
+      apiUrl: `${process.env.VUE_APP_URL}`,
+      ticketsUrl: null,
+      customerEditUrl: "",
+      uploadUrl: `${process.env.VUE_APP_URL}attachments/customers/${this.$route.query.id}`,
+      invoicesUrl: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/booked`,
+      dropdownData: {
+        paymentTerms: [],
+        customerGroups: [],
+        currencies: [],
+        vatZones: [],
+        employees: [],
+        invoiceFrequencies: [
+          { text: "Weekly", value: 2 },
+          { text: "Biweekly", value: 3 },
+          { text: "Monthly", value: 4 },
+        ],
+      },
+      form: {},
+      contactForm: {
+        notify: [],
+      },
+      fields: {
+        assets: [
+          {
+            key: "AgentID",
+            label: "Asset ID",
           },
-          invoices: {
-            perPage: 10,
-            currentPage: 1,
-            totalItems: 0,
-            filterOptions: {
-              options: [
-                {
-                  text: 'Booked',
-                  value: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/booked`,
-                },
-                {
-                  text: 'Drafts',
-                  value: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/drafts`,
-                },
-                // { text: 'Unpaid', value: 'unpaid'},
-                // { text: 'Paid', value: 'paid'},
-                // { text: 'Overdue', value: 'overdue'},
-                // { text: 'Not Due', value: 'not-due'},
-              ],
-              allSelected: true,
-              selected: 'booked',
-              indeterminate: false,
+          {
+            key: "AgentName",
+            label: "Asset Name",
+          },
+          {
+            key: "Online",
+            label: "Status",
+          },
+          {
+            key: "LastPatchManagementReceived",
+            label: "Last Patched",
+          },
+        ],
+        tickets: [
+          {
+            key: "ticketId",
+            label: "Ticket ID",
+            sortable: true,
+          },
+          {
+            key: "subject",
+            label: "Subject",
+            sortable: true,
+            width: "400px",
+            typeOptions: {
+              type: "link",
+              path: "/ticket",
+              idName: "ticketId",
+              linkText: "subject",
             },
           },
-          tickets: {
-            perPage: 10,
-            currentPage: 1,
-            totalItems: 0,
+          {
+            key: "createdDate",
+            label: "Date of Creation",
+            sortable: true,
+            typeOptions: {
+              type: "datetime",
+            },
           },
-          passwords: {},
-          attachments: {
-            perPage: 13,
-            currentPage: 1,
-            totalItems: 0,
+          {
+            key: "modifiedDate",
+            label: "Last Updated",
+            sortable: true,
+            typeOptions: {
+              type: "datetime",
+            },
+          },
+          {
+            key: "status",
+            sortable: true,
+          },
+          {
+            key: "replyStatus",
+            label: "Reply",
+            sortable: true,
+          },
+        ],
+        invoices: [
+          {
+            key: "bookedInvoiceNumber", //Fix this so it fits all invoices and not just the booked ones
+            label: "Invoice Number",
+            sortable: true,
+          },
+          {
+            key: "date",
+            label: "Date Created",
+            typeOptions: {
+              type: "date",
+            },
+          },
+          {
+            key: "dueDate",
+            label: "Due On",
+            typeOptions: {
+              type: "date",
+            },
+          },
+          {
+            key: "netAmount",
+            typeOptions: {
+              type: "rate",
+            },
+          },
+          {
+            key: "remainder",
+            label: "Payment",
+            sortable: true,
+            typeOptions: {
+              type: "paid",
+            },
+          },
+        ],
+        attachments: [
+          {
+            key: "fileName",
+            label: "Name",
+            sortable: true,
+          },
+          {
+            key: "fileSize",
+            label: "Size (WIP)",
+            sortable: true,
+            typeOptions: {
+              type: "constant",
+            },
+          },
+          {
+            key: "visibleToCustomer",
+            label: "Visible",
+            sortable: true,
+            typeOptions: {
+              type: "constant",
+            },
+          },
+        ],
+      },
+      items: {
+        tickets: [],
+        contacts: [],
+        contracts: [],
+        contractRates: {},
+        assets: [],
+        invoices: [],
+        attachments: [],
+      },
+      pagination: {
+        assets: {
+          perPage: 18,
+          currentPage: 1,
+          totalItems: 0,
+        },
+        invoices: {
+          perPage: 10,
+          currentPage: 1,
+          totalItems: 0,
+          filterOptions: {
+            options: [
+              {
+                text: "Booked",
+                value: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/booked`,
+              },
+              {
+                text: "Drafts",
+                value: `${process.env.VUE_APP_URL}customers/${this.$route.query.id}/invoices/drafts`,
+              },
+              // { text: 'Unpaid', value: 'unpaid'},
+              // { text: 'Paid', value: 'paid'},
+              // { text: 'Overdue', value: 'overdue'},
+              // { text: 'Not Due', value: 'not-due'},
+            ],
+            allSelected: true,
+            selected: "booked",
+            indeterminate: false,
           },
         },
-        customerInfo: {},
-        paymentTerms: {},
-        customerGroup: 0,
-        ateraid: 0,
-        employeeName: null,
-        employee: null,
-        invoiceFrequency: null,
-        invoiceFrequencyName: '',
-        invoiceSingleTickets: null,
-        accessToOperationsCenter: false,
+        tickets: {
+          perPage: 10,
+          currentPage: 1,
+          totalItems: 0,
+        },
+        passwords: {},
+        attachments: {
+          perPage: 13,
+          currentPage: 1,
+          totalItems: 0,
+        },
+      },
+      customerInfo: {},
+      paymentTerms: {},
+      customerGroup: 0,
+      ateraid: 0,
+      employeeName: null,
+      employee: null,
+      invoiceFrequency: null,
+      invoiceFrequencyName: "",
+      invoiceSingleTickets: null,
+      accessToOperationsCenter: false,
+    };
+  },
+  created() {
+    this.ticketsUrl = `${process.env.VUE_APP_URL}customers/${this.id}/tickets`;
+    this.customerEditUrl = `${process.env.VUE_APP_URL}customers/${this.id}`;
+
+    this.getCustomerInfo();
+    this.fetchData(
+      `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
+    ).then((response) => {
+      this.items.assets = response.data.assets.items;
+      this.pagination.assets.totalItems = response.data.assets.totalItemCount;
+    });
+    this.fetchData(`customer/contracts/${this.id}`).then((response) => {
+      this.items.contracts = response.data.contracts;
+    });
+    this.fetchData(`customers/${this.id}/rates`).then((response) => {
+      this.items.contractRates = response.data;
+    });
+    axios
+      .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
+      .then((response) => {
+        for (var item in response.data) {
+          const group = response.data[item];
+          this.dropdownData.customerGroups.push({
+            value: group.customerGroupNumber,
+            text: group.name,
+          });
+        }
+      });
+    axios
+      .get(`${process.env.VUE_APP_URL}invoices/currencies`)
+      .then((response) => {
+        for (var item in response.data) {
+          const currency = response.data[item];
+          this.dropdownData.currencies.push({
+            value: currency.code,
+            text: currency.name,
+          });
+        }
+      });
+    axios
+      .get(`${process.env.VUE_APP_URL}invoices/paymentTerms`)
+      .then((response) => {
+        for (var item in response.data) {
+          const term = response.data[item];
+          this.dropdownData.paymentTerms.push({
+            value: term.paymentTermsNumber,
+            text: term.name,
+          });
+        }
+      });
+    axios
+      .get(`${process.env.VUE_APP_URL}invoices/vatZones`)
+      .then((response) => {
+        for (var item in response.data) {
+          const vatZone = response.data[item];
+          this.dropdownData.vatZones.push({
+            value: vatZone.vatZoneNumber,
+            text: vatZone.name,
+          });
+        }
+      });
+    axios.get(`${process.env.VUE_APP_URL}employees`).then((response) => {
+      for (var item in response.data) {
+        const employee = response.data[item];
+        this.dropdownData.employees.push({
+          value: employee.microsoftId,
+          text: employee.name,
+        });
+      }
+    });
+    // this.loadInvoices()
+  },
+  methods: {
+    async getCustomerInfo() {
+      try {
+        const response = await axios.get(
+          `${process.env.VUE_APP_URL}customers/${this.id}`
+        );
+        this.customerInfo = Object.assign({}, this.customerInfo, response.data);
+        // const data = response.data
+        // this.customerInfo = data.customer
+        // this.customerGroup = data.customerGroup
+        // this.employeeName = data.employeeName
+        // this.employee = data.employee
+        // this.ateraid = data.apiInfo
+        // this.paymentTerms = data.paymentTerms
+        // this.invoiceFrequency = data.invoiceFrequency
+        // this.invoiceFrequencyName = data.invoiceFrequencyName
+        // this.invoiceSingleTickets = data.invoiceSingleTickets
+        // this.accessToOperationsCenter = data.accessToOperationsCenter
+
+        // this.populateForm()
+      } catch (err) {
+        console.error(err);
+      }
+
+      axios
+        .get(`${process.env.VUE_APP_URL}customers/${this.id}/contacts`)
+        .then((response) => {
+          const data = response.data;
+          this.items.contacts = data;
+        });
+    },
+    fetchData(endpoint, params) {
+      if (params) {
+        return axios.get(process.env.VUE_APP_URL + endpoint, params);
+      } else {
+        return axios.get(process.env.VUE_APP_URL + endpoint);
       }
     },
-    created() {
-      this.ticketsUrl = `${process.env.VUE_APP_URL}customers/${this.id}/tickets`
-      this.customerEditUrl = `${process.env.VUE_APP_URL}customers/${this.id}`
+    downloadInvoice(link) {
+      axios
+        .get(`${process.env.VUE_APP_URL}invoices/pdf`, {
+          params: {
+            url: link,
+          },
+          responseType: "arraybuffer",
+        })
+        .then((response) => {
+          fileDownload(response.data, "invoice.pdf");
+        });
+    },
+    getInvoiceStatus(date, remainder) {
+      const today = new Date();
+      const dueDate = dayjs(date);
 
-      this.getCustomerInfo()
+      if (remainder === 0) {
+        return "paid"; //If the remaining payment required is 0, return the status as paid.
+      } else {
+        if (dueDate.isAfter(today)) {
+          return "unpaid"; //If the invoice is due after the current time, return the status as unpaid.
+        } else {
+          return "overdue"; //If the invoice is overdue, return the status as overdue.
+        }
+      }
+    },
+    invoiceOverdue(date) {
+      const today = new Date();
+      const dueDate = dayjs(date);
+
+      if (dueDate.isBefore(today)) {
+        return "overdue";
+      } else {
+        return "notDue";
+      }
+    },
+    invoicePaid(remainder) {
+      if (remainder === 0) {
+        return "paid";
+      } else {
+        return "unpaid";
+      }
+    },
+
+    populateForm() {
+      this.form = {
+        name: this.customerInfo.name,
+        businessNumber: this.customerInfo.corporateIdentificationNumber,
+        domain: this.customerInfo.domain,
+        country: this.customerInfo.country,
+        city: this.customerInfo.city,
+        address: this.customerInfo.address,
+        zip: this.customerInfo.zip,
+        phone: this.customerInfo.telephoneAndFaxNumber,
+        selectedPaymentTerms: this.customerInfo.paymentTerms.paymentTermsNumber,
+        selectedGroup: this.customerInfo.customerGroup.customerGroupNumber,
+        selectedEmployee: this.employee,
+        selectedCurrency: this.customerInfo.currency,
+        selectedVatZone: this.customerInfo.vatZone.vatZoneNumber,
+        eInvoicingDisabledByDefault:
+          this.customerInfo.eInvoicingDisabledByDefault,
+        invoiceFrequency: this.invoiceFrequency,
+        invoiceSingleTickets: this.invoiceSingleTickets,
+        accessToOperationsCenter: this.accessToOperationsCenter,
+      };
+    },
+    submitCustomerEdit() {
+      axios
+        .put(`${process.env.VUE_APP_URL}customers/${this.id}`, this.form)
+        .then(() => {
+          this.$refs["customerEditModal"].hide();
+          this.getCustomerInfo();
+        });
+    },
+    submitContact() {
+      var requestBody = this.contactForm;
+      requestBody.businessNumber = this.id;
+
+      axios.post(`${process.env.VUE_APP_URL}contacts`, requestBody).then(() => {
+        this.$refs["createContactModal"].hide();
+        this.getCustomerInfo();
+      });
+    },
+    async submitContractRates() {
+      axios
+        .put(
+          `${process.env.VUE_APP_URL}customers/${this.id}/rates`,
+          this.items.contractRates
+        )
+        .then(() => {
+          console.log("Success");
+        });
+    },
+    async downloadAttachment(id, name, type) {
+      let attachment = await axios.get(
+        `${process.env.VUE_APP_URL}attachments/${id}`
+      );
+
+      download(`data:${type};base64,${attachment.data}`, name, type);
+    },
+    deleteAttachment(id) {
+      axios.delete(`${process.env.VUE_APP_URL}attachments/${id}`).then(() => {
+        this.loadAttachments();
+      });
+    },
+    async loadAttachments() {
+      let page = this.pagination.attachments.currentPage;
+      let resultsPerPage = this.pagination.attachments.perPage;
+
+      let attachments = await axios.get(
+        `${process.env.VUE_APP_URL}attachments/customers/${this.id}`,
+        {
+          params: {
+            page: page,
+            results: resultsPerPage,
+          },
+        }
+      );
+      this.$set(this.items.attachments, "", attachments.data.attachments);
+      this.items.attachments = attachments.data.attachments;
+      this.pagination.attachments.totalItems = attachments.data.entryCount;
+    },
+    async uploadAttachments() {
+      let token = await getToken();
+      this.uploadHeaders = {
+        authorization: `bearer ${token.idToken}`,
+      };
+
+      this.$refs.attachmentFileAgent
+        .upload(this.uploadUrl, this.uploadHeaders, this.fileRecords)
+        .then(() => {
+          this.loadAttachments();
+        });
+      this.fileRecords = [];
+    },
+    beforeDeleteFileRecord(fileRecord) {
+      this.$refs.attachmentFileAgent.deleteFileRecord(fileRecord);
+    },
+  },
+  filters: {
+    dayjsDateTime: function (date) {
+      return dayjs(date).format("MMM D, YYYY, h:mm:ss a");
+    },
+  },
+  computed: {
+    assetsCurrentPage() {
+      return this.pagination.assets.currentPage;
+    },
+    ticketsCurrentPage() {
+      return this.pagination.tickets.currentPage;
+    },
+    attachmentsCurrentPage() {
+      return this.pagination.attachments.currentPage;
+    },
+  },
+  watch: {
+    assetsCurrentPage() {
       this.fetchData(
         `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
       ).then((response) => {
-        this.items.assets = response.data.assets.items
-        this.pagination.assets.totalItems = response.data.assets.totalItemCount
-      })
-      this.fetchData(`customer/contracts/${this.id}`).then((response) => {
-        this.items.contracts = response.data.contracts
-      })
-      this.fetchData(`customers/${this.id}/rates`).then((response) => {
-        this.items.contractRates = response.data
-      })
-      axios
-        .get(`${process.env.VUE_APP_URL}invoices/customerGroups`)
-        .then((response) => {
-          for (var item in response.data) {
-            const group = response.data[item]
-            this.dropdownData.customerGroups.push({
-              value: group.customerGroupNumber,
-              text: group.name,
-            })
-          }
-        })
-      axios
-        .get(`${process.env.VUE_APP_URL}invoices/currencies`)
-        .then((response) => {
-          for (var item in response.data) {
-            const currency = response.data[item]
-            this.dropdownData.currencies.push({
-              value: currency.code,
-              text: currency.name,
-            })
-          }
-        })
-      axios
-        .get(`${process.env.VUE_APP_URL}invoices/paymentTerms`)
-        .then((response) => {
-          for (var item in response.data) {
-            const term = response.data[item]
-            this.dropdownData.paymentTerms.push({
-              value: term.paymentTermsNumber,
-              text: term.name,
-            })
-          }
-        })
-      axios
-        .get(`${process.env.VUE_APP_URL}invoices/vatZones`)
-        .then((response) => {
-          for (var item in response.data) {
-            const vatZone = response.data[item]
-            this.dropdownData.vatZones.push({
-              value: vatZone.vatZoneNumber,
-              text: vatZone.name,
-            })
-          }
-        })
-      axios.get(`${process.env.VUE_APP_URL}employees`).then((response) => {
-        for (var item in response.data) {
-          const employee = response.data[item]
-          this.dropdownData.employees.push({
-            value: employee.microsoftId,
-            text: employee.name,
-          })
-        }
-      })
-      // this.loadInvoices()
+        this.items.assets = response.data.assets.items;
+        this.pagination.assets.totalItems = response.data.assets.totalItemCount;
+      });
     },
-    methods: {
-      async getCustomerInfo() {
-        try {
-          const response = await axios.get(
-            `${process.env.VUE_APP_URL}customers/${this.id}`
-          )
-          this.customerInfo = Object.assign(
-            {},
-            this.customerInfo,
-            response.data
-          )
-          // const data = response.data
-          // this.customerInfo = data.customer
-          // this.customerGroup = data.customerGroup
-          // this.employeeName = data.employeeName
-          // this.employee = data.employee
-          // this.ateraid = data.apiInfo
-          // this.paymentTerms = data.paymentTerms
-          // this.invoiceFrequency = data.invoiceFrequency
-          // this.invoiceFrequencyName = data.invoiceFrequencyName
-          // this.invoiceSingleTickets = data.invoiceSingleTickets
-          // this.accessToOperationsCenter = data.accessToOperationsCenter
-
-          // this.populateForm()
-        } catch (err) {
-          console.error(err)
-        }
-
-        axios
-          .get(`${process.env.VUE_APP_URL}customers/${this.id}/contacts`)
-          .then((response) => {
-            const data = response.data
-            this.items.contacts = data
-          })
-      },
-      fetchData(endpoint, params) {
-        if (params) {
-          return axios.get(process.env.VUE_APP_URL + endpoint, params)
-        } else {
-          return axios.get(process.env.VUE_APP_URL + endpoint)
-        }
-      },
-      downloadInvoice(link) {
-        axios
-          .get(`${process.env.VUE_APP_URL}invoices/pdf`, {
-            params: {
-              url: link,
-            },
-            responseType: 'arraybuffer',
-          })
-          .then((response) => {
-            fileDownload(response.data, 'invoice.pdf')
-          })
-      },
-      getInvoiceStatus(date, remainder) {
-        const today = new Date()
-        const dueDate = dayjs(date)
-
-        if (remainder === 0) {
-          return 'paid' //If the remaining payment required is 0, return the status as paid.
-        } else {
-          if (dueDate.isAfter(today)) {
-            return 'unpaid' //If the invoice is due after the current time, return the status as unpaid.
-          } else {
-            return 'overdue' //If the invoice is overdue, return the status as overdue.
-          }
-        }
-      },
-      invoiceOverdue(date) {
-        const today = new Date()
-        const dueDate = dayjs(date)
-
-        if (dueDate.isBefore(today)) {
-          return 'overdue'
-        } else {
-          return 'notDue'
-        }
-      },
-      invoicePaid(remainder) {
-        if (remainder === 0) {
-          return 'paid'
-        } else {
-          return 'unpaid'
-        }
-      },
-
-      populateForm() {
-        this.form = {
-          name: this.customerInfo.name,
-          businessNumber: this.customerInfo.corporateIdentificationNumber,
-          domain: this.customerInfo.domain,
-          country: this.customerInfo.country,
-          city: this.customerInfo.city,
-          address: this.customerInfo.address,
-          zip: this.customerInfo.zip,
-          phone: this.customerInfo.telephoneAndFaxNumber,
-          selectedPaymentTerms:
-            this.customerInfo.paymentTerms.paymentTermsNumber,
-          selectedGroup: this.customerInfo.customerGroup.customerGroupNumber,
-          selectedEmployee: this.employee,
-          selectedCurrency: this.customerInfo.currency,
-          selectedVatZone: this.customerInfo.vatZone.vatZoneNumber,
-          eInvoicingDisabledByDefault:
-            this.customerInfo.eInvoicingDisabledByDefault,
-          invoiceFrequency: this.invoiceFrequency,
-          invoiceSingleTickets: this.invoiceSingleTickets,
-          accessToOperationsCenter: this.accessToOperationsCenter,
-        }
-      },
-      submitCustomerEdit() {
-        axios
-          .put(`${process.env.VUE_APP_URL}customers/${this.id}`, this.form)
-          .then(() => {
-            this.$refs['customerEditModal'].hide()
-            this.getCustomerInfo()
-          })
-      },
-      submitContact() {
-        var requestBody = this.contactForm
-        requestBody.businessNumber = this.id
-
-        axios
-          .post(`${process.env.VUE_APP_URL}contacts`, requestBody)
-          .then(() => {
-            this.$refs['createContactModal'].hide()
-            this.getCustomerInfo()
-          })
-      },
-      async submitContractRates() {
-        axios
-          .put(
-            `${process.env.VUE_APP_URL}customers/${this.id}/rates`,
-            this.items.contractRates
-          )
-          .then(() => {
-            console.log('Success')
-          })
-      },
-      async downloadAttachment(id, name, type) {
-        let attachment = await axios.get(
-          `${process.env.VUE_APP_URL}attachments/${id}`
-        )
-
-        download(`data:${type};base64,${attachment.data}`, name, type)
-      },
-      deleteAttachment(id) {
-        axios.delete(`${process.env.VUE_APP_URL}attachments/${id}`).then(() => {
-          this.loadAttachments()
-        })
-      },
-      async loadAttachments() {
-        let page = this.pagination.attachments.currentPage
-        let resultsPerPage = this.pagination.attachments.perPage
-
-        let attachments = await axios.get(
-          `${process.env.VUE_APP_URL}attachments/customers/${this.id}`,
-          {
-            params: {
-              page: page,
-              results: resultsPerPage,
-            },
-          }
-        )
-        this.$set(this.items.attachments, '', attachments.data.attachments)
-        this.items.attachments = attachments.data.attachments
-        this.pagination.attachments.totalItems = attachments.data.entryCount
-      },
-      async uploadAttachments() {
-        let token = await getToken()
-        this.uploadHeaders = {
-          authorization: `bearer ${token.idToken}`,
-        }
-
-        this.$refs.attachmentFileAgent
-          .upload(this.uploadUrl, this.uploadHeaders, this.fileRecords)
-          .then(() => {
-            this.loadAttachments()
-          })
-        this.fileRecords = []
-      },
-      beforeDeleteFileRecord(fileRecord) {
-        this.$refs.attachmentFileAgent.deleteFileRecord(fileRecord)
-      },
+    async attachmentsCurrentPage() {
+      this.loadAttachments();
     },
-    filters: {
-      dayjsDateTime: function (date) {
-        return dayjs(date).format('MMM D, YYYY, h:mm:ss a')
-      },
-    },
-    computed: {
-      assetsCurrentPage() {
-        return this.pagination.assets.currentPage
-      },
-      ticketsCurrentPage() {
-        return this.pagination.tickets.currentPage
-      },
-      attachmentsCurrentPage() {
-        return this.pagination.attachments.currentPage
-      },
-    },
-    watch: {
-      assetsCurrentPage() {
-        this.fetchData(
-          `assets/${this.id}/${this.pagination.assets.currentPage}/${this.pagination.assets.perPage}`
-        ).then((response) => {
-          this.items.assets = response.data.assets.items
-          this.pagination.assets.totalItems =
-            response.data.assets.totalItemCount
-        })
-      },
-      async attachmentsCurrentPage() {
-        this.loadAttachments()
-      },
-    },
-    components: {
-      PaginatedTable,
-      PasswordsTab,
-      SubscriptionsTab,
-      CustomerCallLog,
-      CustomerInfoBox,
-      ContactCard,
-      LogTab,
-    },
-  })
+  },
+  components: {
+    PaginatedTable,
+    PasswordsTab,
+    SubscriptionsTab,
+    CustomerCallLog,
+    CustomerInfoBox,
+    ContactCard,
+    LogTab,
+  },
+});
 </script>

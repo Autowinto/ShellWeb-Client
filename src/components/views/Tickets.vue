@@ -46,179 +46,179 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import PaginatedTable from '../PaginatedTable'
-  import ModalForm from '../ModalForm'
+import Vue from "vue";
+import PaginatedTable from "../PaginatedTable";
+import ModalForm from "../ModalForm";
 
-  export default Vue.extend({
-    components: {
-      PaginatedTable,
-      ModalForm,
+export default Vue.extend({
+  components: {
+    PaginatedTable,
+    ModalForm,
+  },
+  methods: {
+    handleTicketPosted() {
+      this.$refs.ticketTable.loadData();
     },
-    methods: {
-      handleTicketPosted() {
-        this.$refs.ticketTable.loadData()
-      },
-    },
-    data() {
-      return {
-        url: `${process.env.VUE_APP_URL}tickets`,
-        fields: [
-          {
-            key: 'ticketId',
-            label: 'Ticket ID',
-            sortable: true,
+  },
+  data() {
+    return {
+      url: `${process.env.VUE_APP_URL}tickets`,
+      fields: [
+        {
+          key: "ticketId",
+          label: "Ticket ID",
+          sortable: true,
+        },
+        {
+          key: "customerName",
+          label: "Customer",
+          sortable: true,
+        },
+        {
+          key: "subject",
+          label: "Subject",
+          sortable: true,
+          width: "450px",
+          typeOptions: {
+            type: "link",
+            path: "ticket",
+            idName: "ticketId",
+            linkText: "subject",
           },
-          {
-            key: 'customerName',
-            label: 'Customer',
-            sortable: true,
-          },
-          {
-            key: 'subject',
-            label: 'Subject',
-            sortable: true,
-            width: '450px',
-            typeOptions: {
-              type: 'link',
-              path: 'ticket',
-              idName: 'ticketId',
-              linkText: 'subject',
+        },
+        {
+          key: "createdDate",
+          label: "Created",
+          sortable: true,
+          type: "date",
+        },
+        {
+          key: "modifiedDate",
+          label: "Updated",
+          sortable: true,
+          type: "date",
+        },
+        {
+          key: "status",
+          sortable: true,
+        },
+        {
+          key: "replyStatus",
+          label: "Reply",
+          sortable: true,
+        },
+      ],
+      formFields: [
+        {
+          key: "customerId",
+          label: "Customer",
+          textKeys: ["name"],
+          type: "lookup",
+          lookupEndpoint: "customers",
+          placeholder: "None picked. All contacts will be shown",
+          required: true,
+          cols: 6,
+        },
+        {
+          key: "contactId",
+          parentKey: "customerId",
+          filterKey: "customer",
+          label: "Contact",
+          textKeys: ["firstName", "lastName"],
+          type: "lookup",
+          lookupEndpoint: "contacts",
+          required: true,
+          cols: 6,
+        },
+        {
+          key: "title",
+          type: "string",
+          label: "Ticket Title",
+          required: true,
+          cols: 12,
+        },
+        {
+          key: "description",
+          type: "text",
+          label: "Description",
+          required: true,
+          cols: 12,
+        },
+        {
+          key: "impact",
+          type: "select",
+          options: [
+            {
+              text: "No Impact",
+              value: "NoImpact",
             },
-          },
-          {
-            key: 'createdDate',
-            label: 'Created',
-            sortable: true,
-            type: 'date',
-          },
-          {
-            key: 'modifiedDate',
-            label: 'Updated',
-            sortable: true,
-            type: 'date',
-          },
-          {
-            key: 'status',
-            sortable: true,
-          },
-          {
-            key: 'replyStatus',
-            label: 'Reply',
-            sortable: true,
-          },
-        ],
-        formFields: [
-          {
-            key: 'customerId',
-            label: 'Customer',
-            textKeys: ['name'],
-            type: 'lookup',
-            lookupEndpoint: 'customers',
-            placeholder: 'None picked. All contacts will be shown',
-            required: true,
-            cols: 6,
-          },
-          {
-            key: 'contactId',
-            parentKey: 'customerId',
-            filterKey: 'customer',
-            label: 'Contact',
-            textKeys: ['firstName', 'lastName'],
-            type: 'lookup',
-            lookupEndpoint: 'contacts',
-            required: true,
-            cols: 6,
-          },
-          {
-            key: 'title',
-            type: 'string',
-            label: 'Ticket Title',
-            required: true,
-            cols: 12,
-          },
-          {
-            key: 'description',
-            type: 'text',
-            label: 'Description',
-            required: true,
-            cols: 12,
-          },
-          {
-            key: 'impact',
-            type: 'select',
-            options: [
-              {
-                text: 'No Impact',
-                value: 'NoImpact',
-              },
-              {
-                text: 'Minor',
-                value: 'Minor',
-              },
-              {
-                text: 'Major',
-                value: 'Major',
-              },
-              {
-                text: 'Site Down',
-                value: 'NoImpact',
-              },
-              {
-                text: 'Server Issue',
-                value: 'ServerIssue',
-              },
-              {
-                text: 'Crisis',
-                value: 'Crisis',
-              },
-            ],
-            required: true,
-            label: 'Ticket Impact',
-            cols: 6,
-          },
-          {
-            key: 'type',
-            type: 'select',
-            options: [
-              {
-                text: 'Incident',
-                value: 'Incident',
-              },
-              {
-                text: 'Problem',
-                value: 'Problem',
-              },
-              {
-                text: 'Request',
-                value: 'Request',
-              },
-              {
-                text: 'Change',
-                value: 'Change',
-              },
-            ],
-            required: true,
-            label: 'Ticket Type',
-            cols: 6,
-          },
-          {
-            key: 'isProject',
-            label: 'Project',
-            type: 'boolean',
-            triggersKey: 'fixedPrice',
-            checkText: 'Is this ticket a project e.g a fixed price?',
-            cols: 6,
-          },
-          {
-            key: 'fixedPrice',
-            label: 'Fixed Price',
-            type: 'double',
-            show: false,
-            cols: 6,
-          },
-        ],
-      }
-    },
-  })
+            {
+              text: "Minor",
+              value: "Minor",
+            },
+            {
+              text: "Major",
+              value: "Major",
+            },
+            {
+              text: "Site Down",
+              value: "NoImpact",
+            },
+            {
+              text: "Server Issue",
+              value: "ServerIssue",
+            },
+            {
+              text: "Crisis",
+              value: "Crisis",
+            },
+          ],
+          required: true,
+          label: "Ticket Impact",
+          cols: 6,
+        },
+        {
+          key: "type",
+          type: "select",
+          options: [
+            {
+              text: "Incident",
+              value: "Incident",
+            },
+            {
+              text: "Problem",
+              value: "Problem",
+            },
+            {
+              text: "Request",
+              value: "Request",
+            },
+            {
+              text: "Change",
+              value: "Change",
+            },
+          ],
+          required: true,
+          label: "Ticket Type",
+          cols: 6,
+        },
+        {
+          key: "isProject",
+          label: "Project",
+          type: "boolean",
+          triggersKey: "fixedPrice",
+          checkText: "Is this ticket a project e.g a fixed price?",
+          cols: 6,
+        },
+        {
+          key: "fixedPrice",
+          label: "Fixed Price",
+          type: "double",
+          show: false,
+          cols: 6,
+        },
+      ],
+    };
+  },
+});
 </script>
