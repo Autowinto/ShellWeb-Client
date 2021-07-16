@@ -78,7 +78,7 @@ export function setDisplayName(name: string) {
 
 export function signIn(this: any) {
   console.log('Signing in')
-  app.loginRedirect(loginRequest).then(async () => {
+  app.loginPopup(loginRequest).then(async () => {
     const account = app.getAllAccounts()[0]
     console.log(account)
     this.username = account.username //Upon succesful login, there should only ever be one account logged in.
@@ -97,7 +97,9 @@ export function checkAuthenticationStatus() {
     } else if (currentAccounts.length > 1) {
       //More than one account signed in currently
       for (const account in currentAccounts) {
-        if (currentAccounts[account].tenantId == process.env.VUE_APP_TENANT_ID) {
+        if (
+          currentAccounts[account].tenantId == process.env.VUE_APP_TENANT_ID
+        ) {
           getGraphToken(currentAccounts[account]) //Attempt getting a graph token to truly make sure that the user is authenticated.
             .then(() => {
               loginBackend(currentAccounts[account])
