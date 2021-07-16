@@ -12,6 +12,9 @@ import TimeOverview from '../components/views/TimeOverview.vue'
 import Administration from '../components/views/Administration.vue'
 import Asset from '../components/views/Asset.vue'
 import Authentication from '../components/views/Authentication.vue'
+import NavBar from '../components/NavBar.vue'
+import store from '@/auth/store'
+import * as auth from '@/auth/authHelper'
 
 Vue.use(Router)
 
@@ -20,8 +23,14 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'dashboard',
-      component: Dashboard,
+      component: NavBar,
+      children: [
+        {
+          path: '',
+          name: 'Dashboard',
+          component: Dashboard,
+        },
+      ],
       meta: {
         title: 'Dashboard',
         requireAuth: true,
@@ -29,8 +38,14 @@ const router = new Router({
     },
     {
       path: '/customers',
-      name: 'customers',
-      component: Customers,
+      component: NavBar,
+      children: [
+        {
+          path: '',
+          name: 'Customers',
+          component: Customers,
+        },
+      ],
       meta: {
         title: 'Customers',
         requireAuth: true,
@@ -38,8 +53,14 @@ const router = new Router({
     },
     {
       path: '/customer',
-      name: 'customer',
-      component: Customer,
+      component: NavBar,
+      children: [
+        {
+          path: '',
+          name: 'Customer',
+          component: Customer,
+        },
+      ],
       meta: {
         title: 'Customer',
         requireAuth: true,
@@ -47,8 +68,14 @@ const router = new Router({
     },
     {
       path: '/invoices',
-      name: 'invoices',
-      component: Invoices,
+      component: NavBar,
+      children: [
+        {
+          path: '',
+          name: 'Invoices',
+          component: Invoices,
+        },
+      ],
       meta: {
         title: 'Invoices',
         requireAuth: true,
@@ -56,8 +83,14 @@ const router = new Router({
     },
     {
       path: '/contact',
-      name: 'contact',
-      component: Contact,
+      component: NavBar,
+      children: [
+        {
+          path: '',
+          name: 'Contact',
+          component: Contact,
+        },
+      ],
       meta: {
         title: 'Contact',
         requireAuth: true,
@@ -65,8 +98,14 @@ const router = new Router({
     },
     {
       path: '/tickets',
-      name: 'tickets',
-      component: Tickets,
+      component: NavBar,
+      children: [
+        {
+          path: '',
+          name: 'Tickets',
+          component: Tickets,
+        },
+      ],
       meta: {
         title: 'Tickets',
         requireAuth: true,
@@ -74,8 +113,14 @@ const router = new Router({
     },
     {
       path: '/ticket',
-      name: 'ticket',
-      component: Ticket,
+      component: NavBar,
+      children: [
+        {
+          path: '',
+          name: 'Ticket',
+          component: Ticket,
+        },
+      ],
       meta: {
         title: 'Ticket',
         requireAuth: true,
@@ -83,8 +128,14 @@ const router = new Router({
     },
     {
       path: '/timeoverview',
-      name: 'timeoverview',
-      component: TimeOverview,
+      component: NavBar,
+      children: [
+        {
+          path: '',
+          name: 'Time Overview',
+          component: TimeOverview,
+        },
+      ],
       meta: {
         title: 'Time Overview',
         requireAuth: true,
@@ -92,8 +143,14 @@ const router = new Router({
     },
     {
       path: '/administration',
-      name: 'administration',
-      component: Administration,
+      component: NavBar,
+      children: [
+        {
+          path: '',
+          name: 'Administration',
+          component: Administration,
+        },
+      ],
       meta: {
         title: 'Administration',
         requireAuth: true,
@@ -101,8 +158,14 @@ const router = new Router({
     },
     {
       path: '/asset',
-      name: 'asset',
-      component: Asset,
+      component: NavBar,
+      children: [
+        {
+          path: '',
+          name: 'Asset',
+          component: Asset,
+        },
+      ],
       meta: {
         title: 'Asset',
         requireAuth: true,
@@ -113,7 +176,6 @@ const router = new Router({
       name: 'login',
       component: Login,
       meta: {
-        hideNavBar: true,
         title: 'Login',
       },
     },
@@ -138,9 +200,8 @@ const router = new Router({
   ],
 })
 
-router.beforeEach((to, from, next) => {
-  document.title =
-    to?.meta?.title + ' - IT-Confidence Shell' || 'Something Went Wrong'
+router.beforeEach(async (to, from, next) => {
+  document.title = to?.name + ' - IT-Confidence Shell' || 'Something Went Wrong'
   next()
 })
 

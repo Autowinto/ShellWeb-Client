@@ -13,7 +13,7 @@ import 'vue-file-agent/dist/vue-file-agent.css'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import './config/axiosConfig'
+import './config/axiosConfig.ts'
 import { CoolSelectPlugin } from 'vue-cool-select'
 import 'vue-cool-select/dist/themes/bootstrap.css'
 

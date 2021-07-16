@@ -1,65 +1,85 @@
 <template>
-  <NavBar v-if="!$route.meta.hideNavBar">
-    <router-view
-      v-if="this.$store.state.isAuthenticated"
-      :key="this.$store.state.isAuthenticated"
-    ></router-view>
-  </NavBar>
-  <router-view v-else></router-view>
+  <router-view v-if="store.state.isAuthenticated"></router-view>
+  <b-container style="height: 100vh; width: 100vh" v-else>
+    <b-row class="h-100">
+      <b-col class="d-flex justify-content-center align-items-center" cols="12">
+        <b-spinner class="mr-2" variant="dark"></b-spinner>
+        <h2 class="my-1">Authenticating...</h2>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
-import Vue from "vue";
-import NavBar from "./components/NavBar";
-import * as auth from "./auth/authHelper";
-import axios from "axios";
-import store from "./auth/store";
+import * as auth from './auth/authHelper'
+import axios from 'axios'
+import { defineComponent } from '@vue/composition-api'
 
-export default Vue.extend({
-  created() {
+export default defineComponent({
+  setup(props, ctx) {
+    const store = ctx.root.$store
+
     auth
-      .checkAuthenticationStatus()
+      .checkSessionValidity()
       .then(() => {
-        console.log("Successfully checked authentication");
-        this.handleMSGraph(store.state.account);
+        console.log('Valid session')
+        store.state.isAuthenticated = true
       })
-      .catch((error) => {
-        console.log(error);
-        auth.signIn();
-      });
+      .catch(() => {
+        console.log('Need to sign in')
+        auth.signInAzure().then(() => {
+          auth.loginBackend().then(() => {
+            auth.checkSessionValidity().then(() => {
+              store.state.isAuthenticated = true
+            })
+          })
+        })
+      })
+
+    return {
+      store,
+    }
   },
+  // created() {
+  //   auth
+  //     .checkAuthenticationStatus()
+  //     .then(() => {
+  //       console.log('Successfully checked authentication')
+  //       this.handleMSGraph(store.state.account)
+  //     })
+  //     .catch((error) => {
+  //       console.log(error)
+  //       auth.signIn()
+  //     })
+  // },
   methods: {
     fetchRole(accountId) {
       axios
         .get(`${process.env.VUE_APP_URL}employees/${accountId}/role`)
         .then((response) => {
-          auth.setRole(response.data);
-        });
+          auth.setRole(response.data)
+        })
     },
     handleMSGraph(value) {
       if (value !== null) {
-        this.fetchRole(value.localAccountId);
+        this.fetchRole(value.localAccountId)
         auth.getAccountGraph(value).then((response) => {
-          auth.setDisplayName(response.data.displayName);
-        });
+          auth.setDisplayName(response.data.displayName)
+        })
       }
     },
   },
   computed: {
-    authStatus() {
-      return store.state.account;
-    },
+    // authStatus() {
+    //   return store.state.account;
+    // },
   },
   watch: {
-    authStatus(accountValue) {
-      this.handleMSGraph(accountValue);
-    },
+    // authStatus(accountValue) {
+    //   this.handleMSGraph(accountValue)
+    // },
   },
-  name: "App",
-  components: {
-    NavBar,
-  },
-});
+})
 </script>
 
 <style>

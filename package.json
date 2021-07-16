@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
+    "devs": "vue-cli-service serve --https",
     "build": "vue-cli-service build",
     "buildAnalyze": "vue-cli-service build --report",
     "lint": "vue-cli-service lint"
@@ -11,6 +12,7 @@
   "dependencies": {
     "@azure/msal-browser": "^2.14.1",
     "@popperjs/core": "^2.6.0",
+    "@vue/cli": "^4.5.13",
     "@vue/composition-api": "1.0.0-rc.13",
     "@vueuse/core": "^4.3.6",
     "@vueuse/router": "^4.3.6",
@@ -24,6 +26,7 @@
     "dotenv": "^8.2.0",
     "downloadjs": "^1.4.7",
     "eslint": "^7.27.0",
+    "global": "^4.4.0",
     "jquery": "^3.5.1",
     "js-file-download": "^0.4.12",
     "lodash": "^4.17.21",

@@ -34,29 +34,29 @@
         <hr class="sidebar-divider my-0" />
 
         <b-nav pills class="pl-2 pr-2">
-          <b-nav-item :active="$route.name == 'dashboard'" to="/">
+          <b-nav-item :active="$route.path == '/'" to="/">
             <b-icon icon="house"></b-icon> Dashboard
           </b-nav-item>
           <!-- <b-nav-item :active="$route.name == 'changelog'" to="/changelog">
             <b-icon icon="newspaper"></b-icon> Changelog
           </b-nav-item> -->
-          <b-nav-item :active="$route.name == 'customers'" to="/customers">
+          <b-nav-item :active="$route.path == '/customers'" to="/customers">
             <b-icon icon="people"></b-icon> Customers
           </b-nav-item>
-          <b-nav-item :active="$route.name == 'tickets'" to="/tickets">
+          <b-nav-item :active="$route.path == '/tickets'" to="/tickets">
             <b-icon icon="envelope"></b-icon> Tickets
           </b-nav-item>
-          <b-nav-item :active="$route.name == 'invoices'" to="/invoices">
+          <b-nav-item :active="$route.path == '/invoices'" to="/invoices">
             <b-icon icon="cash-stack"></b-icon> Invoices
           </b-nav-item>
           <b-nav-item
-            :active="$route.name == 'timeoverview'"
+            :active="$route.path == '/timeoverview'"
             to="/timeoverview"
           >
             <b-icon icon="clock"></b-icon> Time Overview
           </b-nav-item>
           <b-nav-item
-            :active="$route.name == 'administration'"
+            :active="$route.path == '/administration'"
             to="/administration"
           >
             <i class="fas fa-table"></i>Administration
@@ -232,7 +232,7 @@
             </ul>
           </div>
         </nav>
-        <slot></slot>
+        <router-view></router-view>
       </div>
       <footer class="bg-white sticky-footer">
         <div class="container my-auto">
@@ -246,56 +246,56 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import store from '../auth/store'
-  export default {
-    data() {
-      return {
-        user: {
-          displayName: 'Not Logged In', //displayName is just "Not Logged In" per default, so that displays when the user isn't logged in properly
-          role: '',
-        },
-        textMessageForm: {
-          message: null,
-          receiver: null,
-        },
-      }
-    },
-    mounted() {
-      this.user.displayName = store.state.displayName
-    },
-    methods: {
-      submitTextMessage() {
-        console.log('Submitting text message')
-        axios
-          .post(`${process.env.VUE_APP_URL}misc/sms`, {
-            message: this.textMessageForm.message,
-            receiver: this.textMessageForm.receiver,
-          })
-          .then(() => {
-            this.$refs['smsModal'].hide()
-            this.textMessageForm.message = null
-            this.textMessageForm.receiver = null
-          })
+import axios from 'axios'
+import store from '../auth/store'
+export default {
+  data() {
+    return {
+      user: {
+        displayName: 'Not Logged In', //displayName is just "Not Logged In" per default, so that displays when the user isn't logged in properly
+        role: '',
       },
+      textMessageForm: {
+        message: null,
+        receiver: null,
+      },
+    }
+  },
+  mounted() {
+    this.user.displayName = store.state.displayName
+  },
+  methods: {
+    submitTextMessage() {
+      console.log('Submitting text message')
+      axios
+        .post(`${process.env.VUE_APP_URL}misc/sms`, {
+          message: this.textMessageForm.message,
+          receiver: this.textMessageForm.receiver,
+        })
+        .then(() => {
+          this.$refs['smsModal'].hide()
+          this.textMessageForm.message = null
+          this.textMessageForm.receiver = null
+        })
     },
-    computed: {
-      displayName() {
-        return store.state.displayName
-      },
-      role() {
-        return store.state.role
-      },
+  },
+  computed: {
+    displayName() {
+      return store.state.displayName
     },
-    watch: {
-      displayName(displayName) {
-        this.user.displayName = displayName
-      },
-      role(role) {
-        this.user.role = role.name
-      },
+    role() {
+      return store.state.role
     },
-  }
+  },
+  watch: {
+    displayName(displayName) {
+      this.user.displayName = displayName
+    },
+    role(role) {
+      this.user.role = role.name
+    },
+  },
+}
 </script>
 
 <style></style>

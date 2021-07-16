@@ -80,25 +80,15 @@
             </div>
             <div v-else-if="scope.field.typeOptions.type == 'boolean'">
               <div v-if="!scope.item.editing">
-                <b-badge
-                  variant="success"
-                  v-if="scope.item[scope.field.key] == 'true'"
-                >
+                <b-badge variant="success" v-if="scope.item[scope.field.key] == 'true'">
                   {{ scope.item[scope.field.key] }}</b-badge
                 >
-                <b-badge variant="danger" v-else>
-                  {{ scope.item[scope.field.key] }}</b-badge
-                >
+                <b-badge variant="danger" v-else> {{ scope.item[scope.field.key] }}</b-badge>
               </div>
-              <b-checkbox
-                v-else
-                v-model="scope.item[scope.field.key]"
-              ></b-checkbox>
+              <b-checkbox v-else v-model="scope.item[scope.field.key]"></b-checkbox>
             </div>
             <div v-else-if="scope.field.typeOptions.type == 'rate'">
-              <span v-if="!scope.item.editing"
-                >{{ scope.item[scope.field.key] }}DKK
-              </span>
+              <span v-if="!scope.item.editing">{{ scope.item[scope.field.key] }}DKK </span>
               <b-input
                 v-else
                 v-model="scope.item[scope.field.key]"
@@ -107,9 +97,7 @@
               ></b-input>
             </div>
             <div v-else-if="scope.field.typeOptions.type == 'select'">
-              <span v-if="!scope.item.editing">{{
-                scope.item[scope.field.key]
-              }}</span>
+              <span v-if="!scope.item.editing">{{ scope.item[scope.field.key] }}</span>
               <b-select
                 v-else
                 v-model="scope.item[scope.field.key]"
@@ -126,11 +114,7 @@
                 </div>
               </div>
               <div v-else>
-                <b-checkbox
-                  v-model="scope.item[scope.field.key]"
-                  value="1"
-                  unchecked-value="0"
-                >
+                <b-checkbox v-model="scope.item[scope.field.key]" value="1" unchecked-value="0">
                 </b-checkbox>
               </div>
             </div>
@@ -166,60 +150,30 @@
                     >
                       <b-icon icon="eye"></b-icon
                     ></b-btn>
-                    <b-input
-                      v-else
-                      v-model="scope.item[scope.field.key]"
-                    ></b-input>
+                    <b-input v-else v-model="scope.item[scope.field.key]"></b-input>
                   </div>
                 </div>
               </div>
             </div>
-            <div
-              :key="scope.field.key"
-              v-else-if="scope.field.typeOptions.type == 'paid'"
-            >
+            <div :key="scope.field.key" v-else-if="scope.field.typeOptions.type == 'paid'">
               <div v-if="!scope.item.editing">
-                <b-badge
-                  v-if="scope.item[scope.field.key] == 0"
-                  variant="success"
-                  >Paid</b-badge
-                >
-                <b-badge
-                  v-if="scope.item[scope.field.key] != 0"
-                  variant="warning"
-                  >Unpaid</b-badge
-                >
+                <b-badge v-if="scope.item[scope.field.key] == 0" variant="success">Paid</b-badge>
+                <b-badge v-if="scope.item[scope.field.key] != 0" variant="warning">Unpaid</b-badge>
               </div>
             </div>
           </template>
           <template #row-details="scope">
             <label for="description-area">Description</label>
-            <b-textarea
-              id="description-area"
-              v-model="scope.item.description"
-            ></b-textarea>
+            <b-textarea id="description-area" v-model="scope.item.description"></b-textarea>
           </template>
 
           <template v-slot:cell(actions)="scope">
-            <div
-              v-if="
-                scope.item[editBooleanKey] == 'false' ||
-                editBooleanKey == undefined
-              "
-            >
+            <div v-if="scope.item[editBooleanKey] == 'false' || editBooleanKey == undefined">
               <div v-if="!scope.item.editing">
-                <b-btn
-                  size="sm"
-                  v-if="editable"
-                  variant="primary"
-                  @click="doEdit(scope)"
+                <b-btn size="sm" v-if="editable" variant="primary" @click="doEdit(scope)"
                   ><b-icon icon="pencil-square"></b-icon
                 ></b-btn>
-                <b-btn
-                  size="sm"
-                  v-if="downloadable"
-                  variant="primary"
-                  @click="doDownload(scope)"
+                <b-btn size="sm" v-if="downloadable" variant="primary" @click="doDownload(scope)"
                   ><b-icon icon="download"></b-icon
                 ></b-btn>
                 <b-btn
@@ -231,15 +185,8 @@
                 ></b-btn>
               </div>
               <div v-else>
-                <b-btn size="sm" variant="success" @click="sendEdit(scope.item)"
-                  >Save</b-btn
-                >
-                <b-btn
-                  size="sm"
-                  variant="danger"
-                  @click="cancelEdit(scope.item)"
-                  >Cancel</b-btn
-                >
+                <b-btn size="sm" variant="success" @click="sendEdit(scope.item)">Save</b-btn>
+                <b-btn size="sm" variant="danger" @click="cancelEdit(scope.item)">Cancel</b-btn>
               </div>
             </div>
             <div v-else>
@@ -338,12 +285,7 @@
       }
     },
     created() {
-      if (
-        this.editable ||
-        this.downloadable ||
-        this.deletable ||
-        this.activatesModal
-      ) {
+      if (this.editable || this.downloadable || this.deletable || this.activatesModal) {
         // eslint-disable-next-line vue/no-mutating-props
         this.fields.push({ key: 'actions' })
       }
